@@ -3,7 +3,10 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Badge from "react-bootstrap/Badge";
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import FormControl from "react-bootstrap/FormControl";
+import InputGroup from "react-bootstrap/InputGroup";
 import ListGroup from "react-bootstrap/ListGroup";
 import Spinner from "react-bootstrap/Spinner";
 import Navigation from "../components/Navigation";
@@ -13,7 +16,7 @@ import "../App.css";
 
 const about = [
   {
-    text: "Select an Experiment",
+    text: "Select Experiment",
     icon: "search",
   },
   {
@@ -21,7 +24,7 @@ const about = [
     icon: "visibility",
   },
   {
-    text: "Drag and Drop Objects",
+    text: "Drag and Drop Apparatus",
     icon: "touch_app",
   },
   {
@@ -29,7 +32,7 @@ const about = [
     icon: "done_all",
   },
   {
-    text: "Export your Diagram",
+    text: "Export Diagram",
     icon: "save",
   },
 ];
@@ -39,15 +42,25 @@ export default class Home extends Component {
     super(props);
     this.state = {
       experiments: [],
+      search: "",
       selection: "",
       hidden: true,
     };
-    this.getSelection = this.getSelection.bind(this);
+    this.handleSelection = this.handleSelection.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+    this.handleClear = this.handleClear.bind(this);
   }
 
-  getSelection = (selection) => {
+  handleSearch = (event) => {
+    this.setState({ search: event.target.value });
+  };
+
+  handleClear = () => {
+    this.setState({ search: "" });
+  };
+
+  handleSelection = (selection) => {
     this.setState({ selection: selection });
-    console.log(selection);
   };
 
   getExperiments = () => {
@@ -95,29 +108,55 @@ export default class Home extends Component {
 
           {!this.state.hidden ? (
             <div>
-              <Row style={{ marginTop: "2rem" }}>
+              <Row style={{ marginTop: "0rem" }}>
                 <Col md={6}>
-                  <p style={{ fontSize: "2rem" }}>
-                    Select an Experiment to Get Started.
-                  </p>
+                  <p style={{ fontSize: "2rem" }}>Select to Get Started.</p>
                 </Col>
               </Row>
               <Row style={{ marginTop: "0rem" }}>
                 <Col md={6}>
-                  <ListGroup>
-                    {this.state.experiments.map((item, index) => {
-                      return (
-                        <ListGroup.Item
-                          action
-                          onClick={() => this.getSelection(item.title)}
-                          key={index}
-                        >
-                          {item.title}
-                        </ListGroup.Item>
-                      );
-                    })}
-                  </ListGroup>
+                  <InputGroup className="mb-3">
+                    <FormControl
+                      placeholder="Search"
+                      value={this.state.search}
+                      onChange={this.handleSearch}
+                    />
+                    <InputGroup.Append>
+                      <Button
+                        variant="outline-secondary"
+                        onClick={() => this.handleClear()}
+                      >
+                        Clear
+                      </Button>
+                    </InputGroup.Append>
+                  </InputGroup>
+                  <Card style={{ marginTop: "1rem", height: "10rem" }}>
+                    <ListGroup variant="flush">
+                      {this.state.experiments.map((item, index) => {
+                        return item.title
+                          .toLowerCase()
+                          .includes(this.state.search) ? (
+                          <ListGroup.Item
+                            action
+                            onClick={() => this.handleSelection(item.title)}
+                            key={index}
+                          >
+                            {item.title}
+                          </ListGroup.Item>
+                        ) : null;
+                      })}
+                    </ListGroup>
+                  </Card>
                 </Col>
+              </Row>
+              <Row style={{ marginTop: "3rem" }}>
+                {about.map((item, idx) => {
+                  return (
+                    <Col md={2}>
+                      <AboutCard idx={idx} text={item.text} icon={item.icon} />
+                    </Col>
+                  );
+                })}
               </Row>
             </div>
           ) : (
@@ -129,15 +168,6 @@ export default class Home extends Component {
               <span className="sr-only">Loading...</span>
             </Spinner>
           )}
-          <Row style={{ marginTop: "3rem" }}>
-            {about.map((item, idx) => {
-              return (
-                <Col md={2}>
-                  <AboutCard idx={idx} text={item.text} icon={item.icon} />
-                </Col>
-              );
-            })}
-          </Row>
         </Container>
 
         <Router>
