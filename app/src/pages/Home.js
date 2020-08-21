@@ -9,6 +9,8 @@ import FormControl from "react-bootstrap/FormControl";
 import InputGroup from "react-bootstrap/InputGroup";
 import ListGroup from "react-bootstrap/ListGroup";
 import Spinner from "react-bootstrap/Spinner";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 import Navigation from "../components/Navigation";
 import AboutCard from "../components/AboutCard";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -101,7 +103,7 @@ export default class Home extends Component {
                   textAlign: "right",
                 }}
               >
-                Department of Chemistry
+                UCT Department of Chemistry
               </h1>
             </Col>
           </Row>
@@ -136,13 +138,20 @@ export default class Home extends Component {
                         return item.title
                           .toLowerCase()
                           .includes(this.state.search) ? (
-                          <ListGroup.Item
-                            action
-                            onClick={() => this.handleSelection(item.title)}
-                            key={index}
+                          <OverlayTrigger
+                            placement="right"
+                            overlay={<Tooltip>{item.information}</Tooltip>}
                           >
-                            {item.title}
-                          </ListGroup.Item>
+                            <ListGroup.Item
+                              action
+                              onClick={() => this.handleSelection(item.title)}
+                              key={index}
+                            >
+                              {item.title.length < 60
+                                ? item.title
+                                : `${item.title.substring(0, 60)}...`}
+                            </ListGroup.Item>
+                          </OverlayTrigger>
                         ) : null;
                       })}
                     </ListGroup>
