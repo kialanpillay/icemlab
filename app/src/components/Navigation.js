@@ -6,7 +6,7 @@ export default class Navigation extends Component {
   render() {
     return (
       <Navbar bg="light" variant="light">
-        <Navbar.Brand href="/">
+        <Navbar.Brand>
           <span>
             <h3>iCEMlab</h3>
           </span>
