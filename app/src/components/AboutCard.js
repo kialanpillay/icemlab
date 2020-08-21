@@ -7,14 +7,25 @@ import "bootstrap/dist/css/bootstrap.min.css";
 export default class AboutCard extends Component {
   render() {
     return (
-      <Card style={{ height: "12rem" }}>
+      <Card style={{ height: "12rem" }} className="text-center">
         <Card.Body>
-          <Card.Title>
-            <Badge pill variant="dark">
+          <Card.Title style={{ textAlign: "left" }}>
+            <Badge
+              pill
+              style={{
+                backgroundColor: "rgb(78, 45, 132)",
+                color: "white",
+              }}
+            >
               {this.props.idx + 1}
             </Badge>
           </Card.Title>
-          <Icon style={{ fontSize: "64px", textAlign: "center" }}>
+          <Icon
+            style={{
+              fontSize: "64px",
+              textAlign: "center",
+            }}
+          >
             {this.props.icon}
           </Icon>
           <Card.Text>
