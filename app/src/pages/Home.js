@@ -112,10 +112,10 @@ export default class Home extends Component {
             <div>
               <Row style={{ marginTop: "0rem" }}>
                 <Col md={6}>
-                  <p style={{ fontSize: "2rem" }}>Select to Get Started.</p>
+                  <h2>Select an Experiment to Get Started</h2>
                 </Col>
               </Row>
-              <Row style={{ marginTop: "0rem" }}>
+              <Row style={{ marginTop: "1rem" }}>
                 <Col md={6}>
                   <InputGroup className="mb-3">
                     <FormControl
