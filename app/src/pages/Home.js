@@ -112,14 +112,14 @@ export default class Home extends Component {
             <div>
               <Row style={{ marginTop: "0rem" }}>
                 <Col md={6}>
-                  <p style={{ fontSize: "2rem" }}>Select to Get Started.</p>
+                  <h2>Select an Experiment to Get Started</h2>
                 </Col>
               </Row>
-              <Row style={{ marginTop: "0rem" }}>
+              <Row style={{ marginTop: "1rem" }}>
                 <Col md={6}>
                   <InputGroup className="mb-3">
                     <FormControl
-                      placeholder="Search"
+                      placeholder={`Search from over ${this.state.experiments.length} different experiments`}
                       value={this.state.search}
                       onChange={this.handleSearch}
                     />
@@ -132,7 +132,13 @@ export default class Home extends Component {
                       </Button>
                     </InputGroup.Append>
                   </InputGroup>
-                  <Card style={{ marginTop: "1rem", height: "10rem" }}>
+                  <Card
+                    style={{
+                      marginTop: "1rem",
+                      height: "10rem",
+                      overflowY: "scroll",
+                    }}
+                  >
                     <ListGroup variant="flush">
                       {this.state.experiments.map((item, index) => {
                         return item.title
@@ -147,9 +153,25 @@ export default class Home extends Component {
                               onClick={() => this.handleSelection(item.title)}
                               key={index}
                             >
-                              {item.title.length < 60
-                                ? item.title
-                                : `${item.title.substring(0, 60)}...`}
+                              {item.title.length < 60 ? (
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: item.title,
+                                  }}
+                                />
+                              ) : item.title.includes("sub") ? (
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: `${item.title.substring(0, 80)}...`,
+                                  }}
+                                />
+                              ) : (
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: `${item.title.substring(0, 60)}...`,
+                                  }}
+                                />
+                              )}
                             </ListGroup.Item>
                           </OverlayTrigger>
                         ) : null;
