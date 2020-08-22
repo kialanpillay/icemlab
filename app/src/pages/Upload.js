@@ -3,8 +3,38 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import "./Upload.css";
 import Navigation from "../components/Navigation";
+import Button from "react-bootstrap/Button";
+import Checklist from "../components/Checklist";
+import Card from "react-bootstrap/Card";
 
 class Upload extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      apparatus: [],
+      test: ["hello", "goodbye"],
+      checked: [],
+    };
+  }
+  getApparatus = () => {
+    const apparatusEndpoint = "https://icemlab.herokuapp.com/apparatus/";
+    fetch(apparatusEndpoint, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        this.setState({
+          apparatus: response.apparatus,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  componentDidMount() {
+    this.getApparatus();
+  }
+
   render() {
     return (
       <div className="page">
@@ -21,9 +51,68 @@ class Upload extends Component {
                     required={true}
                   />
                 </Form.Group>
+                <Form.Group as={Col} controlId="preamble">
+                  <Form.Label>Experiment Preamble </Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows="15"
+                    placeholder="Enter Experiment Preamble"
+                    required={true}
+                  />
+
+                 
+                </Form.Group>
+                <Form.Group as={Col} controlId="apparatus" >
+                  <Form.Label>Apparatus Checklist</Form.Label>
+                  <Checklist
+                    data={this.state.test}
+                    checked={this.state.checked}
+                  />
+                </Form.Group>
+                <Form.Group as={Col} controlId="reagents">
+                  <Form.Label>Reagents</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows="8"
+                    placeholder="Seperate reagent names with a comma Eg.Potassium,Sodium Chloride"
+                    required={true}
+                  />
+                </Form.Group>
               </div>
             </div>
             <hr />
+            <div className="u-div">
+              <div className="ulabel">Experiment Method</div>
+              <div className="ucontent-div">
+                <Form.Group as={Col} controlId="expiermentMethod">
+                  <Form.Label>Experiment Method </Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows="15"
+                    placeholder="Enter Experiment Method"
+                    required={true}
+                  />
+                </Form.Group>
+              </div>
+            </div>
+            <hr />
+            <div className="u-div">
+              <div className="ulabel">Additonal Notes</div>
+              <div className="ucontent-div">
+                <Form.Group as={Col} controlId="additionalNotes">
+                  <Form.Label>Notes</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows="6"
+                    placeholder="Additional Notes"
+                    required={true}
+                  />
+                </Form.Group>
+                <Button className="ubutton" variant="secondary" size="lg">
+                  Upload
+                </Button>
+              </div>
+            </div>
           </Form>
         </div>
       </div>
