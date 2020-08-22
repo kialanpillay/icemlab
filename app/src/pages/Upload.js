@@ -12,12 +12,10 @@ class Upload extends Component {
     super(props);
     this.state = {
       apparatus: [],
-      test: ["hello", "goodbye"],
-      checked: [],
     };
   }
   getApparatus = () => {
-    const apparatusEndpoint = "https://icemlab.herokuapp.com/apparatus/";
+    const apparatusEndpoint = "https://icemlab.herokuapp.com/apparatus";
     fetch(apparatusEndpoint, {
       method: "GET",
     })
@@ -55,7 +53,7 @@ class Upload extends Component {
                   <Form.Label>Experiment Preamble </Form.Label>
                   <Form.Control
                     as="textarea"
-                    rows="15"
+                    rows="5"
                     placeholder="Enter Experiment Preamble"
                     required={true}
                   />
@@ -65,8 +63,7 @@ class Upload extends Component {
                 <Form.Group as={Col} controlId="apparatus" >
                   <Form.Label>Apparatus Checklist</Form.Label>
                   <Checklist
-                    data={this.state.test}
-                    checked={this.state.checked}
+                    data={this.state.apparatus}
                   />
                 </Form.Group>
                 <Form.Group as={Col} controlId="reagents">
@@ -74,7 +71,7 @@ class Upload extends Component {
                   <Form.Control
                     as="textarea"
                     rows="8"
-                    placeholder="Seperate reagent names with a comma Eg.Potassium,Sodium Chloride"
+                    placeholder="Enter Reagents, seperated by a comma e.g. Potassium, Sodium Chloride"
                     required={true}
                   />
                 </Form.Group>
