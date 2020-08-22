@@ -7,14 +7,17 @@ export default class Navigation extends Component {
     return (
       <Navbar bg="light" variant="light">
         <Navbar.Brand>
-          <span>
-            <h3>iCEMlab</h3>
-          </span>
+          <img alt="" src="logo.png" height="30" />
         </Navbar.Brand>
         <Nav className="mr-auto">
           <Nav.Link href="/">Home</Nav.Link>
           <Nav.Link href="/view">Upload</Nav.Link>
         </Nav>
+        <Navbar.Collapse className="justify-content-end">
+          <Navbar.Brand href="http://www.chemistry.uct.ac.za/">
+            <img alt="" src="transparent_straight_logo.gif" height="36" />{" "}
+          </Navbar.Brand>
+        </Navbar.Collapse>
       </Navbar>
     );
   }

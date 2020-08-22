@@ -88,7 +88,15 @@ export default class Home extends Component {
 
   render() {
     return (
-      <div className="App" style={{ backgroundImage: "url('bg.png')" }}>
+      <div
+        className="App"
+        style={{
+          backgroundImage: "url('bg.png')",
+          backgroundSize: "62rem auto",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "right top",
+        }}
+      >
         <Navigation />
         <Container style={{ marginTop: "2rem" }}>
           <Row>
