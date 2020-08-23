@@ -14,11 +14,13 @@ export default function CheckboxList(props) {
     const newChecked = [...checked];
 
     if (currentIndex === -1) {
-      newChecked.push(value); //adding to checked
+      newChecked.push(value); //adding checked items to newChecked
+
     } else {
       newChecked.splice(currentIndex, 1); //removing from checked
     }
     setChecked(newChecked);
+    props.callback(newChecked);
   };
 
   return (
