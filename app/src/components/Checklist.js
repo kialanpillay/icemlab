@@ -1,5 +1,4 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -15,7 +14,6 @@ export default function CheckboxList(props) {
 
     if (currentIndex === -1) {
       newChecked.push(value); //adding checked items to newChecked
-
     } else {
       newChecked.splice(currentIndex, 1); //removing from checked
     }

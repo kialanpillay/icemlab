@@ -5,26 +5,24 @@ import "./Upload.css";
 import Navigation from "../components/Navigation";
 import Button from "react-bootstrap/Button";
 import Checklist from "../components/Checklist";
-import Card from "react-bootstrap/Card";
 
 class Upload extends Component {
   constructor(props) {
     super(props);
     this.state = {
       apparatus: [],
-      name:"",
-      preamble:"",
-      checked:[],
-      reagents:"",
-      method:"",
-      notes:"",
-      reagentArr:[]
-
+      name: "",
+      preamble: "",
+      checked: [],
+      reagents: "",
+      method: "",
+      notes: "",
+      reagentArr: [],
     };
     this.handleChange = this.handleChange.bind(this);
     this.callback = this.callback.bind(this);
-    this.putPayload=this.putPayload.bind(this);
   }
+
   getApparatus = () => {
     const apparatusEndpoint = "https://icemlab.herokuapp.com/apparatus";
     fetch(apparatusEndpoint, {
@@ -42,55 +40,45 @@ class Upload extends Component {
   };
   callback = (checked) => {
     this.setState({ checked: checked });
-    console.log(this.state.checked);
-};
- 
-  
+  };
 
   componentDidMount() {
     this.getApparatus();
   }
+
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
-  onUpload() {
-    this.setState({reagentArr : this.state.reagents.split(',')})
-   console.log(this.state.reagentArr);
-   console.log(this.state.name);
-   console.log(this.state.method);
-   console.log(this.state.preamble);
-   console.log(this.state.checked);
-   console.log(this.state.notes);
 
+  onUpload() {
+    this.setState({ reagentArr: this.state.reagents.split(",") });
   }
+
   putPayload = () => {
-      this.onUpload()
-  
-     /** */ const payload = {
-        title: this.state.name,
-        information: this.state.preamble,
-        apparatus: this.state.checked, //need to get the checked from checklist 
-        reagents: this.state.reagentArr,
-        method:this.state.method,
-        notes:this.state.notes
-      
-      };
-      const url ="https://icemlab.herokuapp.com/experiment";
-      fetch(url, {
-        method: "PUT",
-        headers: {
-          "content-type": "application/json",
-          accept: "application/json",
-        },
-        body: JSON.stringify(payload),
-      })
-        .then((response) => response.json())
-        
-        .catch((err) => {
-          console.log(err);
-        });
-    
-    
+    this.onUpload();
+
+    const payload = {
+      title: this.state.name,
+      information: this.state.preamble,
+      apparatus: this.state.checked,
+      reagents: this.state.reagentArr,
+      method: this.state.method,
+      notes: this.state.notes,
+    };
+    const url = "https://icemlab.herokuapp.com/experiment";
+    fetch(url, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   render() {
@@ -98,8 +86,8 @@ class Upload extends Component {
       <div className="page">
         <Navigation></Navigation>
         <div className="container u-form">
-        <div className="pageHeading">Experiment Upload</div>
-        <hr />
+          <div className="pageHeading">Experiment Upload</div>
+          <hr />
           <Form>
             <div className="u-div">
               <div className="ulabel">Experiment Details</div>
@@ -128,10 +116,11 @@ class Upload extends Component {
                 </Form.Group>
                 <Form.Group as={Col} controlId="apparatus">
                   <Form.Label>Apparatus Checklist</Form.Label>
-                  <Checklist data={this.state.apparatus} 
+                  <Checklist
+                    data={this.state.apparatus}
                     checked={this.state.checked}
-                    callback={this.callback}/>
-               
+                    callback={this.callback}
+                  />
                 </Form.Group>
                 <Form.Group as={Col} controlId="reagents">
                   <Form.Label>Reagents</Form.Label>
@@ -143,8 +132,6 @@ class Upload extends Component {
                     name="reagents"
                     value={this.state.reagents}
                     onChange={this.handleChange}
-                  
-
                   />
                 </Form.Group>
               </div>
@@ -180,10 +167,14 @@ class Upload extends Component {
                     name="notes"
                     value={this.state.notes}
                     onChange={this.handleChange}
-                  
                   />
                 </Form.Group>
-                <Button className="ubutton" variant="secondary" size="lg" onClick={() => this.putPayload()}>
+                <Button
+                  className="ubutton"
+                  variant="secondary"
+                  size="lg"
+                  onClick={() => this.putPayload()}
+                >
                   Upload
                 </Button>
               </div>
