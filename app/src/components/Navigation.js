@@ -11,7 +11,7 @@ export default class Navigation extends Component {
         </Navbar.Brand>
         <Nav className="mr-auto">
           <Nav.Link href="/">Home</Nav.Link>
-          <Nav.Link href="/view">Upload</Nav.Link>
+          <Nav.Link href="/upload">Upload</Nav.Link>
         </Nav>
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Brand href="http://www.chemistry.uct.ac.za/">
