@@ -45,15 +45,14 @@ export default class Dashboard extends Component {
       <div>
         <Navigation></Navigation>
         <Container style={{ marginTop: "2rem", marginBottom: "2rem" }}>
-          <Row >
-          <Col md={4} >
-      
+          <Row>
+            <Col md={4}>
               <UploadCard />
             </Col>
 
             {this.state.experiments.map((item, index) => {
               return (
-                <Col md={4} >
+                <Col md={4}>
                   <ExperimentCard experimentTitle={item.title} />
                 </Col>
               );
