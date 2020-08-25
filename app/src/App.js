@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Upload from "./pages/Upload";
 import Experiment from "./pages/Experiment";
 
+//Functional component that contains the React Router for declarative routing
 export default function App() {
   return (
     <div>

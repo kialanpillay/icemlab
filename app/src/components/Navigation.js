@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 
+//Navigation component
 export default class Navigation extends Component {
   render() {
     return (

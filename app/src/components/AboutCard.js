@@ -4,6 +4,7 @@ import Badge from "react-bootstrap/Badge";
 import Icon from "@material-ui/core/Icon";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+//Custom component to display About text and associated icon
 export default class AboutCard extends Component {
   render() {
     return (

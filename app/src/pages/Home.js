@@ -16,6 +16,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../App.css";
 import Experiment from "./Experiment";
 
+//Array of data for the About functionality
 const about = [
   {
     text: "Select Experiment",
@@ -38,33 +39,37 @@ const about = [
     icon: "save",
   },
 ];
-
+//Home Page Component 
 export default class Home extends Component {
+  //Constructor
   constructor(props) {
     super(props);
+    //Initialising class state data
+    //State is used instead of class member variables to avoid manually managing component renders  
     this.state = {
       experiments: [],
       search: "",
       selection: "",
       hidden: true,
     };
+    //Binding of methods to the class instance
     this.handleSelection = this.handleSelection.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleClear = this.handleClear.bind(this);
   }
-
+  //Sets search-string state using the value of a user event (key press)
   handleSearch = (event) => {
     this.setState({ search: event.target.value });
   };
-
+  //Resets state, which clears the input component
   handleClear = () => {
     this.setState({ search: "" });
   };
-
+  //Sets the experiment selection state
   handleSelection = (selection) => {
     this.setState({ selection: selection });
   };
-
+  //GET request to retrieve an array of available experiments from the API server
   getExperiments = () => {
     const url = "https://icemlab.herokuapp.com/experiment";
     fetch(url, {
@@ -81,7 +86,7 @@ export default class Home extends Component {
         console.log(err);
       });
   };
-
+  //Calls method once the component has rendered
   componentDidMount() {
     this.getExperiments();
   }
@@ -153,6 +158,7 @@ export default class Home extends Component {
                           return item.title
                             .toLowerCase()
                             .includes(this.state.search) ? (
+                              //Tooltip functionality to display experiment description on mouseover
                             <OverlayTrigger
                               placement="right"
                               overlay={<Tooltip>{item.information}</Tooltip>}
@@ -164,6 +170,8 @@ export default class Home extends Component {
                                 key={index}
                               >
                                 {item.title.length < 60 ? (
+                                  //Concatenates the title length if greater than 60 characters
+                                  //Inner HTML used to display subscripts
                                   <div
                                     dangerouslySetInnerHTML={{
                                       __html: item.title,
@@ -206,6 +214,7 @@ export default class Home extends Component {
                           icon={item.icon}
                         />
                       </Col>
+                      //Each array item is mapped to a custom component, consisting of text and an icon
                     );
                   })}
                 </Row>
@@ -217,12 +226,13 @@ export default class Home extends Component {
                 style={{ marginTop: "2rem" }}
               >
                 <span className="sr-only">Loading...</span>
-              </Spinner>
+              </Spinner> //Spinner component displays while waiting for a server response
             )}
           </Container>
         </div>
       );
     } else {
+      //Render the Experiment component if user has made a selection
       return <Experiment experiment={this.state.selection} />;
     }
   }
