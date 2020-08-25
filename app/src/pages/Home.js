@@ -142,7 +142,7 @@ export default class Home extends Component {
                           variant="outline-secondary"
                           onClick={() => this.handleClear()}
                         >
-                          Clear
+                          
                         </Button>
                       </InputGroup.Append>
                     </InputGroup>
