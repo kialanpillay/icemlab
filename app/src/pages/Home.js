@@ -14,6 +14,7 @@ import Navigation from "../components/Navigation";
 import AboutCard from "../components/AboutCard";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../App.css";
+import Experiment from "./Experiment";
 
 const about = [
   {
@@ -86,130 +87,143 @@ export default class Home extends Component {
   }
 
   render() {
-    return (
-      <div
-        className="App"
-        style={{
-          backgroundImage: "url('bg.png')",
-          backgroundSize: "62rem auto",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "right top",
-        }}
-      >
-        <Navigation />
-        <Container style={{ marginTop: "2rem" }}>
-          <Row>
-            <Col md={8}>
-              <h1 style={{ fontSize: "4rem" }}>Virtual Chemistry Lab</h1>
-            </Col>
-            <Col md={4}>
-              <h1
-                style={{
-                  fontSize: "2.5rem",
-                  color: "white",
-                  textAlign: "right",
-                }}
-              >
-                UCT Department of Chemistry
-              </h1>
-            </Col>
-          </Row>
+    if (this.state.selection == "") {
+      return (
+        <div
+          className="App"
+          style={{
+            backgroundImage: "url('bg.png')",
+            backgroundSize: "62rem auto",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "right top",
+          }}
+        >
+          <Navigation />
+          <Container style={{ marginTop: "2rem" }}>
+            <Row>
+              <Col md={8}>
+                <h1 style={{ fontSize: "4rem" }}>Virtual Chemistry Lab</h1>
+              </Col>
+              <Col md={4}>
+                <h1
+                  style={{
+                    fontSize: "2.5rem",
+                    color: "white",
+                    textAlign: "right",
+                  }}
+                >
+                  UCT Department of Chemistry
+                </h1>
+              </Col>
+            </Row>
 
-          {!this.state.hidden ? (
-            <div>
-              <Row style={{ marginTop: "0rem" }}>
-                <Col md={6}>
-                  <h2>Select an Experiment to Get Started</h2>
-                </Col>
-              </Row>
-              <Row style={{ marginTop: "1rem" }}>
-                <Col md={6}>
-                  <InputGroup className="mb-3">
-                    <FormControl
-                      placeholder={`Search from over ${this.state.experiments.length} different experiments`}
-                      value={this.state.search}
-                      onChange={this.handleSearch}
-                    />
-                    <InputGroup.Append>
-                      <Button
-                        variant="outline-secondary"
-                        onClick={() => this.handleClear()}
-                      >
-                        Clear
-                      </Button>
-                    </InputGroup.Append>
-                  </InputGroup>
-                  <Card
-                    style={{
-                      marginTop: "1rem",
-                      height: "10rem",
-                      overflowY: "scroll",
-                    }}
-                  >
-                    <ListGroup variant="flush">
-                      {this.state.experiments.map((item, index) => {
-                        return item.title
-                          .toLowerCase()
-                          .includes(this.state.search) ? (
-                          <OverlayTrigger
-                            placement="right"
-                            overlay={<Tooltip>{item.information}</Tooltip>}
-                          >
-                            <ListGroup.Item
-                              action
-                              onClick={() => this.handleSelection(item.title)}
+            {!this.state.hidden ? (
+              <div>
+                <Row style={{ marginTop: "0rem" }}>
+                  <Col md={6}>
+                    <h2>Select an Experiment to Get Started</h2>
+                  </Col>
+                </Row>
+                <Row style={{ marginTop: "1rem" }}>
+                  <Col md={6}>
+                    <InputGroup className="mb-3">
+                      <FormControl
+                        placeholder={`Search from over ${this.state.experiments.length} different experiments`}
+                        value={this.state.search}
+                        onChange={this.handleSearch}
+                      />
+                      <InputGroup.Append>
+                        <Button
+                          variant="outline-secondary"
+                          onClick={() => this.handleClear()}
+                        >
+                          Clear
+                        </Button>
+                      </InputGroup.Append>
+                    </InputGroup>
+                    <Card
+                      style={{
+                        marginTop: "1rem",
+                        height: "10rem",
+                        overflowY: "scroll",
+                      }}
+                    >
+                      <ListGroup variant="flush">
+                        {this.state.experiments.map((item, index) => {
+                          return item.title
+                            .toLowerCase()
+                            .includes(this.state.search) ? (
+                            <OverlayTrigger
+                              placement="right"
+                              overlay={<Tooltip>{item.information}</Tooltip>}
                               key={index}
                             >
-                              {item.title.length < 60 ? (
-                                <div
-                                  dangerouslySetInnerHTML={{
-                                    __html: item.title,
-                                  }}
-                                />
-                              ) : item.title.includes("sub") ? (
-                                <div
-                                  dangerouslySetInnerHTML={{
-                                    __html: `${item.title.substring(0, 80)}...`,
-                                  }}
-                                />
-                              ) : (
-                                <div
-                                  dangerouslySetInnerHTML={{
-                                    __html: `${item.title.substring(0, 60)}...`,
-                                  }}
-                                />
-                              )}
-                            </ListGroup.Item>
-                          </OverlayTrigger>
-                        ) : null;
-                      })}
-                    </ListGroup>
-                  </Card>
-                </Col>
-              </Row>
-              <Row style={{ marginTop: "3rem" }}>
-                {about.map((item, idx) => {
-                  return (
-                    <Col md={2}>
-                      <AboutCard idx={idx} text={item.text} icon={item.icon} />
-                    </Col>
-                  );
-                })}
-              </Row>
-            </div>
-          ) : (
-            <Spinner
-              animation="border"
-              role="status"
-              style={{ marginTop: "2rem" }}
-            >
-              <span className="sr-only">Loading...</span>
-            </Spinner>
-          )}
-        </Container>
-
-       
-      </div>
-    );
+                              <ListGroup.Item
+                                action
+                                onClick={() => this.handleSelection(item.title)}
+                                key={index}
+                              >
+                                {item.title.length < 60 ? (
+                                  <div
+                                    dangerouslySetInnerHTML={{
+                                      __html: item.title,
+                                    }}
+                                  />
+                                ) : item.title.includes("sub") ? (
+                                  <div
+                                    dangerouslySetInnerHTML={{
+                                      __html: `${item.title.substring(
+                                        0,
+                                        80
+                                      )}...`,
+                                    }}
+                                  />
+                                ) : (
+                                  <div
+                                    dangerouslySetInnerHTML={{
+                                      __html: `${item.title.substring(
+                                        0,
+                                        60
+                                      )}...`,
+                                    }}
+                                  />
+                                )}
+                              </ListGroup.Item>
+                            </OverlayTrigger>
+                          ) : null;
+                        })}
+                      </ListGroup>
+                    </Card>
+                  </Col>
+                </Row>
+                <Row style={{ marginTop: "3rem" }}>
+                  {about.map((item, idx) => {
+                    return (
+                      <Col md={2} key={idx}>
+                        <AboutCard
+                          idx={idx}
+                          text={item.text}
+                          icon={item.icon}
+                        />
+                      </Col>
+                    );
+                  })}
+                </Row>
+              </div>
+            ) : (
+              <Spinner
+                animation="border"
+                role="status"
+                style={{ marginTop: "2rem" }}
+              >
+                <span className="sr-only">Loading...</span>
+              </Spinner>
+            )}
+          </Container>
+        </div>
+      );
+    } else {
+      return <Experiment experiment={this.state.selection} />;
+    }
   }
 }

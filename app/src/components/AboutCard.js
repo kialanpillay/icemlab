@@ -35,9 +35,9 @@ export default class AboutCard extends Component {
           >
             {this.props.icon}
           </Icon>
-          <Card.Text>
+          <div>
             <h6>{this.props.text}</h6>
-          </Card.Text>
+          </div>
         </Card.Body>
       </Card>
     );
