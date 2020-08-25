@@ -1,0 +1,110 @@
+.container-wrapper {
+  overflow: visible;
+  margin-left: 120px;
+  right: 0;
+  bottom: 0;
+  background: #ebebeb;
+  height: 36rem;
+}
+.graphContainer {
+  margin: 0 2rem;
+  left: 0;
+  top: 50px;
+  right: 0;
+  bottom: 0;
+  background-color: rgb(255, 255, 255);
+  height: 32rem;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2UwZTBlMCIgb3BhY2l0eT0iMC4yIiBzdHJva2Utd2lkdGg9IjEiLz48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZTBlMGUwIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=");
+}
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  margin: 10px;
+  margin-left: 120px;
+}
+.toolbar button {
+  font-size: 14px;
+  margin-left: 3px;
+  margin-right: 3px;
+  background: transparent;
+  border-width: 0px;
+  cursor: pointer;
+}
+
+.sidebar {
+  font-size: 20px;
+  text-align: center;
+  overflow: visible;
+  position: absolute;
+  width: 160px;
+  list-style: none;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+.sidebar li {
+  list-style: none;
+  margin: 0;
+  padding: 3px 5px;
+  margin-bottom: 6px;
+  width: 80px;
+}
+.sidebar img.item {
+  width: 40px;
+  margin: 0 50px 0 0;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+div.mxRubberband {
+  position: absolute;
+  overflow: hidden;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgb(78, 45, 132);
+  background: rgb(215,205,252)
+}
+div.mxWindow {
+  border: 1px solid #c3c3c3;
+  position: absolute;
+  overflow: hidden;
+  z-index: 1;
+}
+table.mxWindow {
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+td.mxWindowTitle {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  font-weight: bold;
+  overflow: hidden;
+  height: 13px;
+  padding: 2px;
+  padding-top: 4px;
+  padding-bottom: 6px;
+  color: black;
+}
+
+div.mxPopupMenu {
+  position: absolute;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  background-color: white
+}
+table.mxPopupMenu {
+  border-collapse: collapse;
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+tr.mxPopupMenuItem {
+  color: black;
+  cursor: pointer;
+}
+tr.mxPopupMenuItemHover {
+  background-color: darkgray;
+  color: white;
+  cursor: pointer;
+}
