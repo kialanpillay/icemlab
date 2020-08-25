@@ -5,23 +5,19 @@ import Button from "react-bootstrap/Button";
 import ExperimentCard from "../components/ExperimentCard";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
+import UploadCard from "../components/UploadCard";
 
-
-
-//Experiment Dashboard Page Component 
+//Experiment Dashboard Page Component
 export default class Dashboard extends Component {
   //Constructor
   constructor(props) {
     super(props);
     //Initialising class state data
-    //State is used instead of class member variables to avoid manually managing component renders  
+    //State is used instead of class member variables to avoid manually managing component renders
     this.state = {
       experiments: [],
     };
-  
-
   }
-
 
   //GET request to retrieve an array of available experiments from the API server
   getExperiments = () => {
@@ -32,45 +28,39 @@ export default class Dashboard extends Component {
       .then((response) => response.json())
       .then((response) => {
         this.setState({
-          experiments: [{title: "A"}, {title: "B"}],
+          experiments: response.experiments,
           hidden: false,
         });
-        
       })
       .catch((err) => {
         console.log(err);
       });
-  console.log(this.state.experiments)
-};
-
+  };
+  componentDidMount() {
+    this.getExperiments();
+  }
 
   render() {
     return (
       <div>
-          <Navigation></Navigation>
+        <Navigation></Navigation>
         <Container style={{ marginTop: "2rem", marginBottom: "2rem" }}>
-          
-         
-            <Row>
-              {this.state.experiments.map((item, index) => {
-                return (
-                  <Col
-                    md={6}
-            
-                  >
-                    <ExperimentCard
-                      experimentTitle={item.title}
-            
-                    />
-                  </Col>
-                );
-              })}
-            </Row>
-         
-        </Container>
+          <Row >
+          <Col md={4} >
       
-      </div>
+              <UploadCard />
+            </Col>
 
+            {this.state.experiments.map((item, index) => {
+              return (
+                <Col md={4} >
+                  <ExperimentCard experimentTitle={item.title} />
+                </Col>
+              );
+            })}
+          </Row>
+        </Container>
+      </div>
     );
   }
 }

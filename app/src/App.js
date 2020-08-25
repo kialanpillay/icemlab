@@ -20,6 +20,9 @@ export default function App() {
           <Route exact path="/dashboard">
             <Dashboard />
           </Route>
+          <Route exact path="/upload">
+            <Upload />
+          </Route>
           <Route exact path="/experiment">
             <Experiment />
           </Route>
