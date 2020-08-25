@@ -14,7 +14,11 @@ export default class Experiment extends Component {
         <Container style={{ marginTop: "2rem" }}>
           <Row className="justify-content-center">
             <Col md="auto">
-              <h1>{this.props.experiment}</h1>
+              <h1
+                dangerouslySetInnerHTML={{
+                  __html: this.props.experiment,
+                }}
+              />
             </Col>
           </Row>
         </Container>
