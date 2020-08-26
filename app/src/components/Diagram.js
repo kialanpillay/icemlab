@@ -42,13 +42,13 @@ export default class Diagram extends Component {
           title: 'Flask',
           description: 'Laboratory glassware',
           image: '',
-          url: ''
+          source: ''
         },
         'microscope': {
           title: 'Microscope',
           description: 'Laboratory instrument',
           image: '',
-          url: ''
+          source: ''
         },
       }
     };
@@ -57,6 +57,44 @@ export default class Diagram extends Component {
 
   componentDidMount() {
     this.loadGraph();
+
+    const fetchJson = async (url) => {
+      const response = await fetch(url);
+      return await response.json();
+    }
+
+    const APPARATUS = [
+      { name: 'flask', wikiRef: 'Round-bottom_flask', title: 'Round bottom flask' },
+      { name: 'microscope', wikiRef: 'Microscope', title: 'Microscope' }
+    ];
+
+    APPARATUS.forEach(async ({name, wikiRef, title}) => {
+      const base = 'https://wikipedia-cors.herokuapp.com/w/api.php?action=query&format=json';
+
+      try {
+        const descResponse = await fetchJson(`${base}&prop=description&titles=${wikiRef}`);
+        const description = Object.values(descResponse.query.pages)[0].description
+
+        const imgResponse = await fetchJson(`${base}&prop=pageimages&titles=${wikiRef}&pithumbsize=100`)
+        const image = Object.values(imgResponse.query.pages)[0].thumbnail.source
+
+        const srcResponse = await fetchJson(`${base}&prop=info&inprop=url&titles=${wikiRef}`)
+        const source = Object.values(srcResponse.query.pages)[0].fullurl
+
+        this.setState(prev => {
+          let prevWiki = { ...prev.wiki }
+          prevWiki[name] = {
+            title,
+            description,
+            image,
+            source
+          }
+          return { ...prev, wiki: prevWiki }
+        })
+      } catch (error) {
+        console.error("Could not get wikipedia data", error)
+      }
+    })
   }
 
   graphF = (evt) => {
