@@ -56,26 +56,30 @@ export default class Dashboard extends Component {
     return (
       <div>
         <Navigation></Navigation>
-
         <Container>
-    
-              <InputGroup style={{ width: "350px",marginLeft:"730px", paddingTop:"15px"}}>
+          <Row
+            style={{
+              marginTop: "2rem",
+            }}
+          >
+            <Col md={{ span: 4, offset: 8 }}>
+              <InputGroup>
                 <FormControl
-                  placeholder={`Search from over ${this.state.experiments.length} different experiments`}
+                  placeholder={`Search for an experiment`}
                   value={this.state.search}
                   onChange={this.handleSearch}
                 />
               </InputGroup>
-           <Row>
-               
-           </Row>
-
-          <Row >
+            </Col>
+          </Row>
+          <Row>
             <Col md={4}>
               <UploadCard />
             </Col>
             {this.state.experiments.map((item, index) => {
-              return item.title.toLowerCase().includes(this.state.search) ? (
+              return item.title
+                .toLowerCase()
+                .includes(this.state.search.toLowerCase()) ? (
                 <Col md={4}>
                   <ExperimentCard experimentTitle={item.title} />
                 </Col>

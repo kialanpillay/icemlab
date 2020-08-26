@@ -6,22 +6,23 @@ export default function UploadCard() {
   return (
     <Card
       style={{
-        width: "20rem",
         height: "15rem",
         marginTop: "2rem",
-        textAlign: "left",
-        cursor:"pointer"
+        cursor: "pointer",
       }}
       onClick={() => (window.location.href = "/upload")}
+      className="text-center"
     >
-      <AddIcon
-        style={{
-          width: "20rem",
-          height: "15rem",
-          textAlign: "left",
-          color: "#4E2E84",
-        }}
-      />
+      <div>
+        <AddIcon
+          style={{
+            width: "20rem",
+            height: "15rem",
+            textAlign: "left",
+            color: "#4E2E84",
+          }}
+        />
+      </div>
     </Card>
   );
 }

@@ -153,7 +153,7 @@ export default class Home extends Component {
                         {this.state.experiments.map((item, index) => {
                           return item.title
                             .toLowerCase()
-                            .includes(this.state.search) ? (
+                            .includes(this.state.search.toLowerCase()) ? (
                             //Tooltip functionality to display experiment description on mouseover
                             <OverlayTrigger
                               placement="right"
