@@ -15,6 +15,7 @@ import AboutCard from "../components/AboutCard";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../App.css";
 import Experiment from "./Experiment";
+import Icon from "@material-ui/core/Icon";
 
 //Array of data for the About functionality
 const about = [
@@ -39,13 +40,13 @@ const about = [
     icon: "save",
   },
 ];
-//Home Page Component 
+//Home Page Component
 export default class Home extends Component {
   //Constructor
   constructor(props) {
     super(props);
     //Initialising class state data
-    //State is used instead of class member variables to avoid manually managing component renders  
+    //State is used instead of class member variables to avoid manually managing component renders
     this.state = {
       experiments: [],
       search: "",
@@ -92,45 +93,40 @@ export default class Home extends Component {
   }
 
   render() {
-    if (this.state.selection == "") {
+    if (this.state.selection === "") {
       return (
-        <div
-          className="App"
-          style={{
-            backgroundImage: "url('bg.png')",
-            backgroundSize: "62rem auto",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "right top",
-          }}
-        >
+        <div className="App">
           <Navigation />
           <Container style={{ marginTop: "2rem" }}>
-            <Row>
-              <Col md={8}>
+            <Row className="justify-content-center">
+              <Col md="auto">
                 <h1 style={{ fontSize: "4rem" }}>Virtual Chemistry Lab</h1>
               </Col>
-              <Col md={4}>
-                <h1
-                  style={{
-                    fontSize: "2.5rem",
-                    color: "white",
-                    textAlign: "right",
-                  }}
-                >
-                  UCT Department of Chemistry
-                </h1>
-              </Col>
+              <Icon
+                style={{
+                  fontSize: "5rem",
+                  color: "rgb(78, 45, 132)",
+                }}
+              >
+                science
+              </Icon>
             </Row>
 
             {!this.state.hidden ? (
               <div>
-                <Row style={{ marginTop: "0rem" }}>
-                  <Col md={6}>
+                <Row
+                  style={{ marginTop: "0rem" }}
+                  className="justify-content-center"
+                >
+                  <Col md='auto'>
                     <h2>Select an Experiment to Get Started</h2>
                   </Col>
                 </Row>
-                <Row style={{ marginTop: "1rem" }}>
-                  <Col md={6}>
+                <Row
+                  style={{ marginTop: "1rem" }}
+                  className="justify-content-center"
+                >
+                  <Col md={8}>
                     <InputGroup className="mb-3">
                       <FormControl
                         placeholder={`Search from over ${this.state.experiments.length} different experiments`}
@@ -158,7 +154,7 @@ export default class Home extends Component {
                           return item.title
                             .toLowerCase()
                             .includes(this.state.search) ? (
-                              //Tooltip functionality to display experiment description on mouseover
+                            //Tooltip functionality to display experiment description on mouseover
                             <OverlayTrigger
                               placement="right"
                               overlay={<Tooltip>{item.information}</Tooltip>}
@@ -169,33 +165,12 @@ export default class Home extends Component {
                                 onClick={() => this.handleSelection(item.title)}
                                 key={index}
                               >
-                                {item.title.length < 60 ? (
-                                  //Concatenates the title length if greater than 60 characters
-                                  //Inner HTML used to display subscripts
-                                  <div
-                                    dangerouslySetInnerHTML={{
-                                      __html: item.title,
-                                    }}
-                                  />
-                                ) : item.title.includes("sub") ? (
-                                  <div
-                                    dangerouslySetInnerHTML={{
-                                      __html: `${item.title.substring(
-                                        0,
-                                        80
-                                      )}...`,
-                                    }}
-                                  />
-                                ) : (
-                                  <div
-                                    dangerouslySetInnerHTML={{
-                                      __html: `${item.title.substring(
-                                        0,
-                                        60
-                                      )}...`,
-                                    }}
-                                  />
-                                )}
+                                {/*Inner HTML used to display subscripts*/}
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: item.title,
+                                  }}
+                                />
                               </ListGroup.Item>
                             </OverlayTrigger>
                           ) : null;
@@ -204,7 +179,10 @@ export default class Home extends Component {
                     </Card>
                   </Col>
                 </Row>
-                <Row style={{ marginTop: "3rem" }}>
+                <Row
+                  style={{ marginTop: "3rem" }}
+                  className="justify-content-center"
+                >
                   {about.map((item, idx) => {
                     return (
                       <Col md={2} key={idx}>
@@ -220,13 +198,15 @@ export default class Home extends Component {
                 </Row>
               </div>
             ) : (
-              <Spinner
-                animation="border"
-                role="status"
-                style={{ marginTop: "2rem" }}
-              >
-                <span className="sr-only">Loading...</span>
-              </Spinner> //Spinner component displays while waiting for a server response
+              <Row className="justify-content-center">
+                <Spinner
+                  animation="border"
+                  role="status"
+                  style={{ marginTop: "2rem" }}
+                >
+                  <span className="sr-only">Loading...</span>
+                </Spinner>{" "}
+              </Row> //Spinner component displays while waiting for a server response
             )}
           </Container>
         </div>

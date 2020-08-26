@@ -22,7 +22,7 @@ export default class AboutCard extends Component {
               style={{
                 backgroundColor: "rgb(78, 45, 132)",
                 color: "white",
-                fontSize: "1.2rem",
+                fontSize: "1.5rem",
               }}
             >
               {this.props.idx + 1}
