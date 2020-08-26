@@ -1,0 +1,17 @@
+.custom-card {
+  height: 15rem;
+  margin-top: 2rem;
+  text-align: center;
+  border: 1px solid rgb(223, 223, 223);
+  border-radius: 5px;
+  background-color: white;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+}
+
+.custom-card:hover,
+.custom-card:focus,
+.custom-card:active {
+  border-color: rgb(78, 45, 132);
+  color: rgb(78, 45, 132);
+}

@@ -113,7 +113,6 @@ class Upload extends Component {
                     name="name"
                     value={this.state.name}
                     onChange={this.handleChange}
-                    required={true}
                   />
                 </Form.Group>
                 <Form.Group as={Col} controlId="preamble">
@@ -126,7 +125,6 @@ class Upload extends Component {
                     name="preamble"
                     value={this.state.preamble}
                     onChange={this.handleChange}
-                    required={true}
                   />
                 </Form.Group>
                 <Form.Group as={Col} controlId="apparatus">
@@ -147,7 +145,6 @@ class Upload extends Component {
                     name="reagents"
                     value={this.state.reagents}
                     onChange={this.handleChange}
-                    required={true}
                   />
                 </Form.Group>
               </div>
@@ -167,7 +164,6 @@ class Upload extends Component {
                     name="method"
                     value={this.state.method}
                     onChange={this.handleChange}
-                    required={true}
                   />
                 </Form.Group>
               </div>
