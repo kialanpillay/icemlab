@@ -3,37 +3,24 @@ import ReactDOM from "react-dom";
 import "./Diagram.css";
 import {
   mxGraph,
-  mxParallelEdgeLayout,
   mxConstants,
   mxEdgeStyle,
-  mxLayoutManager,
   mxGraphHandler,
   mxGuide,
   mxEdgeHandler,
-  mxCell,
-  mxGeometry,
   mxRubberband,
   mxDragSource,
-  mxKeyHandler,
-  mxCodec,
   mxClient,
   mxConnectionHandler,
   mxUtils,
-  mxToolbar,
   mxEvent,
-  mxImage,
   mxConstraintHandler,
-  mxFastOrganicLayout,
   mxUndoManager,
-  mxObjectCodec,
-  mxHierarchicalLayout,
   mxConnectionConstraint,
   mxCellState,
   mxPoint,
-  mxGraphModel,
   mxPerimeter,
   mxCompactTreeLayout,
-  mxCellOverlay,
 } from "mxgraph-js";
 
 export default class Diagram extends Component {
@@ -288,7 +275,7 @@ export default class Diagram extends Component {
 
   initToolbar = () => {
     const that = this;
-    const { graph, layout } = this.state;
+    const { graph } = this.state;
     var toolbar = ReactDOM.findDOMNode(this.refs.toolbar);
     toolbar.appendChild(
       mxUtils.button("Zoom(+)", function (evt) {
@@ -354,7 +341,7 @@ export default class Diagram extends Component {
 
           graph.getModel().beginUpdate();
           try {
-            var v1 = graph.insertVertex(
+            graph.insertVertex(
               parent,
               null,
               null,
@@ -381,11 +368,13 @@ export default class Diagram extends Component {
               <h5>Apparatus</h5>
             </li>
             <img
+              alt="Flask"
               className="item"
               data-value="Flask"
               src="science-24px.svg"
             ></img>
             <img
+              alt="Microscope"
               className="item"
               data-value="Microscope"
               src="biotech-24px.svg"

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Col from "react-bootstrap/Col";
 import Navigation from "../components/Navigation";
-import Button from "react-bootstrap/Button";
 import ExperimentCard from "../components/ExperimentCard";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
