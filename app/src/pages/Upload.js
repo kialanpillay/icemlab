@@ -7,7 +7,7 @@ import Navigation from "../components/Navigation";
 import Button from "react-bootstrap/Button";
 import Checklist from "../components/Checklist";
 import Alert from "react-bootstrap/Alert";
-import CheckIcon from '@material-ui/icons/Check';
+import CheckIcon from "@material-ui/icons/Check";
 
 class Upload extends Component {
   constructor(props) {
@@ -23,11 +23,9 @@ class Upload extends Component {
       reagentArr: [],
       show: false,
       upload: false,
-     
     };
     this.handleChange = this.handleChange.bind(this);
     this.callback = this.callback.bind(this);
-
   }
 
   getApparatus = () => {
@@ -57,21 +55,18 @@ class Upload extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  onUpload() {
-    this.setState({ reagentArr: this.state.reagents.split(",") });
-  }
-
   putPayload = () => {
-    this.onUpload();
-
     const payload = {
       title: this.state.name,
       information: this.state.preamble,
       apparatus: this.state.checked,
-      reagents: this.state.reagentArr,
+      reagents: this.state.reagents.includes(",")
+        ? this.state.reagents.split(",")
+        : [this.state.reagents],
       method: this.state.method,
       notes: this.state.notes,
     };
+
     const url = "https://icemlab.herokuapp.com/experiment";
     fetch(url, {
       method: "PUT",
@@ -93,7 +88,7 @@ class Upload extends Component {
   alertOnClose = () => {
     window.location.href = "/dashboard";
   };
-  
+
   render() {
     return (
       <div className="page">
@@ -184,48 +179,44 @@ class Upload extends Component {
                     onChange={this.handleChange}
                   />
                 </Form.Group>
-                <Row style={{
-                marginTop:"15px",
-               
-              }}>
+                <Row
+                  style={{
+                    marginTop: "15px",
+                  }}
+                >
                   <Button
                     className="ubutton"
-              
                     onClick={() => this.putPayload()}
                     style={{
                       marginLeft: "30px",
                       backgroundColor: "#4E2E84",
                       border: "#4E2E84",
-                      height:"50px",
-                      width:"90px"
+                      height: "50px",
+                      width: "90px",
                     }}
                   >
                     Upload
                   </Button>
-                  <Alert 
-              show={this.state.upload}
-              variant="success"
-              onClose={() => this.alertOnClose()}
-              dismissible
-              style={{
-                display:"flex",
-                marginLeft:"10px"
-                
-               
-              }}
-              
-            >
-              <CheckIcon  style={{
-              
-                marginRight:"5px"
-               
-              }}/>
-              Experiment Uploaded
-            </Alert>
+                  <Alert
+                    show={this.state.upload}
+                    variant="success"
+                    onClose={() => this.alertOnClose()}
+                    dismissible
+                    style={{
+                      display: "flex",
+                      marginLeft: "10px",
+                    }}
+                  >
+                    <CheckIcon
+                      style={{
+                        marginRight: "5px",
+                      }}
+                    />
+                    Experiment Uploaded
+                  </Alert>
                 </Row>
               </div>
             </div>
-            
           </Form>
         </div>
       </div>
