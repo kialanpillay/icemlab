@@ -5,23 +5,31 @@ import Button from "react-bootstrap/Button";
 import ExperimentCard from "../components/ExperimentCard";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
+import UploadCard from "../components/UploadCard";
+import InputGroup from "react-bootstrap/InputGroup";
+import FormControl from "react-bootstrap/FormControl";
 
-
-
-//Experiment Dashboard Page Component 
+//Experiment Dashboard Page Component
 export default class Dashboard extends Component {
   //Constructor
   constructor(props) {
     super(props);
     //Initialising class state data
-    //State is used instead of class member variables to avoid manually managing component renders  
+    //State is used instead of class member variables to avoid manually managing component renders
     this.state = {
       experiments: [],
+      search: "",
     };
-  
-
+    this.handleSearch = this.handleSearch.bind(this);
+    this.handleClear = this.handleClear.bind(this);
   }
-
+  handleSearch = (event) => {
+    this.setState({ search: event.target.value });
+  };
+  //Resets state, which clears the input component
+  handleClear = () => {
+    this.setState({ search: "" });
+  };
 
   //GET request to retrieve an array of available experiments from the API server
   getExperiments = () => {
@@ -32,45 +40,50 @@ export default class Dashboard extends Component {
       .then((response) => response.json())
       .then((response) => {
         this.setState({
-          experiments: [{title: "A"}, {title: "B"}],
+          experiments: response.experiments,
           hidden: false,
         });
-        
       })
       .catch((err) => {
         console.log(err);
       });
-  console.log(this.state.experiments)
-};
-
+  };
+  componentDidMount() {
+    this.getExperiments();
+  }
 
   render() {
     return (
       <div>
-          <Navigation></Navigation>
-        <Container style={{ marginTop: "2rem", marginBottom: "2rem" }}>
-          
-         
-            <Row>
-              {this.state.experiments.map((item, index) => {
-                return (
-                  <Col
-                    md={6}
-            
-                  >
-                    <ExperimentCard
-                      experimentTitle={item.title}
-            
-                    />
-                  </Col>
-                );
-              })}
-            </Row>
-         
-        </Container>
-      
-      </div>
+        <Navigation></Navigation>
 
+        <Container>
+    
+              <InputGroup style={{ width: "350px",marginLeft:"730px", paddingTop:"15px"}}>
+                <FormControl
+                  placeholder={`Search from over ${this.state.experiments.length} different experiments`}
+                  value={this.state.search}
+                  onChange={this.handleSearch}
+                />
+              </InputGroup>
+           <Row>
+               
+           </Row>
+
+          <Row >
+            <Col md={4}>
+              <UploadCard />
+            </Col>
+            {this.state.experiments.map((item, index) => {
+              return item.title.toLowerCase().includes(this.state.search) ? (
+                <Col md={4}>
+                  <ExperimentCard experimentTitle={item.title} />
+                </Col>
+              ) : null;
+            })}
+          </Row>
+        </Container>
+      </div>
     );
   }
 }
