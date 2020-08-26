@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import "./Diagram.css";
+
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Popover from "react-bootstrap/Popover";
+
 import {
   mxGraph,
   mxConstants,
@@ -33,6 +37,20 @@ export default class Diagram extends Component {
       dragElt: null,
       createVisivle: false,
       currentNode: null,
+      wiki: {
+        'flask': {
+          title: 'Flask',
+          description: 'Laboratory glassware',
+          image: '',
+          url: ''
+        },
+        'microscope': {
+          title: 'Microscope',
+          description: 'Laboratory instrument',
+          image: '',
+          url: ''
+        },
+      }
     };
     this.loadGraph = this.loadGraph.bind(this);
   }
@@ -359,7 +377,18 @@ export default class Diagram extends Component {
       mxEvent.disableContextMenu(container);
     }
   }
+
   render() {
+
+    const popover = (apparatus) => (
+      <Popover id="popover-basic">
+        <Popover.Title as="h3">{this.state.wiki[apparatus].title}</Popover.Title>
+        <Popover.Content>
+          {this.state.wiki[apparatus].description}
+        </Popover.Content>
+      </Popover>
+    );
+
     return (
       <div>
         <div>
@@ -367,18 +396,30 @@ export default class Diagram extends Component {
             <li>
               <h5>Apparatus</h5>
             </li>
-            <img
-              alt="Flask"
-              className="item"
-              data-value="Flask"
-              src="science-24px.svg"
-            ></img>
-            <img
-              alt="Microscope"
-              className="item"
-              data-value="Microscope"
-              src="biotech-24px.svg"
-            ></img>
+            <OverlayTrigger
+              placement="right"
+              delay={{ show: 250, hide: 400 }}
+              overlay={popover('flask')}
+            >
+              <img
+                alt="Flask"
+                className="item"
+                data-value="Flask"
+                src="science-24px.svg"
+              />
+            </OverlayTrigger>
+            <OverlayTrigger
+              placement="right"
+              delay={{ show: 250, hide: 400 }}
+              overlay={popover('microscope')}
+            >
+              <img
+                alt="Microscope"
+                className="item"
+                data-value="Microscope"
+                src="biotech-24px.svg"
+              />
+            </OverlayTrigger>
           </ul>
         </div>
         <div className="toolbar" ref="toolbar" />
