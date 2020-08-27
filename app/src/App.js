@@ -5,7 +5,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import Home from "./pages/Home";
 import Upload from "./pages/Upload";
-import Experiment from "./pages/Experiment";
 import Dashboard from "./pages/Dashboard";
 
 //Functional component that contains the React Router for declarative routing
@@ -22,9 +21,6 @@ export default function App() {
           </Route>
           <Route exact path="/upload">
             <Upload />
-          </Route>
-          <Route exact path="/experiment">
-            <Experiment />
           </Route>
         </Switch>
       </Router>

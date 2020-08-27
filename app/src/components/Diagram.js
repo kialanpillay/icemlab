@@ -396,7 +396,7 @@ export default class Diagram extends Component {
               null,
               null,
               300,
-              360,
+              420,
               600,
               40,
               "table"
