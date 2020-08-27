@@ -40,15 +40,9 @@ export default class Diagram extends Component {
       wiki: {
         'flask': {
           title: 'Flask',
-          description: 'Laboratory glassware',
-          image: '',
-          source: ''
         },
         'microscope': {
           title: 'Microscope',
-          description: 'Laboratory instrument',
-          image: '',
-          source: ''
         },
       }
     };
@@ -68,7 +62,7 @@ export default class Diagram extends Component {
       { name: 'microscope', wikiRef: 'Microscope', title: 'Microscope' }
     ];
 
-    APPARATUS.forEach(async ({name, wikiRef, title}) => {
+    APPARATUS.forEach(async ({ name, wikiRef, title }) => {
       const base = 'https://wikipedia-cors.herokuapp.com/w/api.php?action=query&format=json';
 
       try {
@@ -418,14 +412,20 @@ export default class Diagram extends Component {
 
   render() {
 
-    const popover = (apparatus) => (
-      <Popover id="popover-basic">
-        <Popover.Title as="h3">{this.state.wiki[apparatus].title}</Popover.Title>
-        <Popover.Content>
-          {this.state.wiki[apparatus].description}
-        </Popover.Content>
-      </Popover>
-    );
+    const popover = (name) => {
+      const { title, description, image, source } = this.state.wiki[name]
+
+      return (
+        <Popover id="popover-basic">
+          <Popover.Title as="h3">{title}</Popover.Title>
+          <Popover.Content>
+            {image && <div><img src={image} /></div>}
+            <div style={{ marginTop: 5 }}>{description || 'Loading'}</div>
+            {source && <a href={source} target="_blank">More</a>}
+          </Popover.Content>
+        </Popover>
+      );
+    };
 
     return (
       <div>
@@ -436,7 +436,7 @@ export default class Diagram extends Component {
             </li>
             <OverlayTrigger
               placement="right"
-              delay={{ show: 250, hide: 400 }}
+              delay={{ show: 250, hide: 1500 }}
               overlay={popover('flask')}
             >
               <img
@@ -448,7 +448,7 @@ export default class Diagram extends Component {
             </OverlayTrigger>
             <OverlayTrigger
               placement="right"
-              delay={{ show: 250, hide: 400 }}
+              delay={{ show: 250, hide: 1500 }}
               overlay={popover('microscope')}
             >
               <img
