@@ -5,6 +5,7 @@ import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Icon from "@material-ui/core/Icon";
 
+//Custom component to display experiment apparatus or reagent information
 export default class Information extends Component {
   render() {
     return (

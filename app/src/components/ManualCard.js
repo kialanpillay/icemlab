@@ -4,6 +4,7 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Icon from "@material-ui/core/Icon";
 
+//Custom component to display practical manual data 
 export default function ManualCard(props) {
   return (
     <Card

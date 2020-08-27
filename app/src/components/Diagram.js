@@ -27,24 +27,27 @@ import {
   mxCompactTreeLayout,
 } from "mxgraph-js";
 
+//Diagramming Tool Component
 export default class Diagram extends Component {
   constructor(props) {
     super(props);
+    //Initialising class state data
+    //State is used instead of class member variables to avoid manually managing component renders
     this.state = {
       graph: {},
       layout: {},
       json: "",
       dragElt: null,
-      createVisivle: false,
+      createVisible: false,
       currentNode: null,
       wiki: {
-        'flask': {
-          title: 'Flask',
+        flask: {
+          title: "Flask",
         },
-        'microscope': {
-          title: 'Microscope',
+        microscope: {
+          title: "Microscope",
         },
-      }
+      },
     };
     this.loadGraph = this.loadGraph.bind(this);
   }
@@ -52,56 +55,73 @@ export default class Diagram extends Component {
   componentDidMount() {
     this.loadGraph();
 
+    //Logic to retrieve apparatus images and descriptions from Wikipedia service
+
     const fetchJson = async (url) => {
       const response = await fetch(url);
       return await response.json();
-    }
+    };
 
     const APPARATUS = [
-      { name: 'flask', wikiRef: 'Round-bottom_flask', title: 'Round bottom flask' },
-      { name: 'microscope', wikiRef: 'Microscope', title: 'Microscope' }
+      {
+        name: "flask",
+        wikiRef: "Round-bottom_flask",
+        title: "Round bottom flask",
+      },
+      { name: "microscope", wikiRef: "Microscope", title: "Microscope" },
     ];
 
     APPARATUS.forEach(async ({ name, wikiRef, title }) => {
-      const base = 'https://wikipedia-cors.herokuapp.com/w/api.php?action=query&format=json';
+      const base =
+        "https://wikipedia-cors.herokuapp.com/w/api.php?action=query&format=json";
 
       try {
-        const descResponse = await fetchJson(`${base}&prop=description&titles=${wikiRef}`);
-        const description = Object.values(descResponse.query.pages)[0].description
+        const descResponse = await fetchJson(
+          `${base}&prop=description&titles=${wikiRef}`
+        );
+        const description = Object.values(descResponse.query.pages)[0]
+          .description;
 
-        const imgResponse = await fetchJson(`${base}&prop=pageimages&titles=${wikiRef}&pithumbsize=100`)
-        const image = Object.values(imgResponse.query.pages)[0].thumbnail.source
+        const imgResponse = await fetchJson(
+          `${base}&prop=pageimages&titles=${wikiRef}&pithumbsize=100`
+        );
+        const image = Object.values(imgResponse.query.pages)[0].thumbnail
+          .source;
 
-        const srcResponse = await fetchJson(`${base}&prop=info&inprop=url&titles=${wikiRef}`)
-        const source = Object.values(srcResponse.query.pages)[0].fullurl
+        const srcResponse = await fetchJson(
+          `${base}&prop=info&inprop=url&titles=${wikiRef}`
+        );
+        const source = Object.values(srcResponse.query.pages)[0].fullurl;
 
-        this.setState(prev => {
-          let prevWiki = { ...prev.wiki }
+        this.setState((prev) => {
+          let prevWiki = { ...prev.wiki };
           prevWiki[name] = {
             title,
             description,
             image,
-            source
-          }
-          return { ...prev, wiki: prevWiki }
-        })
+            source,
+          };
+          return { ...prev, wiki: prevWiki };
+        });
       } catch (error) {
-        console.error("Could not get wikipedia data", error)
+        console.error("Could not get wikipedia data", error);
       }
-    })
+    });
   }
 
+  //Functor to return current graph
   graphF = (evt) => {
     const { graph } = this.state;
-    var x = mxEvent.getClientX(evt);
-    var y = mxEvent.getClientY(evt);
-    var elt = document.elementFromPoint(x, y);
+    let x = mxEvent.getClientX(evt);
+    let y = mxEvent.getClientY(evt);
+    let elt = document.elementFromPoint(x, y);
     if (mxUtils.isAncestorNode(graph.container, elt)) {
       return graph;
     }
     return null;
   };
 
+  //Sets global graph configuration
   loadGlobalSetting = () => {
     mxGraphHandler.prototype.guidesEnabled = true;
     mxGuide.prototype.isEnabledForEvent = function (evt) {
@@ -110,14 +130,7 @@ export default class Diagram extends Component {
     mxEdgeHandler.prototype.snapToTerminals = true;
   };
 
-  getEditPreview = () => {
-    var dragElt = document.createElement("div");
-    dragElt.style.border = "dashed black 1px";
-    dragElt.style.width = "120px";
-    dragElt.style.height = "40px";
-    return dragElt;
-  };
-
+  //Creates a draggable element from sidebar items (apparatus)
   createDragElement = () => {
     const { graph } = this.state;
     const tasksDrag = ReactDOM.findDOMNode(
@@ -143,12 +156,15 @@ export default class Diagram extends Component {
       ds.createDragElement = mxDragSource.prototype.createDragElement;
     });
   };
+  //Changes the currently selected graph node
   selectionChanged = (graph, value) => {
     this.setState({
       createVisible: true,
       currentNode: graph.getSelectionCell(),
     });
   };
+
+  //Creates node context menu
   createPopupMenu = (graph, menu, cell, evt) => {
     if (cell) {
       if (cell.edge === true) {
@@ -164,6 +180,8 @@ export default class Diagram extends Component {
       }
     }
   };
+
+  //Sets graph configuration options
   setGraphSetting = () => {
     const { graph } = this.state;
     const that = this;
@@ -176,12 +194,14 @@ export default class Diagram extends Component {
     graph.centerZoom = true;
     graph.autoSizeCellsOnAdd = true;
 
+    //Constructs rubberband object for element selection
     new mxRubberband(graph);
     graph.getTooltipForCell = function (cell) {
       return cell.getAttribute("data-value");
     };
 
-    var style = {};
+    //Initialising style objects
+    let style = {};
     style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
     style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
     style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
@@ -209,15 +229,16 @@ export default class Diagram extends Component {
     };
   };
 
+  //Functor used create a styled graph node
   funct = (graph, evt, target, x, y, value, src) => {
-    var style = {};
+    let style = {};
     style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
     style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
     style[mxConstants.STYLE_IMAGE] = src;
     style[mxConstants.STYLE_FONTCOLOR] = "#FFFFFF";
     graph.getStylesheet().putCellStyle(`item${src}`, style);
 
-    var parent = graph.getDefaultParent();
+    let parent = graph.getDefaultParent();
     let cell = graph.insertVertex(
       parent,
       target,
@@ -231,6 +252,8 @@ export default class Diagram extends Component {
     graph.setSelectionCell(cell);
     this.selectionChanged(graph, value);
   };
+
+  //Sets graph layout properties
   setLayoutSetting = (layout) => {
     layout.parallelEdgeSpacing = 10;
     layout.useBoundingBox = false;
@@ -243,6 +266,7 @@ export default class Diagram extends Component {
     };
   };
 
+  //Handles and updates graph node connections
   settingConnection = () => {
     const { graph } = this.state;
     mxConstraintHandler.prototype.intersects = function (
@@ -254,13 +278,13 @@ export default class Diagram extends Component {
       return !source || existingEdge || mxUtils.intersects(icon.bounds, point);
     };
 
-    var mxConnectionHandlerUpdateEdgeState =
+    let mxConnectionHandlerUpdateEdgeState =
       mxConnectionHandler.prototype.updateEdgeState;
     mxConnectionHandler.prototype.updateEdgeState = function (pt, constraint) {
       if (pt != null && this.previous != null) {
-        var constraints = this.graph.getAllConnectionConstraints(this.previous);
-        var nearestConstraint = null;
-        var dist = null;
+        let constraints = this.graph.getAllConnectionConstraints(this.previous);
+        let nearestConstraint = null;
+        let dist = null;
 
         for (var i = 0; i < constraints.length; i++) {
           var cp = this.graph.getConnectionPoint(this.previous, constraints[i]);
@@ -306,7 +330,7 @@ export default class Diagram extends Component {
     };
 
     graph.connectionHandler.createEdgeState = function (me) {
-      var edge = graph.createEdge(
+      let edge = graph.createEdge(
         null,
         null,
         "Edge",
@@ -323,10 +347,11 @@ export default class Diagram extends Component {
     };
   };
 
+  //Instantiates a toolbar with utility functions
   initToolbar = () => {
     const that = this;
     const { graph } = this.state;
-    var toolbar = ReactDOM.findDOMNode(this.refs.toolbar);
+    let toolbar = ReactDOM.findDOMNode(this.refs.toolbar);
     toolbar.appendChild(
       mxUtils.button("Zoom(+)", function (evt) {
         graph.zoomIn();
@@ -346,9 +371,8 @@ export default class Diagram extends Component {
         });
       })
     );
-
-    var undoManager = new mxUndoManager();
-    var listener = function (sender, evt) {
+    let undoManager = new mxUndoManager();
+    let listener = function (sender, evt) {
       undoManager.undoableEditHappened(evt.getProperty("edit"));
     };
     graph.getModel().addListener(mxEvent.UNDO, listener);
@@ -367,12 +391,14 @@ export default class Diagram extends Component {
     );
   };
 
+  //Loads graph with initial node and layout
   loadGraph() {
-    var container = ReactDOM.findDOMNode(this.refs.divGraph);
+    let container = ReactDOM.findDOMNode(this.refs.divGraph);
     if (!mxClient.isBrowserSupported()) {
       mxUtils.error("Browser is not supported!", 200, false);
     } else {
-      var graph = new mxGraph(container);
+      //Constructs mxGraph object
+      let graph = new mxGraph(container);
       this.setState(
         {
           graph: graph,
@@ -387,20 +413,11 @@ export default class Diagram extends Component {
           this.initToolbar();
           this.settingConnection();
           this.createDragElement();
-          var parent = graph.getDefaultParent();
+          let parent = graph.getDefaultParent();
 
           graph.getModel().beginUpdate();
           try {
-            graph.insertVertex(
-              parent,
-              null,
-              null,
-              300,
-              420,
-              600,
-              40,
-              "table"
-            );
+            graph.insertVertex(parent, null, null, 300, 420, 600, 40, "table");
           } finally {
             graph.getModel().endUpdate();
           }
@@ -411,17 +428,24 @@ export default class Diagram extends Component {
   }
 
   render() {
-
     const popover = (name) => {
-      const { title, description, image, source } = this.state.wiki[name]
+      const { title, description, image, source } = this.state.wiki[name];
 
       return (
         <Popover id="popover-basic">
           <Popover.Title as="h3">{title}</Popover.Title>
           <Popover.Content>
-            {image && <div><img src={image} alt={title} /></div>}
-            <div style={{ marginTop: 5 }}>{description || 'Loading'}</div>
-            {source && <a href={source} target="_blank" rel="noopener noreferrer">More</a>}
+            {image && (
+              <div>
+                <img src={image} alt={title} />
+              </div>
+            )}
+            <div style={{ marginTop: 5 }}>{description || "Loading"}</div>
+            {source && (
+              <a href={source} target="_blank" rel="noopener noreferrer">
+                More
+              </a>
+            )}
           </Popover.Content>
         </Popover>
       );
@@ -437,7 +461,7 @@ export default class Diagram extends Component {
             <OverlayTrigger
               placement="right"
               delay={{ show: 250, hide: 1500 }}
-              overlay={popover('flask')}
+              overlay={popover("flask")}
             >
               <img
                 alt="Flask"
@@ -449,7 +473,7 @@ export default class Diagram extends Component {
             <OverlayTrigger
               placement="right"
               delay={{ show: 250, hide: 1500 }}
-              overlay={popover('microscope')}
+              overlay={popover("microscope")}
             >
               <img
                 alt="Microscope"
