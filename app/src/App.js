@@ -4,6 +4,7 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import Home from "./pages/Home";
+import Upload from "./pages/Upload";
 import Experiment from "./pages/Experiment";
 import Dashboard from "./pages/Dashboard";
 
