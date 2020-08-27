@@ -17,11 +17,11 @@ export default class CheckList extends Component {
     //Binding of method to the class instance
     this.handleToggle = this.handleToggle.bind(this);
   }
-//Setting the state of checked items to include the new checked items
+  //Setting the state of checked items to include the new checked items
   setChecked = (newChecked) => {
     this.setState({ checked: newChecked });
   };
-//Adding selected items to an array 
+  //Adding selected items to an array
   handleToggle = (value) => {
     const currentIndex = this.state.checked.indexOf(value);
     let newChecked = [...this.state.checked];
@@ -34,11 +34,14 @@ export default class CheckList extends Component {
     this.setChecked(newChecked);
     this.props.callback(newChecked);
   };
-  
 
   render() {
     return (
-      <List style={{ width: "20rem" }}>
+      <List
+        style={{
+          width: this.props.type === "experiment" ? "inherit" : "20rem",
+        }}
+      >
         {this.props.data.map((value) => {
           const labelId = `checkbox-list-label-${value}`;
 
@@ -56,12 +59,10 @@ export default class CheckList extends Component {
                   checked={this.state.checked.indexOf(value) !== -1}
                   tabIndex={-1}
                   disableRipple
-                  labelStyle={{color: '#4E2E84'}}
-                  iconStyle={{fill: '#4E2E84'}}
-                  inputStyle={{color:'#4E2E84'}}
-                  style={{color:'#4E2E84'}}
-                 
-                  
+                  labelStyle={{ color: "#4E2E84" }}
+                  iconStyle={{ fill: "#4E2E84" }}
+                  inputStyle={{ color: "#4E2E84" }}
+                  style={{ color: "#4E2E84" }}
                 />
               </ListItemIcon>
               <ListItemText id={labelId} primary={` ${value}`} />

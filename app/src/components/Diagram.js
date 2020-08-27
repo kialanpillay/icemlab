@@ -428,7 +428,7 @@ export default class Diagram extends Component {
 
           graph.getModel().beginUpdate();
           try {
-            graph.insertVertex(parent, null, null, 300, 420, 600, 40, "table");
+            graph.insertVertex(parent, null, null, 180, 440, 520, 40, "table");
           } finally {
             graph.getModel().endUpdate();
           }

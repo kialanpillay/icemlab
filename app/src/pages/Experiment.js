@@ -9,6 +9,7 @@ import Spinner from "react-bootstrap/Spinner";
 import Navigation from "../components/Navigation";
 import Information from "../components/Information";
 import ManualCard from "../components/ManualCard";
+import Checklist from "../components/Checklist";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default class Experiment extends Component {
@@ -20,8 +21,14 @@ export default class Experiment extends Component {
     this.state = {
       experiment: [],
       hidden: true,
+      checked: [],
     };
   }
+
+  //Sets the state of the checked array to include items that have been selected.
+  callback = (checked) => {
+    this.setState({ checked: checked });
+  };
 
   //Encode query parameters for a HTTP request
   encodeParameters = (params) => {
@@ -113,7 +120,24 @@ export default class Experiment extends Component {
             </Container>
           </Tab>
           <Tab eventKey="diagram" title="Virtual Experiment">
-            <Diagram />
+            <Row>
+              <Col md={9}>
+                <Diagram />
+              </Col>
+              <Col md={3}>
+                <h5 style={{ marginTop: "2rem" }}>Experiment Steps</h5>
+                <Checklist
+                  data={[
+                    "This is the first step",
+                    "This is the second step",
+                    "This is the third step.",
+                  ]}
+                  checked={this.state.checked}
+                  callback={this.callback}
+                  type="experiment"
+                />
+              </Col>
+            </Row>
           </Tab>
         </Tabs>
       </div>

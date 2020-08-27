@@ -137,6 +137,7 @@ class Upload extends Component {
                     data={this.state.apparatus}
                     checked={this.state.checked}
                     callback={this.callback}
+                    type="upload"
                   />
                 </Form.Group>
                 <Form.Group as={Col} controlId="reagents">
