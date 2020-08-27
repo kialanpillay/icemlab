@@ -6,12 +6,10 @@ import Col from "react-bootstrap/Col";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import Spinner from "react-bootstrap/Spinner";
-import Card from "react-bootstrap/Card";
 import Navigation from "../components/Navigation";
 import Information from "../components/Information";
 import ManualCard from "../components/ManualCard";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Icon from "@material-ui/core/Icon";
 
 export default class Experiment extends Component {
   //Constructor
