@@ -12,7 +12,6 @@ export default class Information extends Component {
         style={{
           height: this.props.type === "Reagents" ? "10rem" : "18rem",
           marginTop: this.props.type === "Reagents" ? "0rem" : "2rem",
-          overflowY: "scroll",
         }}
       >
         <Card.Header as="h5">
@@ -30,7 +29,12 @@ export default class Information extends Component {
             </Col>
           </Row>
         </Card.Header>
-        <ListGroup variant="flush">
+        <ListGroup
+          variant="flush"
+          style={{
+            overflowY: "scroll",
+          }}
+        >
           {this.props.type === "Reagents"
             ? this.props.experiment.reagents.map((item, index) => {
                 return <ListGroup.Item key={index}>{item}</ListGroup.Item>;

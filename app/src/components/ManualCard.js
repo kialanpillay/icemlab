@@ -10,7 +10,6 @@ export default function ManualCard(props) {
       style={{
         height: props.type === "Introduction" ? "10rem" : "18rem",
         marginTop: props.type === "Introduction" ? "0rem" : "2rem",
-        overflowY: "scroll",
       }}
     >
       <Card.Header as="h5">
@@ -23,14 +22,16 @@ export default function ManualCard(props) {
                 color: "rgb(78, 45, 132)",
               }}
             >
-              {props.type === "Introduction"
-                ? "emoji_objects"
-                : "visibility"}
+              {props.type === "Introduction" ? "emoji_objects" : "visibility"}
             </Icon>
           </Col>
         </Row>
       </Card.Header>
-      <Card.Body>
+      <Card.Body
+        style={{
+          overflowY: "scroll",
+        }}
+      >
         <div
           dangerouslySetInnerHTML={{
             __html:
