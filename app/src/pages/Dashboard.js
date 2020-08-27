@@ -18,6 +18,7 @@ export default class Dashboard extends Component {
     this.state = {
       experiments: [], //array to store experiments retrieved from the server
       search: "",
+      loading: true,
     };
     //Binding of methods to the class instance
     this.handleSearch = this.handleSearch.bind(this);
@@ -39,7 +40,7 @@ export default class Dashboard extends Component {
       .then((response) => {
         this.setState({
           experiments: response.experiments,
-          hidden: false,
+          loading: false,
         });
       })
       .catch((err) => {
@@ -65,7 +66,7 @@ export default class Dashboard extends Component {
               {/*Search bar*/}
               <InputGroup>
                 <FormControl
-                  placeholder={`Search for an experiment`}
+                  placeholder={this.state.loading ? "Loading": "Search for an experiment"}
                   value={this.state.search}
                   onChange={this.handleSearch}
                 />
