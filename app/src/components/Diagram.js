@@ -1,39 +1,30 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import "./Diagram.css";
+
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Popover from "react-bootstrap/Popover";
+
 import {
   mxGraph,
-  mxParallelEdgeLayout,
   mxConstants,
   mxEdgeStyle,
-  mxLayoutManager,
   mxGraphHandler,
   mxGuide,
   mxEdgeHandler,
-  mxCell,
-  mxGeometry,
   mxRubberband,
   mxDragSource,
-  mxKeyHandler,
-  mxCodec,
   mxClient,
   mxConnectionHandler,
   mxUtils,
-  mxToolbar,
   mxEvent,
-  mxImage,
   mxConstraintHandler,
-  mxFastOrganicLayout,
   mxUndoManager,
-  mxObjectCodec,
-  mxHierarchicalLayout,
   mxConnectionConstraint,
   mxCellState,
   mxPoint,
-  mxGraphModel,
   mxPerimeter,
   mxCompactTreeLayout,
-  mxCellOverlay,
 } from "mxgraph-js";
 
 export default class Diagram extends Component {
@@ -46,12 +37,58 @@ export default class Diagram extends Component {
       dragElt: null,
       createVisivle: false,
       currentNode: null,
+      wiki: {
+        'flask': {
+          title: 'Flask',
+        },
+        'microscope': {
+          title: 'Microscope',
+        },
+      }
     };
     this.loadGraph = this.loadGraph.bind(this);
   }
 
   componentDidMount() {
     this.loadGraph();
+
+    const fetchJson = async (url) => {
+      const response = await fetch(url);
+      return await response.json();
+    }
+
+    const APPARATUS = [
+      { name: 'flask', wikiRef: 'Round-bottom_flask', title: 'Round bottom flask' },
+      { name: 'microscope', wikiRef: 'Microscope', title: 'Microscope' }
+    ];
+
+    APPARATUS.forEach(async ({ name, wikiRef, title }) => {
+      const base = 'https://wikipedia-cors.herokuapp.com/w/api.php?action=query&format=json';
+
+      try {
+        const descResponse = await fetchJson(`${base}&prop=description&titles=${wikiRef}`);
+        const description = Object.values(descResponse.query.pages)[0].description
+
+        const imgResponse = await fetchJson(`${base}&prop=pageimages&titles=${wikiRef}&pithumbsize=100`)
+        const image = Object.values(imgResponse.query.pages)[0].thumbnail.source
+
+        const srcResponse = await fetchJson(`${base}&prop=info&inprop=url&titles=${wikiRef}`)
+        const source = Object.values(srcResponse.query.pages)[0].fullurl
+
+        this.setState(prev => {
+          let prevWiki = { ...prev.wiki }
+          prevWiki[name] = {
+            title,
+            description,
+            image,
+            source
+          }
+          return { ...prev, wiki: prevWiki }
+        })
+      } catch (error) {
+        console.error("Could not get wikipedia data", error)
+      }
+    })
   }
 
   graphF = (evt) => {
@@ -288,7 +325,7 @@ export default class Diagram extends Component {
 
   initToolbar = () => {
     const that = this;
-    const { graph, layout } = this.state;
+    const { graph } = this.state;
     var toolbar = ReactDOM.findDOMNode(this.refs.toolbar);
     toolbar.appendChild(
       mxUtils.button("Zoom(+)", function (evt) {
@@ -354,7 +391,7 @@ export default class Diagram extends Component {
 
           graph.getModel().beginUpdate();
           try {
-            var v1 = graph.insertVertex(
+            graph.insertVertex(
               parent,
               null,
               null,
@@ -372,7 +409,24 @@ export default class Diagram extends Component {
       mxEvent.disableContextMenu(container);
     }
   }
+
   render() {
+
+    const popover = (name) => {
+      const { title, description, image, source } = this.state.wiki[name]
+
+      return (
+        <Popover id="popover-basic">
+          <Popover.Title as="h3">{title}</Popover.Title>
+          <Popover.Content>
+            {image && <div><img src={image} /></div>}
+            <div style={{ marginTop: 5 }}>{description || 'Loading'}</div>
+            {source && <a href={source} target="_blank">More</a>}
+          </Popover.Content>
+        </Popover>
+      );
+    };
+
     return (
       <div>
         <div>
@@ -380,16 +434,30 @@ export default class Diagram extends Component {
             <li>
               <h5>Apparatus</h5>
             </li>
-            <img
-              className="item"
-              data-value="Flask"
-              src="science-24px.svg"
-            ></img>
-            <img
-              className="item"
-              data-value="Microscope"
-              src="biotech-24px.svg"
-            ></img>
+            <OverlayTrigger
+              placement="right"
+              delay={{ show: 250, hide: 1500 }}
+              overlay={popover('flask')}
+            >
+              <img
+                alt="Flask"
+                className="item"
+                data-value="Flask"
+                src="science-24px.svg"
+              />
+            </OverlayTrigger>
+            <OverlayTrigger
+              placement="right"
+              delay={{ show: 250, hide: 1500 }}
+              overlay={popover('microscope')}
+            >
+              <img
+                alt="Microscope"
+                className="item"
+                data-value="Microscope"
+                src="biotech-24px.svg"
+              />
+            </OverlayTrigger>
           </ul>
         </div>
         <div className="toolbar" ref="toolbar" />
