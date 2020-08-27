@@ -419,9 +419,9 @@ export default class Diagram extends Component {
         <Popover id="popover-basic">
           <Popover.Title as="h3">{title}</Popover.Title>
           <Popover.Content>
-            {image && <div><img src={image} /></div>}
+            {image && <div><img src={image} alt={title} /></div>}
             <div style={{ marginTop: 5 }}>{description || 'Loading'}</div>
-            {source && <a href={source} target="_blank">More</a>}
+            {source && <a href={source} target="_blank" rel="noopener noreferrer">More</a>}
           </Popover.Content>
         </Popover>
       );
