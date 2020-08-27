@@ -127,11 +127,11 @@ export default class Experiment extends Component {
               <Col md={3}>
                 <h5 style={{ marginTop: "2rem" }}>Experiment Steps</h5>
                 <Checklist
-                  data={[
-                    "This is the first step",
-                    "This is the second step",
-                    "This is the third step.",
-                  ]}
+                  data={
+                    this.state.hidden
+                      ? []
+                      : this.state.experiment.method.split(".").slice(0, -1)
+                  }
                   checked={this.state.checked}
                   callback={this.callback}
                   type="experiment"

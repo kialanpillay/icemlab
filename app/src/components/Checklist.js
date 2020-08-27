@@ -40,6 +40,8 @@ export default class CheckList extends Component {
       <List
         style={{
           width: this.props.type === "experiment" ? "inherit" : "20rem",
+          height: this.props.type === "experiment" ? "37rem" : "inherit",
+          overflowY: "scroll",
         }}
       >
         {this.props.data.map((value) => {
