@@ -34,6 +34,7 @@ export default class CheckList extends Component {
     this.setChecked(newChecked);
     this.props.callback(newChecked);
   };
+  
 
   render() {
     return (
@@ -55,11 +56,12 @@ export default class CheckList extends Component {
                   checked={this.state.checked.indexOf(value) !== -1}
                   tabIndex={-1}
                   disableRipple
-                  color="primary"
-                  iconstyle={{ fill: "#4E2E84" }}
-                  labelstyle={{ color: "#4E2E84" }}
-                  inputstyle={{ color: "#4E2E84" }}
-                  style={{ colour: "#4E2E84" }}
+                  labelStyle={{color: '#4E2E84'}}
+                  iconStyle={{fill: '#4E2E84'}}
+                  inputStyle={{color:'#4E2E84'}}
+                  style={{color:'#4E2E84'}}
+                 
+                  
                 />
               </ListItemIcon>
               <ListItemText id={labelId} primary={` ${value}`} />
