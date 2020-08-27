@@ -2,6 +2,7 @@ import React from "react";
 import EditTwoToneIcon from "@material-ui/icons/EditTwoTone";
 import "./ExperimentCard.css";
 
+//Custom component to display expierments 
 export default function ExperimentCard(props) {
   return (
     <div className="custom-card">

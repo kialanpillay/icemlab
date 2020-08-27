@@ -9,9 +9,13 @@ import Checklist from "../components/Checklist";
 import Alert from "react-bootstrap/Alert";
 import CheckIcon from "@material-ui/icons/Check";
 
+//Upload  Page Component
 class Upload extends Component {
+  //Constructor
   constructor(props) {
     super(props);
+    //Initialising class state data
+    //State is used instead of class member variables to avoid manually managing component renders
     this.state = {
       apparatus: [],
       name: "",
@@ -24,10 +28,11 @@ class Upload extends Component {
       show: false,
       upload: false,
     };
+    //Binding of methods to the class instance
     this.handleChange = this.handleChange.bind(this);
     this.callback = this.callback.bind(this);
   }
-
+  //GET request to retrieve an array of available experiments from the API server
   getApparatus = () => {
     const apparatusEndpoint = "https://icemlab.herokuapp.com/apparatus";
     fetch(apparatusEndpoint, {
@@ -43,18 +48,19 @@ class Upload extends Component {
         console.log(err);
       });
   };
+  //Sets the state of the checked array to include items that have been selected.
   callback = (checked) => {
     this.setState({ checked: checked });
   };
-
+  //Calls method once the component has rendered
   componentDidMount() {
     this.getApparatus();
   }
-
+  //retrieves the value of the user input as assigns it to the relevant state variable
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
-
+  //Put request to send the user input (Experiment upload details) to the API server
   putPayload = () => {
     const payload = {
       title: this.state.name,
@@ -78,13 +84,14 @@ class Upload extends Component {
     })
       .then((response) => response.json())
       .then(() => {
-        this.setState({ upload: true }); // for alert
+        this.setState({ upload: true }); //  alert
       })
 
       .catch((err) => {
         console.log(err);
       });
   };
+  //alert to notify the user that the experiment was uploaded successfully
   alertOnClose = () => {
     window.location.href = "/dashboard";
   };
@@ -93,10 +100,12 @@ class Upload extends Component {
     return (
       <div className="page">
         <Navigation></Navigation>
+
         <div className="container u-form">
           <div className="pageHeading">Experiment Upload</div>
-          <hr />
+          <hr /> {/*Splits up sections*/}
           <Form>
+            {/*Div used for all experiment details */}
             <div className="u-div">
               <div className="ulabel">Experiment Details</div>
               <div className="ucontent-div">
@@ -145,7 +154,7 @@ class Upload extends Component {
               </div>
             </div>
             <hr />
-
+            {/*Div used for experiment method */}
             <div className="u-div">
               <div className="ulabel">Experiment Method</div>
               <div className="ucontent-div">
@@ -164,7 +173,7 @@ class Upload extends Component {
               </div>
             </div>
             <hr />
-
+            {/*Div used for additional notes*/}
             <div className="u-div">
               <div className="ulabel">Additonal Notes</div>
               <div className="ucontent-div">
@@ -186,7 +195,7 @@ class Upload extends Component {
                 >
                   <Button
                     className="ubutton"
-                    onClick={() => this.putPayload()}
+                    onClick={() => this.putPayload()} // Calling the PUT method to upload the experiment
                     style={{
                       marginLeft: "30px",
                       backgroundColor: "#4E2E84",
@@ -197,7 +206,8 @@ class Upload extends Component {
                   >
                     Upload
                   </Button>
-                  <Alert
+
+                  <Alert //Indicating the upload success to the user
                     show={this.state.upload}
                     variant="success"
                     onClose={() => this.alertOnClose()}

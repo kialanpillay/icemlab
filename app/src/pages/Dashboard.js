@@ -16,19 +16,18 @@ export default class Dashboard extends Component {
     //Initialising class state data
     //State is used instead of class member variables to avoid manually managing component renders
     this.state = {
-      experiments: [],
+      experiments: [], //array to store experiments retrieved from the server
       search: "",
     };
+    //Binding of methods to the class instance
     this.handleSearch = this.handleSearch.bind(this);
-    this.handleClear = this.handleClear.bind(this);
+   
   }
+  //Sets search-string state using the value of a user event (key press)
   handleSearch = (event) => {
     this.setState({ search: event.target.value });
   };
-  //Resets state, which clears the input component
-  handleClear = () => {
-    this.setState({ search: "" });
-  };
+
 
   //GET request to retrieve an array of available experiments from the API server
   getExperiments = () => {
@@ -47,6 +46,7 @@ export default class Dashboard extends Component {
         console.log(err);
       });
   };
+  //Calls method once the component has rendered
   componentDidMount() {
     this.getExperiments();
   }
@@ -62,6 +62,7 @@ export default class Dashboard extends Component {
             }}
           >
             <Col md={{ span: 4, offset: 8 }}>
+              {/*Search bar*/}
               <InputGroup>
                 <FormControl
                   placeholder={`Search for an experiment`}
@@ -71,11 +72,15 @@ export default class Dashboard extends Component {
               </InputGroup>
             </Col>
           </Row>
+
           <Row>
             <Col md={4}>
-              <UploadCard />
+              {/*Rendering the card which allows experiments to be uploaded when clicked on*/}
+              <UploadCard /> 
             </Col>
             {this.state.experiments.map((item, index) => {
+              //Each experiment in the array is mapped to a card. If experiments have been filtered, only the relevant ones will be displayed.
+
               return item.title
                 .toLowerCase()
                 .includes(this.state.search.toLowerCase()) ? (
