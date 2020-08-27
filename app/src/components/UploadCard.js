@@ -2,6 +2,8 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import AddIcon from "@material-ui/icons/Add";
 
+
+//Custom component used to navigate to uploading an experiment 
 export default function UploadCard() {
   return (
     <Card

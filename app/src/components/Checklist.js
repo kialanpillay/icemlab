@@ -5,19 +5,23 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 
+//Custom component for apparatus checklist
 export default class CheckList extends Component {
+  //Constructor
   constructor(props) {
     super(props);
+    //Initialising class state data
     this.state = {
       checked: [],
     };
+    //Binding of method to the class instance
     this.handleToggle = this.handleToggle.bind(this);
   }
-
+//Setting the state of checked items to include the new checked items
   setChecked = (newChecked) => {
     this.setState({ checked: newChecked });
   };
-
+//Adding selected items to an array 
   handleToggle = (value) => {
     const currentIndex = this.state.checked.indexOf(value);
     let newChecked = [...this.state.checked];
