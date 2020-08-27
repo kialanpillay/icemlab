@@ -130,6 +130,15 @@ export default class Diagram extends Component {
     mxEdgeHandler.prototype.snapToTerminals = true;
   };
 
+  //Generates a preview of an edited node
+  getEditPreview = () => {
+    var dragElt = document.createElement("div");
+    dragElt.style.border = "dashed black 1px";
+    dragElt.style.width = "120px";
+    dragElt.style.height = "40px";
+    return dragElt;
+  };
+
   //Creates a draggable element from sidebar items (apparatus)
   createDragElement = () => {
     const { graph } = this.state;
@@ -389,6 +398,8 @@ export default class Diagram extends Component {
         undoManager.redo();
       })
     );
+
+    toolbar.appendChild(mxUtils.button("Export", function () {}));
   };
 
   //Loads graph with initial node and layout
