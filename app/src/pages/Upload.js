@@ -60,7 +60,7 @@ class Upload extends Component {
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
-  //Put request to send the user input (Experiment upload details) to the API server
+  //PUT request to send the user input (Experiment upload details) to the API server
   putPayload = () => {
     const payload = {
       title: this.state.name,
