@@ -25,6 +25,7 @@ import {
   mxPoint,
   mxPerimeter,
   mxCompactTreeLayout,
+  mxCodec
 } from "mxgraph-js";
 
 //Diagramming Tool Component
@@ -399,7 +400,25 @@ export default class Diagram extends Component {
       })
     );
 
-    toolbar.appendChild(mxUtils.button("Export", function () {}));
+    toolbar.appendChild(mxUtils.button("Export", function () {
+      const encoder = new mxCodec();
+      const result = encoder.encode(graph.getModel());
+      const xml = mxUtils.getXml(result);
+      const blob = new Blob([xml], { type: 'text/xml' });
+      const filename = 'experiment.xml'
+
+      if (window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveBlob(blob, filename);
+      }
+      else {
+        const element = window.document.createElement('a');
+        element.href = window.URL.createObjectURL(blob);
+        element.download = filename;
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      }
+    }));
   };
 
   //Loads graph with initial node and layout
