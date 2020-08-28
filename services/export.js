@@ -511,61 +511,61 @@ async function handleRequest(req, res)
 				const page = await browser.newPage();
 				await page.goto((process.env.DRAWIO_SERVER_URL || 'https://www.draw.io') + '/export3.html', {waitUntil: 'networkidle0'});
 				
-				async function rederPage(pageIndex)
-				{
-					await page.evaluate((body, pageIndex) => {
-						return render({
-							xml: body.xml,
-							format: body.format,
-							w: body.w,
-							h: body.h,
-							border: body.border || 0,
-							bg: body.bg,
-							from: pageIndex,
-							to: pageIndex,
-							pageId: body.pageId,
-							scale: body.scale || 1,
-							extras: body.extras
-						});
-					}, req.body, pageIndex);
+				// async function rederPage(pageIndex)
+				// {
+				// 	await page.evaluate((body, pageIndex) => {
+				// 		return render({
+				// 			xml: body.xml,
+				// 			format: body.format,
+				// 			w: body.w,
+				// 			h: body.h,
+				// 			border: body.border || 0,
+				// 			bg: body.bg,
+				// 			from: pageIndex,
+				// 			to: pageIndex,
+				// 			pageId: body.pageId,
+				// 			scale: body.scale || 1,
+				// 			extras: body.extras
+				// 		});
+				// 	}, req.body, pageIndex);
 
-					//default timeout is 30000 (30 sec)
-					await page.waitForSelector('#LoadingComplete');
+				// 	//default timeout is 30000 (30 sec)
+				// 	await page.waitForSelector('#LoadingComplete');
 					
-					var bounds = await page.mainFrame().$eval('#LoadingComplete', div => div.getAttribute('bounds'));
-					var pageId = await page.mainFrame().$eval('#LoadingComplete', div => div.getAttribute('page-id'));
-					var scale  = await page.mainFrame().$eval('#LoadingComplete', div => div.getAttribute('scale'));
-					var pageCount  = parseInt(await page.mainFrame().$eval('#LoadingComplete', div => div.getAttribute('pageCount')));
-					var pdfOptions = {format: 'A4'};
+				// 	var bounds = await page.mainFrame().$eval('#LoadingComplete', div => div.getAttribute('bounds'));
+				// 	var pageId = await page.mainFrame().$eval('#LoadingComplete', div => div.getAttribute('page-id'));
+				// 	var scale  = await page.mainFrame().$eval('#LoadingComplete', div => div.getAttribute('scale'));
+				// 	var pageCount  = parseInt(await page.mainFrame().$eval('#LoadingComplete', div => div.getAttribute('pageCount')));
+				// 	var pdfOptions = {format: 'A4'};
 					
-					if (bounds != null)
-					{
-						bounds = JSON.parse(bounds);
+				// 	if (bounds != null)
+				// 	{
+				// 		bounds = JSON.parse(bounds);
 
-						var isPdf = req.body.format == 'pdf';
+				// 		var isPdf = req.body.format == 'pdf';
 
-						//Chrome generates Pdf files larger than requested pixels size and requires scaling
-						//For images, the fixing scale shows scrollbars
-						var fixingScale = isPdf? 0.959 : 1;
+				// 		//Chrome generates Pdf files larger than requested pixels size and requires scaling
+				// 		//For images, the fixing scale shows scrollbars
+				// 		var fixingScale = isPdf? 0.959 : 1;
 
-						var w = Math.ceil(Math.ceil(bounds.width + bounds.x) * fixingScale);
+				// 		var w = Math.ceil(Math.ceil(bounds.width + bounds.x) * fixingScale);
 						
-						// +0.1 fixes cases where adding 1px below is not enough
-						// Increase this if more cropped PDFs have extra empty pages
-						var h = Math.ceil(Math.ceil(bounds.height + bounds.y) * fixingScale + (isPdf? 0.1 : 0));
+				// 		// +0.1 fixes cases where adding 1px below is not enough
+				// 		// Increase this if more cropped PDFs have extra empty pages
+				// 		var h = Math.ceil(Math.ceil(bounds.height + bounds.y) * fixingScale + (isPdf? 0.1 : 0));
 
-						page.setViewport({width: w, height: h});
+				// 		page.setViewport({width: w, height: h});
 
-						pdfOptions = {
-							printBackground: true,
-							width: w + 'px',
-							height: (h + 1) + 'px', //the extra pixel to prevent adding an extra empty page
-							margin: {top: '0px', bottom: '0px', left: '0px', right: '0px'}
-						}
-					}
+				// 		pdfOptions = {
+				// 			printBackground: true,
+				// 			width: w + 'px',
+				// 			height: (h + 1) + 'px', //the extra pixel to prevent adding an extra empty page
+				// 			margin: {top: '0px', bottom: '0px', left: '0px', right: '0px'}
+				// 		}
+				// 	}
 					
-					return {pdfOptions: pdfOptions, pageId: pageId, scale: scale, pageCount: pageCount, w: w, h: h};
-				}
+				// 	return {pdfOptions: pdfOptions, pageId: pageId, scale: scale, pageCount: pageCount, w: w, h: h};
+				// }
 
 				// Cross-origin access should be allowed to now
 				res.header("Access-Control-Allow-Origin", "*");
@@ -574,8 +574,21 @@ async function handleRequest(req, res)
 				
 				if (req.body.format == 'png' || req.body.format == 'jpg' || req.body.format == 'jpeg')
 				{
-					var info = await rederPage(req.body.from || 0);
-					var pageId = info.pageId, scale = info.scale, h = info.h, w = info.w;
+					// var info = await rederPage(req.body.from || 0);
+
+									// 			xml: body.xml,
+				// 			format: body.format,
+				// 			w: body.w,
+				// 			h: body.h,
+				// 			border: body.border || 0,
+				// 			bg: body.bg,
+				// 			from: pageIndex,
+				// 			to: pageIndex,
+				// 			pageId: body.pageId,
+				// 			scale: body.scale || 1,
+				// 			extras: body.extras
+
+					var pageId = req.body.pageId, scale = req.body.scale || 1, h = req.body.h, w = req.body.w;
 
 					var data = await page.screenshot({
 						omitBackground: req.body.format == 'png' && (req.body.bg == null || req.body.bg == 'none'),	
