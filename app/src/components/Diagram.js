@@ -25,6 +25,10 @@ import {
   mxPoint,
   mxPerimeter,
   mxCompactTreeLayout,
+  mxCodec,
+  mxXmlCanvas2D,
+  mxImageExport,
+  mxXmlRequest
 } from "mxgraph-js";
 
 //Diagramming Tool Component
@@ -399,7 +403,45 @@ export default class Diagram extends Component {
       })
     );
 
-    toolbar.appendChild(mxUtils.button("Export", function () {}));
+    toolbar.appendChild(mxUtils.button("Export", function () {
+      // save/download XML
+      const encoder = new mxCodec();
+      const result = encoder.encode(graph.getModel());
+      const xml = mxUtils.getXml(result);
+      const blob = new Blob([xml], { type: 'text/xml' });
+      const filename = 'experiment.xml'
+
+      if (window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveBlob(blob, filename);
+      }
+      else {
+        const element = window.document.createElement('a');
+        element.href = window.URL.createObjectURL(blob);
+        element.download = filename;
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      }
+
+      // export PNG
+      var xmlDoc = mxUtils.createXmlDocument();
+      var root = xmlDoc.createElement('output');
+      xmlDoc.appendChild(root);
+      
+      var xmlCanvas = new mxXmlCanvas2D(root);
+      var imgExport = new mxImageExport();
+      imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
+      
+      var bounds = graph.getGraphBounds();
+      var w = Math.ceil(bounds.x + bounds.width);
+      var h = Math.ceil(bounds.y + bounds.height);
+      
+      var xmlText = mxUtils.getXml(root);
+      new mxXmlRequest('https://icemlab-export.herokuapp.com/', 'format=png&w=' + w +
+           '&h=' + h + '&bg=#F9F7ED&xml=' + encodeURIComponent(xmlText))
+           .simulate(document, '_blank');
+
+    }));
   };
 
   //Loads graph with initial node and layout
