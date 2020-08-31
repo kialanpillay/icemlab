@@ -34,7 +34,7 @@ class Upload extends Component {
   }
   //GET request to retrieve an array of available experiments from the API server
   getApparatus = () => {
-    const apparatusEndpoint = "https://icemlab.herokuapp.com/apparatus";
+    const apparatusEndpoint = "https://icemlab.herokuapp.com/apparatus/";
     fetch(apparatusEndpoint, {
       method: "GET",
     })

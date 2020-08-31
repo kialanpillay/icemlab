@@ -32,7 +32,7 @@ export default class Dashboard extends Component {
 
   //GET request to retrieve an array of available experiments from the API server
   getExperiments = () => {
-    const url = "https://icemlab.herokuapp.com/experiment";
+    const url = "https://icemlab.herokuapp.com/experiment/";
     fetch(url, {
       method: "GET",
     })
