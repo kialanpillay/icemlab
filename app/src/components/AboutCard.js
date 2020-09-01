@@ -16,16 +16,19 @@ export default class AboutCard extends Component {
         className="text-center"
       >
         <Card.Body>
-          <Card.Title style={{ textAlign: "left" }}>
+          <Card.Title>
             <Badge
               pill
               style={{
                 backgroundColor: "rgb(78, 45, 132)",
                 color: "white",
-                fontSize: "1.5rem",
+                fontSize: "1.6rem",
               }}
             >
-              {this.props.idx + 1}
+              {this.props.idx + 1}{" "}
+              <Icon style={{ paddingTop: "0.1rem" }}>
+                {this.props.idx !== 4 ? "arrow_right_alt" : "check_circle"}
+              </Icon>
             </Badge>
           </Card.Title>
           <Icon
