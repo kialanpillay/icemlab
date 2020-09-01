@@ -58,6 +58,21 @@ export default class Home extends Component {
     this.handleSearch = this.handleSearch.bind(this);
     this.handleClear = this.handleClear.bind(this);
   }
+
+  getCategoryColor = (category) => {
+    let color;
+    if (category === "CEM1000W") {
+      color = "#FAE5D3";
+    }
+    if (category === "CEM2005W") {
+      color = "#E1F5FE";
+    }
+    if (category === "CEM3000W") {
+      color = "#EDE7F6";
+    }
+    return color;
+  };
+
   //Sets search-string state using the value of a user event (key press)
   handleSearch = (event) => {
     this.setState({ search: event.target.value });
@@ -118,7 +133,7 @@ export default class Home extends Component {
                   style={{ marginTop: "0rem" }}
                   className="justify-content-center"
                 >
-                  <Col md='auto'>
+                  <Col md="auto">
                     <h2>Select an Experiment to Get Started</h2>
                   </Col>
                 </Row>
@@ -164,6 +179,11 @@ export default class Home extends Component {
                                 action
                                 onClick={() => this.handleSelection(item.title)}
                                 key={index}
+                                style={{
+                                  backgroundColor: this.getCategoryColor(
+                                    item.category
+                                  ),
+                                }}
                               >
                                 {/*Inner HTML used to display subscripts*/}
                                 <div
