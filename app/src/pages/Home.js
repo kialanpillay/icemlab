@@ -10,6 +10,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Spinner from "react-bootstrap/Spinner";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import Badge from "react-bootstrap/Badge";
 import Navigation from "../components/Navigation";
 import AboutCard from "../components/AboutCard";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -62,13 +63,13 @@ export default class Home extends Component {
   getCategoryColor = (category) => {
     let color;
     if (category === "CEM1000W") {
-      color = "#FAE5D3";
+      color = "#FFE0B2";
     }
     if (category === "CEM2005W") {
-      color = "#E1F5FE";
+      color = "#BBDEFB";
     }
     if (category === "CEM3000W") {
-      color = "#EDE7F6";
+      color = "#D1C4E9";
     }
     return color;
   };
@@ -179,18 +180,27 @@ export default class Home extends Component {
                                 action
                                 onClick={() => this.handleSelection(item.title)}
                                 key={index}
-                                style={{
-                                  backgroundColor: this.getCategoryColor(
-                                    item.category
-                                  ),
-                                }}
                               >
-                                {/*Inner HTML used to display subscripts*/}
-                                <div
-                                  dangerouslySetInnerHTML={{
-                                    __html: item.title,
-                                  }}
-                                />
+                                <div style={{display: "flex"}}>
+                                  <Badge
+                                    style={{
+                                      backgroundColor: this.getCategoryColor(
+                                        item.category
+                                      ),
+                                      color: "black",
+                                      fontSize: "1rem",
+                                      marginRight: "0.5rem"
+                                    }}
+                                  >
+                                    {item.category}
+                                  </Badge>
+                                  {/*Inner HTML used to display subscripts*/}
+                                  <div
+                                    dangerouslySetInnerHTML={{
+                                      __html: item.title,
+                                    }}
+                                  />
+                                </div>
                               </ListGroup.Item>
                             </OverlayTrigger>
                           ) : null;
