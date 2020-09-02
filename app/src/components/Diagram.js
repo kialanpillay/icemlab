@@ -513,7 +513,7 @@ export default class Diagram extends Component {
             </li>
             <OverlayTrigger
               placement="right"
-              delay={{ show: 250, hide: 1500 }}
+              delay={{ show: 250, hide: 250 }}
               overlay={popover("flask")}
             >
               <img

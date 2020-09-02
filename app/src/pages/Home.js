@@ -172,8 +172,42 @@ export default class Home extends Component {
                             .includes(this.state.search.toLowerCase()) ? (
                             //Tooltip functionality to display experiment description on mouseover
                             <OverlayTrigger
-                              placement="right"
-                              overlay={<Tooltip>{item.information}</Tooltip>}
+                              placement="left"
+                              overlay={
+                                <Tooltip>
+                                  <div style={{ textAlign: "left" }}>
+                                    Summary
+                                    <div style={{ display: "flex" }}>
+                                      {item.reagents.length}
+                                      <Icon
+                                        style={{
+                                          color: "white",
+                                        }}
+                                      >
+                                        science
+                                      </Icon>
+                                      {item.apparatus.length}
+                                      <Icon
+                                        style={{
+                                          color: "white",
+                                        }}
+                                      >
+                                        biotech
+                                      </Icon>
+                                      180
+                                      <Icon
+                                        style={{
+                                          color: "white",
+                                        }}
+                                      >
+                                        schedule
+                                      </Icon>
+                                    </div>
+                                    <br />
+                                    {item.information}
+                                  </div>
+                                </Tooltip>
+                              }
                               key={index}
                             >
                               <ListGroup.Item
@@ -181,7 +215,7 @@ export default class Home extends Component {
                                 onClick={() => this.handleSelection(item.title)}
                                 key={index}
                               >
-                                <div style={{display: "flex"}}>
+                                <div style={{ display: "flex" }}>
                                   <Badge
                                     style={{
                                       backgroundColor: this.getCategoryColor(
@@ -189,7 +223,7 @@ export default class Home extends Component {
                                       ),
                                       color: "black",
                                       fontSize: "1rem",
-                                      marginRight: "0.5rem"
+                                      marginRight: "0.5rem",
                                     }}
                                   >
                                     {item.category}
