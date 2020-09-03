@@ -8,6 +8,18 @@ import Button from "react-bootstrap/Button";
 import Checklist from "../components/Checklist";
 import Alert from "react-bootstrap/Alert";
 import CheckIcon from "@material-ui/icons/Check";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import main from "../assets/main.png"
+
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, false] }],
+    ["bold", "italic", "underline", "strike"],
+    [{ script: "sub" }, { script: "super" }],
+    ["clean"],
+  ],
+};
 
 //Upload  Page Component
 class Upload extends Component {
@@ -27,9 +39,11 @@ class Upload extends Component {
       reagentArr: [],
       show: false,
       upload: false,
+      content: "",
     };
     //Binding of methods to the class instance
     this.handleChange = this.handleChange.bind(this);
+    this.handleEditorChange = this.handleEditorChange.bind(this);
     this.callback = this.callback.bind(this);
   }
   //GET request to retrieve an array of available experiments from the API server
@@ -73,7 +87,7 @@ class Upload extends Component {
       notes: this.state.notes,
     };
 
-    const url = "https://icemlab.herokuapp.com/experiment";
+    const url = "https://icemlab.herokuapp.com/experiment/";
     fetch(url, {
       method: "PUT",
       headers: {
@@ -95,6 +109,11 @@ class Upload extends Component {
   alertOnClose = () => {
     window.location.href = "/dashboard";
   };
+
+  handleEditorChange(content, delta, source, editor) {
+    console.log(editor.getText());
+    this.setState({ method: content });
+  }
 
   render() {
     return (
@@ -131,15 +150,18 @@ class Upload extends Component {
                     onChange={this.handleChange}
                   />
                 </Form.Group>
-                <Form.Group as={Col} controlId="apparatus">
-                  <Form.Label>Apparatus Checklist</Form.Label>
-                  <Checklist
-                    data={this.state.apparatus}
-                    checked={this.state.checked}
-                    callback={this.callback}
-                    type="upload"
-                  />
-                </Form.Group>
+                <div className="u-div">
+                  <Form.Group as={Col} controlId="apparatus">
+                    <Form.Label>Apparatus Checklist</Form.Label>
+                    <Checklist
+                      data={this.state.apparatus}
+                      checked={this.state.checked}
+                      callback={this.callback}
+                      type="upload"
+                    />
+                  </Form.Group>
+                  <img src={main} height="350" alt="Graphic"></img>
+                </div>
                 <Form.Group as={Col} controlId="reagents">
                   <Form.Label>Reagents</Form.Label>
                   <Form.Control
@@ -158,19 +180,36 @@ class Upload extends Component {
             {/*Div used for experiment method */}
             <div className="u-div">
               <div className="ulabel">Experiment Method</div>
-              <div className="ucontent-div">
-                <Form.Group as={Col} controlId="expiermentMethod">
-                  <Form.Label>Experiment Method </Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows="15"
-                    placeholder="Enter Experiment Method"
-                    required={true}
-                    name="method"
-                    value={this.state.method}
-                    onChange={this.handleChange}
-                  />
-                </Form.Group>
+              <div className="ucontent-div" style={{ height: "20rem" }}>
+                <ReactQuill
+                  theme="snow"
+                  onChange={this.handleEditorChange}
+                  modules={modules}
+                  style={{ height: "16rem" }}
+                ></ReactQuill>
+              </div>
+            </div>
+            <hr />
+            <div className="u-div">
+              <div className="ulabel">Generated Steps</div>
+              <div
+                className="ucontent-div"
+                style={{ maxHeight: "20rem", overflowY: "scroll" }}
+              >
+                <ol>
+                  {this.state.method
+                    .split(".")
+                    .slice(0, -1)
+                    .map((item, index) => {
+                      return (
+                        <li
+                          dangerouslySetInnerHTML={{
+                            __html: `${item}`,
+                          }}
+                        />
+                      );
+                    })}
+                </ol>
               </div>
             </div>
             <hr />
