@@ -40,7 +40,7 @@ export default class CheckList extends Component {
       <List
         style={{
           width: this.props.type === "experiment" ? "inherit" : "20rem",
-          height: this.props.type === "experiment" ? "37rem" : "inherit",
+          height: this.props.type === "experiment" ? "34rem" : "inherit",
           overflowY: "scroll",
         }}
       >
@@ -61,9 +61,9 @@ export default class CheckList extends Component {
                   checked={this.state.checked.indexOf(value) !== -1}
                   tabIndex={-1}
                   disableRipple
-                  labelStyle={{ color: "#4E2E84" }}
-                  iconStyle={{ fill: "#4E2E84" }}
-                  inputStyle={{ color: "#4E2E84" }}
+                  labelstyle={{ color: "#4E2E84" }}
+                  iconstyle={{ fill: "#4E2E84" }}
+                  inputstyle={{ color: "#4E2E84" }}
                   style={{ color: "#4E2E84" }}
                 />
               </ListItemIcon>

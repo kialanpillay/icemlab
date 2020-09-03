@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import "./Diagram.css";
 
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
-
+import Accordion from "react-bootstrap/Accordion";
+import Card from "react-bootstrap/Card";
 import {
   mxGraph,
   mxConstants,
@@ -28,7 +28,9 @@ import {
   mxCodec,
   mxXmlCanvas2D,
   mxImageExport,
-  mxXmlRequest
+  mxXmlRequest,
+  mxImage,
+  mxKeyHandler,
 } from "mxgraph-js";
 
 //Diagramming Tool Component
@@ -40,8 +42,6 @@ export default class Diagram extends Component {
     this.state = {
       graph: {},
       layout: {},
-      json: "",
-      dragElt: null,
       createVisible: false,
       currentNode: null,
       wiki: {
@@ -52,7 +52,11 @@ export default class Diagram extends Component {
           title: "Microscope",
         },
       },
+      loaded: false,
     };
+    this.sidebar = React.createRef();
+    this.toolbar = React.createRef();
+    this.graphContainer = React.createRef();
     this.loadGraph = this.loadGraph.bind(this);
   }
 
@@ -112,7 +116,6 @@ export default class Diagram extends Component {
       }
     });
   }
-
   //Functor to return current graph
   graphF = (evt) => {
     const { graph } = this.state;
@@ -132,31 +135,26 @@ export default class Diagram extends Component {
       return !mxEvent.isAltDown(evt);
     };
     mxEdgeHandler.prototype.snapToTerminals = true;
-  };
-
-  //Generates a preview of an edited node
-  getEditPreview = () => {
-    var dragElt = document.createElement("div");
-    dragElt.style.border = "dashed black 1px";
-    dragElt.style.width = "120px";
-    dragElt.style.height = "40px";
-    return dragElt;
+    mxConstraintHandler.prototype.pointImage = new mxImage(
+      "https://uploads.codesandbox.io/uploads/user/4bf4b6b3-3aa9-4999-8b70-bbc1b287a968/-q_3-point.gif",
+      5,
+      5
+    );
   };
 
   //Creates a draggable element from sidebar items (apparatus)
   createDragElement = () => {
     const { graph } = this.state;
-    const tasksDrag = ReactDOM.findDOMNode(
-      this.refs.mxSidebar
-    ).querySelectorAll(".item");
-    Array.prototype.slice.call(tasksDrag).forEach((ele) => {
+    const items = this.sidebar.current.querySelectorAll(".item");
+    Array.prototype.slice.call(items).forEach((ele) => {
       const src = ele.getAttribute("src");
-      const value = ele.getAttribute("data-value");
+      const value = ele.getAttribute("value");
+      const type = ele.getAttribute("type");
       let ds = mxUtils.makeDraggable(
         ele,
         this.graphF,
         (graph, evt, target, x, y) =>
-          this.funct(graph, evt, target, x, y, value, src),
+          this.funct(graph, evt, target, x, y, value, src, type),
         this.dragElt,
         null,
         null,
@@ -181,7 +179,7 @@ export default class Diagram extends Component {
   createPopupMenu = (graph, menu, cell, evt) => {
     if (cell) {
       if (cell.edge === true) {
-        menu.addItem("Delete Connection", null, function () {
+        menu.addItem("Delete Arrow", null, function () {
           graph.removeCells([cell]);
           mxEvent.consume(evt);
         });
@@ -197,7 +195,7 @@ export default class Diagram extends Component {
   //Sets graph configuration options
   setGraphSetting = () => {
     const { graph } = this.state;
-    const that = this;
+    const node = this;
     graph.gridSize = 30;
     graph.setPanning(true);
     graph.setTooltips(true);
@@ -205,12 +203,20 @@ export default class Diagram extends Component {
     graph.setCellsEditable(true);
     graph.setEnabled(true);
     graph.centerZoom = true;
-    graph.autoSizeCellsOnAdd = true;
 
+    const keyHandler = new mxKeyHandler(graph);
+    keyHandler.bindKey(46, function (evt) {
+      if (graph.isEnabled()) {
+        const currentNode = graph.getSelectionCell();
+        if (currentNode.edge === true) {
+          graph.removeCells([currentNode]);
+        }
+      }
+    });
     //Constructs rubberband object for element selection
     new mxRubberband(graph);
     graph.getTooltipForCell = function (cell) {
-      return cell.getAttribute("data-value");
+      return this.convertValueToString(cell);
     };
 
     //Initialising style objects
@@ -227,44 +233,102 @@ export default class Diagram extends Component {
     graph.getStylesheet().putCellStyle("table", style);
 
     style = {};
-    style[mxConstants.STYLE_STROKECOLOR] = "#f90";
+    style[mxConstants.STYLE_STROKECOLOR] = "black";
     style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_CONNECTOR;
     style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
     style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
     style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
     style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
-    style[mxConstants.STYLE_FONTSIZE] = "10";
-    style[mxConstants.VALID_COLOR] = "#27bf81";
+    style[mxConstants.STYLE_FONTSIZE] = "14";
+    style[mxConstants.VALID_COLOR] = "black";
 
     graph.getStylesheet().putDefaultEdgeStyle(style);
+
+    style = {};
+    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+    style[mxConstants.STYLE_FILLCOLOR] = "none";
+    style[mxConstants.STYLE_STROKECOLOR] = "none";
+    style[mxConstants.STYLE_STROKEWIDTH] = 0;
+    style[mxConstants.STYLE_FONTSIZE] = "14";
+    style[mxConstants.STYLE_FONTCOLOR] = "black";
+    graph.getStylesheet().putCellStyle("reagent", style);
+
+    style = {};
+    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+    style[mxConstants.STYLE_FILLCOLOR] = "none";
+    style[mxConstants.STYLE_STROKECOLOR] = "black";
+    style[mxConstants.STYLE_STROKEWIDTH] = 1;
+    style[mxConstants.STYLE_FONTSIZE] = "14";
+    style[mxConstants.STYLE_FONTCOLOR] = "black";
+    graph.getStylesheet().putCellStyle("text", style);
+
     graph.popupMenuHandler.factoryMethod = function (menu, cell, evt) {
-      return that.createPopupMenu(graph, menu, cell, evt);
+      return node.createPopupMenu(graph, menu, cell, evt);
     };
   };
 
   //Functor used create a styled graph node
-  funct = (graph, evt, target, x, y, value, src) => {
-    let style = {};
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
-    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-    style[mxConstants.STYLE_IMAGE] = src;
-    style[mxConstants.STYLE_FONTCOLOR] = "#FFFFFF";
-    graph.getStylesheet().putCellStyle(`item${src}`, style);
+  funct = (graph, evt, target, x, y, value, src, type) => {
+    if (src !== null) {
+      let style = {};
+      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
+      style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+      style[mxConstants.STYLE_IMAGE] = src;
+      style[mxConstants.STYLE_FONTCOLOR] = "#FFFFFF";
+      graph.getStylesheet().putCellStyle(`item${src}`, style);
 
-    let parent = graph.getDefaultParent();
-    let cell = graph.insertVertex(
-      parent,
-      target,
-      "",
-      x,
-      y,
-      100,
-      100,
-      `item${src}`
-    );
-    graph.setSelectionCell(cell);
-    this.selectionChanged(graph, value);
+      let parent = graph.getDefaultParent();
+      let cell = graph.insertVertex(
+        parent,
+        target,
+        "",
+        x,
+        y,
+        100,
+        100,
+        `item${src}`
+      );
+      graph.setSelectionCell(cell);
+      this.selectionChanged(graph, value);
+    } else if (type === null) {
+      let parent = graph.getDefaultParent();
+      let cell = graph.insertVertex(
+        parent,
+        target,
+        value,
+        x,
+        y,
+        `${value.length * 8}`,
+        20,
+        "reagent"
+      );
+      graph.setSelectionCell(cell);
+      this.selectionChanged(graph, value);
+    } else {
+      let parent = graph.getDefaultParent();
+      let cell = graph.insertVertex(
+        parent,
+        target,
+        value,
+        x,
+        y,
+        100,
+        40,
+        "text"
+      );
+      graph.setSelectionCell(cell);
+      this.selectionChanged(graph, value);
+    }
   };
+
+  componentDidUpdate() {
+    if (this.props.apparatus.length !== 0 && !this.state.loaded) {
+      this.createDragElement();
+      this.setState({ loaded: true });
+    }
+  }
 
   //Sets graph layout properties
   setLayoutSetting = (layout) => {
@@ -322,7 +386,7 @@ export default class Diagram extends Component {
     };
 
     if (graph.connectionHandler.connectImage == null) {
-      graph.connectionHandler.isConnectableCell = function (cell) {
+      graph.connectionHandler.isConnectableCell = function () {
         return false;
       };
       mxEdgeHandler.prototype.isConnectableCell = function (cell) {
@@ -342,11 +406,11 @@ export default class Diagram extends Component {
       return null;
     };
 
-    graph.connectionHandler.createEdgeState = function (me) {
+    graph.connectionHandler.createEdgeState = function () {
       let edge = graph.createEdge(
         null,
         null,
-        "Edge",
+        null,
         null,
         null,
         "edgeStyle=orthogonalEdgeStyle"
@@ -364,7 +428,7 @@ export default class Diagram extends Component {
   initToolbar = () => {
     const that = this;
     const { graph } = this.state;
-    let toolbar = ReactDOM.findDOMNode(this.refs.toolbar);
+    let toolbar = this.toolbar.current;
     toolbar.appendChild(
       mxUtils.button("Zoom(+)", function (evt) {
         graph.zoomIn();
@@ -403,50 +467,59 @@ export default class Diagram extends Component {
       })
     );
 
-    toolbar.appendChild(mxUtils.button("Export", function () {
-      // save/download XML
-      const encoder = new mxCodec();
-      const result = encoder.encode(graph.getModel());
-      const xml = mxUtils.getXml(result);
-      const blob = new Blob([xml], { type: 'text/xml' });
-      const filename = 'experiment.xml'
+    toolbar.appendChild(
+      mxUtils.button("Export", function () {
+        // save/download XML
+        const encoder = new mxCodec();
+        const result = encoder.encode(graph.getModel());
+        const xml = mxUtils.getXml(result);
+        const blob = new Blob([xml], { type: "text/xml" });
+        const filename = "experiment.xml";
 
-      if (window.navigator.msSaveOrOpenBlob) {
-        window.navigator.msSaveBlob(blob, filename);
-      }
-      else {
-        const element = window.document.createElement('a');
-        element.href = window.URL.createObjectURL(blob);
-        element.download = filename;
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-      }
+        if (window.navigator.msSaveOrOpenBlob) {
+          window.navigator.msSaveBlob(blob, filename);
+        } else {
+          const element = window.document.createElement("a");
+          element.href = window.URL.createObjectURL(blob);
+          element.download = filename;
+          document.body.appendChild(element);
+          element.click();
+          document.body.removeChild(element);
+        }
 
-      // export PNG
-      var xmlDoc = mxUtils.createXmlDocument();
-      var root = xmlDoc.createElement('output');
-      xmlDoc.appendChild(root);
-      
-      var xmlCanvas = new mxXmlCanvas2D(root);
-      var imgExport = new mxImageExport();
-      imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
-      
-      var bounds = graph.getGraphBounds();
-      var w = Math.ceil(bounds.x + bounds.width);
-      var h = Math.ceil(bounds.y + bounds.height);
-      
-      var xmlText = mxUtils.getXml(root);
-      new mxXmlRequest('https://icemlab-export.herokuapp.com/', 'format=png&w=' + w +
-           '&h=' + h + '&bg=#F9F7ED&xml=' + encodeURIComponent(xmlText))
-           .simulate(document, '_blank');
+        // export PNG
+        var xmlDoc = mxUtils.createXmlDocument();
+        var root = xmlDoc.createElement("output");
+        xmlDoc.appendChild(root);
 
-    }));
+        var xmlCanvas = new mxXmlCanvas2D(root);
+        var imgExport = new mxImageExport();
+        imgExport.drawState(
+          graph.getView().getState(graph.model.root),
+          xmlCanvas
+        );
+
+        var bounds = graph.getGraphBounds();
+        var w = Math.ceil(bounds.x + bounds.width);
+        var h = Math.ceil(bounds.y + bounds.height);
+
+        var xmlText = mxUtils.getXml(root);
+        new mxXmlRequest(
+          "https://icemlab-export.herokuapp.com/",
+          "format=png&w=" +
+            w +
+            "&h=" +
+            h +
+            "&bg=#F9F7ED&xml=" +
+            encodeURIComponent(xmlText)
+        ).simulate(document, "_blank");
+      })
+    );
   };
 
   //Loads graph with initial node and layout
   loadGraph() {
-    let container = ReactDOM.findDOMNode(this.refs.divGraph);
+    let container = this.graphContainer.current;
     if (!mxClient.isBrowserSupported()) {
       mxUtils.error("Browser is not supported!", 200, false);
     } else {
@@ -455,7 +528,6 @@ export default class Diagram extends Component {
       this.setState(
         {
           graph: graph,
-          dragElt: this.getEditPreview(),
         },
         () => {
           const layout = new mxCompactTreeLayout(graph, false);
@@ -470,7 +542,7 @@ export default class Diagram extends Component {
 
           graph.getModel().beginUpdate();
           try {
-            graph.insertVertex(parent, null, null, 180, 440, 520, 40, "table");
+            graph.insertVertex(parent, null, null, 180, 440, 480, 40, "table");
           } finally {
             graph.getModel().endUpdate();
           }
@@ -506,40 +578,90 @@ export default class Diagram extends Component {
 
     return (
       <div>
-        <div>
-          <ul className="sidebar" ref="mxSidebar">
-            <li>
-              <h5>Apparatus</h5>
-            </li>
-            <OverlayTrigger
-              placement="right"
-              delay={{ show: 250, hide: 250 }}
-              overlay={popover("flask")}
-            >
-              <img
-                alt="Flask"
-                className="item"
-                data-value="Flask"
-                src="science-24px.svg"
-              />
-            </OverlayTrigger>
-            <OverlayTrigger
-              placement="right"
-              delay={{ show: 250, hide: 1500 }}
-              overlay={popover("microscope")}
-            >
-              <img
-                alt="Microscope"
-                className="item"
-                data-value="Microscope"
-                src="biotech-24px.svg"
-              />
-            </OverlayTrigger>
-          </ul>
+        <div className="sidebar" ref={this.sidebar}>
+          <Accordion defaultActiveKey="0">
+            <Card>
+              <Card.Header>
+                <Accordion.Toggle
+                  as="h5"
+                  eventKey="0"
+                  style={{ cursor: "pointer" }}
+                >
+                  Apparatus
+                </Accordion.Toggle>
+              </Card.Header>
+              <Accordion.Collapse eventKey="0">
+                <Card.Body>
+                  <OverlayTrigger placement="right" overlay={popover("flask")}>
+                    <img
+                      alt="Flask"
+                      className="item"
+                      value="Flask"
+                      src="science-24px.svg"
+                    />
+                  </OverlayTrigger>
+                  <OverlayTrigger
+                    placement="right"
+                    delay={{ show: 250, hide: 1500 }}
+                    overlay={popover("microscope")}
+                  >
+                    <img
+                      alt="Microscope"
+                      className="item"
+                      value="Microscope"
+                      src="biotech-24px.svg"
+                    />
+                  </OverlayTrigger>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+            <Card>
+              <Card.Header>
+                <Accordion.Toggle
+                  as="h5"
+                  eventKey="1"
+                  style={{ cursor: "pointer" }}
+                >
+                  Reagents
+                </Accordion.Toggle>
+              </Card.Header>
+
+              <Accordion.Collapse eventKey="1">
+                <Card.Body>
+                  {this.props.reagents.map((item, index) => {
+                    return (
+                      <p className="item" value={item} key={index}>
+                        {item}
+                      </p>
+                    );
+                  })}
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+            <Card>
+              <Card.Header>
+                <Accordion.Toggle
+                  as="h5"
+                  eventKey="2"
+                  style={{ cursor: "pointer" }}
+                >
+                  General
+                </Accordion.Toggle>
+              </Card.Header>
+
+              <Accordion.Collapse eventKey="2">
+                <Card.Body>
+                  <p className="item" value={"Text"} type="General">
+                    Textbox
+                  </p>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
         </div>
-        <div className="toolbar" ref="toolbar" />
-        <div className="container-wrapper">
-          <div className="graphContainer" ref="divGraph" />
+        <div className="toolbar" ref={this.toolbar} />
+        <div className="containerWrapper">
+          <div className="graphContainer" ref={this.graphContainer} />
         </div>
       </div>
     );

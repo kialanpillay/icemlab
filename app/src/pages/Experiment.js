@@ -5,6 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
+import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 import Navigation from "../components/Navigation";
 import Information from "../components/Information";
@@ -19,7 +20,7 @@ export default class Experiment extends Component {
     //Initialising class state data
     //State is used instead of class member variables to avoid manually managing component renders
     this.state = {
-      experiment: [],
+      experiment: {},
       hidden: true,
       checked: [],
     };
@@ -67,7 +68,7 @@ export default class Experiment extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{ overflowX: "none" }}>
         <Navigation />
         <Tabs defaultActiveKey="practical-manual" style={{ marginTop: "1rem" }}>
           <Tab eventKey="practical-manual" title="Practical Manual">
@@ -122,20 +123,29 @@ export default class Experiment extends Component {
           <Tab eventKey="diagram" title="Virtual Experiment">
             <Row>
               <Col md={9}>
-                <Diagram />
+                <Diagram
+                  apparatus={
+                    this.state.hidden ? [] : this.state.experiment.apparatus
+                  }
+                  reagents={
+                    this.state.hidden ? [] : this.state.experiment.reagents
+                  }
+                />
               </Col>
               <Col md={3}>
-                <h5 style={{ marginTop: "2rem" }}>Experiment Steps</h5>
-                <Checklist
-                  data={
-                    this.state.hidden
-                      ? []
-                      : this.state.experiment.method.split(".").slice(0, -1)
-                  }
-                  checked={this.state.checked}
-                  callback={this.callback}
-                  type="experiment"
-                />
+                <Card style={{ marginTop: "1rem", height: "38rem" }}>
+                  <Card.Header as="h5">Experiment Steps</Card.Header>
+                  <Checklist
+                    data={
+                      this.state.hidden
+                        ? []
+                        : this.state.experiment.method.split(".").slice(0, -1)
+                    }
+                    checked={this.state.checked}
+                    callback={this.callback}
+                    type="experiment"
+                  />
+                </Card>
               </Col>
             </Row>
           </Tab>
