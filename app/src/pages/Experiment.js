@@ -46,7 +46,6 @@ export default class Experiment extends Component {
       title: this.props.experiment,
     };
     const url = endpoint + this.encodeParameters(query);
-    console.log(url);
     fetch(url, {
       method: "GET",
     })

@@ -651,9 +651,20 @@ export default class Diagram extends Component {
 
               <Accordion.Collapse eventKey="2">
                 <Card.Body>
-                  <p className="item" value={"Text"} type="General">
-                    Textbox
-                  </p>
+                  <div
+                    className="item"
+                    value="Text"
+                    type="General"
+                    style={{
+                      border: "1px solid black",
+                      padding: "0.5rem",
+                      textAlign: "center",
+                      cursor: "pointer",
+                      width: "100px",
+                    }}
+                  >
+                    Text
+                  </div>
                 </Card.Body>
               </Accordion.Collapse>
             </Card>
