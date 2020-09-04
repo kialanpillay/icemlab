@@ -13,9 +13,7 @@ export default class Checklist extends Component {
     //Initialising class state data
     this.state = {
       checked: this.props.checked,
-      
     };
-   
     //Binding of method to the class instance
     this.handleToggle = this.handleToggle.bind(this);
   }
@@ -34,11 +32,10 @@ export default class Checklist extends Component {
       newChecked.splice(currentIndex, 1); //removing from checked
     }
     this.setChecked(newChecked);
-    this.props.callbackChecklist(newChecked);
+    this.props.callback(newChecked);
   };
 
   render() {
-    console.log(this.props.checked)
     return (
       <List
         style={{
@@ -76,7 +73,7 @@ export default class Checklist extends Component {
                   dangerouslySetInnerHTML={{
                     __html: `${value}`,
                   }}
-                  style={{fontSize: "0.8rem"}}
+                  style={{ fontSize: "0.8rem" }}
                 />
               ) : (
                 <ListItemText id={labelId} primary={` ${value}`} />

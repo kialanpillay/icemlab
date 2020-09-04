@@ -3,20 +3,24 @@ import EditTwoToneIcon from "@material-ui/icons/EditTwoTone";
 import "./ExperimentCard.css";
 import Badge from "react-bootstrap/Badge";
 
-//Custom component to display expierments
+//Custom component to display experiments
 
 export default function ExperimentCard(props) {
-  const modified =props.experimentModified.substring(0,10);
+  const modified = props.experimentModified.substring(0, 10);
 
   return (
-   
-    <div className="custom-card" onClick={() => props.callbackTitle(props.experimentTitle)}>
+    <div
+      className="custom-card"
+      onClick={() => props.callbackTitle(props.experimentTitle)}
+    >
       <div>
-        <div className="courseBadge"   style={{
-            marginTop:"0.7rem",
-            display:"flex",
-
-          }}>
+        <div
+          className="courseBadge"
+          style={{
+            marginTop: "0.7rem",
+            display: "flex",
+          }}
+        >
           <Badge
             style={{
               backgroundColor: props.experimentColor,
@@ -27,12 +31,10 @@ export default function ExperimentCard(props) {
           >
             {props.experimentCategory}
           </Badge>
-          
-         
         </div>
         <p
           style={{
-            paddingTop:"0.5rem",
+            paddingTop: "0.5rem",
             paddingRight: "1rem",
             paddingLeft: "1rem",
             fontSize: "1.3rem",
@@ -43,25 +45,24 @@ export default function ExperimentCard(props) {
             __html: props.experimentTitle,
           }}
         />
-         
-           
-       <EditTwoToneIcon
+
+        <EditTwoToneIcon
           style={{
             fill: "#4E2E84",
             height: "70px",
             width: "50px",
-            marginBottom:"0.5rem"
+            marginBottom: "0.5rem",
           }}
-        /><p className="lastModified" style={{
-         fontSize:"0.7rem", marginBottom:"0rem"
-            
-          }}>
-         Last Modified: {modified}
-       </p>
-     
-        
-       
-        
+        />
+        <p
+          className="lastModified"
+          style={{
+            fontSize: "0.7rem",
+            marginBottom: "0rem",
+          }}
+        >
+          Last Modified: {modified}
+        </p>
       </div>
     </div>
   );

@@ -34,15 +34,13 @@ class Upload extends Component {
       preamble: "",
       checked: [],
       reagents: "",
+      reagentArr: [],
       method: "",
       notes: "",
-      reagentArr: [],
-      show: false,
-      upload: false,
-      content: "",
       courseCode: "CEM1000W",
       videoLink: "",
-      hidden: "true",
+      upload: false,
+      hidden: true,
     };
     //Binding of methods to the class instance
     this.handleChange = this.handleChange.bind(this);
@@ -74,6 +72,8 @@ class Upload extends Component {
     this.getApparatus();
     if (this.props.edit == true) {
       this.getExperiment(this.props.selection);
+    } else {
+      this.setState({ hidden: false });
     }
   }
   //retrieves the value of the user input as assigns it to the relevant state variable
@@ -89,7 +89,7 @@ class Upload extends Component {
       apparatus: this.state.checked,
       reagents: this.state.reagents.includes(",")
         ? this.state.reagents.split(",")
-        : [this.state.reagents],
+        : this.state.reagents,
       method: this.state.method,
       notes: this.state.notes,
       category: this.state.courseCode,
@@ -138,7 +138,7 @@ class Upload extends Component {
           name: response.experiment.title,
           preamble: response.experiment.information,
           reagents: response.experiment.reagents,
-          method: "",
+          method: response.experiment.method,
           notes: response.experiment.notes,
           courseCode: response.experiment.category,
           videoLink: response.experiment.url,
@@ -157,8 +157,9 @@ class Upload extends Component {
   };
 
   handleEditorChange(content, delta, source, editor) {
-    console.log(editor.getText());
-    this.setState({ method: this.convertDecimalPoint(content) });
+    this.setState({
+      method: this.convertDecimalPoint(content),
+    });
   }
 
   convertDecimalPoint = (method) => {
@@ -241,7 +242,7 @@ class Upload extends Component {
                       <Checklist
                         data={this.state.apparatus}
                         checked={this.state.checked}
-                        callback={this.callback}
+                        callback={this.callbackChecklist}
                         type="upload"
                       />
                     ) : null}
@@ -272,6 +273,7 @@ class Upload extends Component {
                   onChange={this.handleEditorChange}
                   modules={modules}
                   style={{ height: "16rem" }}
+                  value={this.state.method}
                 ></ReactQuill>
               </div>
             </div>
@@ -348,10 +350,7 @@ class Upload extends Component {
                       width: "90px",
                     }}
                   >
-                     {this.props.edit ? (
-                      "Save "
-                     
-                    ) : "Upload"}
+                    {this.props.edit ? "Save " : "Upload"}
                   </Button>
 
                   <Alert //Indicating the upload success to the user
@@ -369,7 +368,9 @@ class Upload extends Component {
                         marginRight: "5px",
                       }}
                     />
-                    Experiment Uploaded
+                    {this.props.edit
+                      ? "Experiment Saved"
+                      : "Experiment Uploaded"}
                   </Alert>
                 </Row>
               </div>
