@@ -6,14 +6,16 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 
 //Custom component for apparatus checklist
-export default class CheckList extends Component {
+export default class Checklist extends Component {
   //Constructor
   constructor(props) {
     super(props);
     //Initialising class state data
     this.state = {
-      checked: [],
+      checked: this.props.checked,
+      
     };
+   
     //Binding of method to the class instance
     this.handleToggle = this.handleToggle.bind(this);
   }
@@ -32,10 +34,11 @@ export default class CheckList extends Component {
       newChecked.splice(currentIndex, 1); //removing from checked
     }
     this.setChecked(newChecked);
-    this.props.callback(newChecked);
+    this.props.callbackChecklist(newChecked);
   };
 
   render() {
+    console.log(this.props.checked)
     return (
       <List
         style={{

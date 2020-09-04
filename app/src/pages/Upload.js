@@ -10,7 +10,7 @@ import Alert from "react-bootstrap/Alert";
 import CheckIcon from "@material-ui/icons/Check";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import main from "../assets/main.png"
+import main from "../assets/main.png";
 
 const modules = {
   toolbar: [
@@ -40,11 +40,14 @@ class Upload extends Component {
       show: false,
       upload: false,
       content: "",
+      courseCode: "CEM1000W",
+      videoLink: "",
+      hidden: "true",
     };
     //Binding of methods to the class instance
     this.handleChange = this.handleChange.bind(this);
     this.handleEditorChange = this.handleEditorChange.bind(this);
-    this.callback = this.callback.bind(this);
+    this.callbackChecklist = this.callbackChecklist.bind(this);
   }
   //GET request to retrieve an array of available experiments from the API server
   getApparatus = () => {
@@ -63,17 +66,21 @@ class Upload extends Component {
       });
   };
   //Sets the state of the checked array to include items that have been selected.
-  callback = (checked) => {
+  callbackChecklist = (checked) => {
     this.setState({ checked: checked });
   };
   //Calls method once the component has rendered
   componentDidMount() {
     this.getApparatus();
+    if (this.props.edit == true) {
+      this.getExperiment(this.props.selection);
+    }
   }
   //retrieves the value of the user input as assigns it to the relevant state variable
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
+
   //PUT request to send the user input (Experiment upload details) to the API server
   putPayload = () => {
     const payload = {
@@ -85,6 +92,8 @@ class Upload extends Component {
         : [this.state.reagents],
       method: this.state.method,
       notes: this.state.notes,
+      category: this.state.courseCode,
+      url: this.state.videoLink,
     };
 
     const url = "https://icemlab.herokuapp.com/experiment/";
@@ -105,6 +114,43 @@ class Upload extends Component {
         console.log(err);
       });
   };
+  //Encode query parameters for a HTTP request
+  encodeParameters = (params) => {
+    let query = Object.keys(params)
+      .map((k) => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
+      .join("&");
+    return `?${query}`;
+  };
+  getExperiment = () => {
+    const endpoint = "https://icemlab.herokuapp.com/experiment/";
+    const query = {
+      title: this.props.experimentTitle,
+    };
+    const url = endpoint + this.encodeParameters(query);
+    fetch(url, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        this.setState({
+          experiment: response.experiment,
+          checked: response.experiment.apparatus,
+          name: response.experiment.title,
+          preamble: response.experiment.information,
+          reagents: response.experiment.reagents,
+          method: "",
+          notes: response.experiment.notes,
+          courseCode: response.experiment.category,
+          videoLink: response.experiment.url,
+          hidden: false,
+        });
+        console.log(url);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   //alert to notify the user that the experiment was uploaded successfully
   alertOnClose = () => {
     window.location.href = "/dashboard";
@@ -124,6 +170,27 @@ class Upload extends Component {
           <div className="pageHeading">Experiment Upload</div>
           <hr /> {/*Splits up sections*/}
           <Form>
+            {/*Div used for course specification */}
+            <div className="u-div">
+              <div className="ulabel">Course</div>
+              <div className="ucontent-div">
+                <Form.Group as={Col} controlId="courseCode">
+                  <Form.Label>Course Code</Form.Label>
+                  <Form.Control
+                    as="select"
+                    required={true}
+                    name="courseCode"
+                    value={this.state.courseCode}
+                    onChange={this.handleChange}
+                  >
+                    <option>CEM1000W</option>
+                    <option>CEM2005W</option>
+                    <option>CEM3000W</option>
+                  </Form.Control>
+                </Form.Group>
+              </div>
+            </div>
+            <hr />
             {/*Div used for all experiment details */}
             <div className="u-div">
               <div className="ulabel">Experiment Details</div>
@@ -153,12 +220,14 @@ class Upload extends Component {
                 <div className="u-div">
                   <Form.Group as={Col} controlId="apparatus">
                     <Form.Label>Apparatus Checklist</Form.Label>
-                    <Checklist
-                      data={this.state.apparatus}
-                      checked={this.state.checked}
-                      callback={this.callback}
-                      type="upload"
-                    />
+                    {!this.state.hidden ? (
+                      <Checklist
+                        data={this.state.apparatus}
+                        checked={this.state.checked}
+                        callback={this.callback}
+                        type="upload"
+                      />
+                    ) : null}
                   </Form.Group>
                   <img src={main} height="350" alt="Graphic"></img>
                 </div>
@@ -213,9 +282,26 @@ class Upload extends Component {
               </div>
             </div>
             <hr />
+            {/*Div used for experiment video */}
+            <div className="u-div">
+              <div className="ulabel">Experiment Demonstration</div>
+              <div className="ucontent-div">
+                <Form.Group as={Col} controlId="videoLink">
+                  <Form.Label>Video URL </Form.Label>
+                  <Form.Control
+                    placeholder=""
+                    required={true}
+                    name="videoLink"
+                    value={this.state.videoLink}
+                    onChange={this.handleChange}
+                  />
+                </Form.Group>
+              </div>
+            </div>
+            <hr />
             {/*Div used for additional notes*/}
             <div className="u-div">
-              <div className="ulabel">Additonal Notes</div>
+              <div className="ulabel">Additional Notes</div>
               <div className="ucontent-div">
                 <Form.Group as={Col} controlId="additionalNotes">
                   <Form.Label>Notes</Form.Label>
@@ -244,7 +330,10 @@ class Upload extends Component {
                       width: "90px",
                     }}
                   >
-                    Upload
+                     {this.props.edit ? (
+                      "Save "
+                     
+                    ) : "Upload"}
                   </Button>
 
                   <Alert //Indicating the upload success to the user
