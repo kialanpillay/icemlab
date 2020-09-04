@@ -11,7 +11,6 @@ import CheckIcon from "@material-ui/icons/Check";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import main from "../assets/main.png";
-import { mxArrow } from "mxgraph-js";
 
 const modules = {
   toolbar: [

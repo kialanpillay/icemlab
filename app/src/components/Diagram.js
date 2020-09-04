@@ -5,6 +5,7 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
+import Tooltip from "react-bootstrap/Tooltip";
 import {
   mxGraph,
   mxConstants,
@@ -538,7 +539,6 @@ export default class Diagram extends Component {
           this.initToolbar();
           this.settingConnection();
           this.createDragElement();
-          let parent = graph.getDefaultParent();
 
           graph.getModel().beginUpdate();
           try {
@@ -600,23 +600,21 @@ export default class Diagram extends Component {
                       src="science-24px.svg"
                     />
                   </OverlayTrigger>
-                  <OverlayTrigger
-                    placement="right"
-                    delay={{ show: 250, hide: 1500 }}
-                    overlay={popover("microscope")}
-                  >
-                    <img
-                      alt="Microscope"
-                      className="item"
-                      value="Microscope"
-                      src="biotech-24px.svg"
-                    />
-                  </OverlayTrigger>
                   {this.props.apparatus.map((item, index) => {
                     return (
-                      <p className="item" value={item} key={index}>
-                        {item}
-                      </p>
+                      <OverlayTrigger
+                        placement="right"
+                        overlay={<Tooltip>{item}</Tooltip>}
+                        key={index}
+                      >
+                        <img
+                          alt={item}
+                          className="item"
+                          value={item}
+                          src={`apparatus/${item}.png`}
+                          key={index}
+                        />
+                      </OverlayTrigger>
                     );
                   })}
                 </Card.Body>
