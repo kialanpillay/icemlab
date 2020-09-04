@@ -20,7 +20,7 @@ export default function App() {
             <Dashboard />
           </Route>
           <Route exact path="/upload">
-            <Upload />
+            <Upload edit={false} />
           </Route>
         </Switch>
       </Router>
