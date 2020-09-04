@@ -5,6 +5,7 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
+import Tooltip from "react-bootstrap/Tooltip";
 import {
   mxGraph,
   mxConstants,
@@ -46,7 +47,7 @@ export default class Diagram extends Component {
       currentNode: null,
       wiki: {
         flask: {
-          title: "Flask",
+          title: "Erlenmeyer Flask",
         },
         microscope: {
           title: "Microscope",
@@ -73,8 +74,8 @@ export default class Diagram extends Component {
     const APPARATUS = [
       {
         name: "flask",
-        wikiRef: "Round-bottom_flask",
-        title: "Round bottom flask",
+        wikiRef: "Erlenmeyer_flask",
+        title: "Erlenmeyer Flask",
       },
       { name: "microscope", wikiRef: "Microscope", title: "Microscope" },
     ];
@@ -538,11 +539,10 @@ export default class Diagram extends Component {
           this.initToolbar();
           this.settingConnection();
           this.createDragElement();
-          let parent = graph.getDefaultParent();
 
           graph.getModel().beginUpdate();
           try {
-            graph.insertVertex(parent, null, null, 180, 440, 480, 40, "table");
+            //graph.insertVertex(parent, null, null, 180, 440, 480, 40, "table");
           } finally {
             graph.getModel().endUpdate();
           }
@@ -600,18 +600,23 @@ export default class Diagram extends Component {
                       src="science-24px.svg"
                     />
                   </OverlayTrigger>
-                  <OverlayTrigger
-                    placement="right"
-                    delay={{ show: 250, hide: 1500 }}
-                    overlay={popover("microscope")}
-                  >
-                    <img
-                      alt="Microscope"
-                      className="item"
-                      value="Microscope"
-                      src="biotech-24px.svg"
-                    />
-                  </OverlayTrigger>
+                  {this.props.apparatus.map((item, index) => {
+                    return (
+                      <OverlayTrigger
+                        placement="right"
+                        overlay={<Tooltip>{item}</Tooltip>}
+                        key={index}
+                      >
+                        <img
+                          alt={item}
+                          className="item"
+                          value={item}
+                          src={`apparatus/${item}.png`}
+                          key={index}
+                        />
+                      </OverlayTrigger>
+                    );
+                  })}
                 </Card.Body>
               </Accordion.Collapse>
             </Card>

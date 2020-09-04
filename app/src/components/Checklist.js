@@ -70,7 +70,17 @@ export default class Checklist extends Component {
                   style={{ color: "#4E2E84" }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={` ${value}`} />
+              {this.props.type === "experiment" ? (
+                <p
+                  id={labelId}
+                  dangerouslySetInnerHTML={{
+                    __html: `${value}`,
+                  }}
+                  style={{fontSize: "0.8rem"}}
+                />
+              ) : (
+                <ListItemText id={labelId} primary={` ${value}`} />
+              )}
             </ListItem>
           );
         })}
