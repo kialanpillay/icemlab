@@ -10,7 +10,8 @@ import Alert from "react-bootstrap/Alert";
 import CheckIcon from "@material-ui/icons/Check";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import main from "../assets/main.png"
+import main from "../assets/main.png";
+import { mxArrow } from "mxgraph-js";
 
 const modules = {
   toolbar: [
@@ -112,8 +113,25 @@ class Upload extends Component {
 
   handleEditorChange(content, delta, source, editor) {
     console.log(editor.getText());
-    this.setState({ method: content });
+    this.setState({ method: this.convertDecimalPoint(content) });
   }
+
+  convertDecimalPoint = (method) => {
+    let arr = method.split("");
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] === ".") {
+        if (
+          i - 1 >= 0 &&
+          !isNaN(arr[i - 1]) &&
+          i + 1 <= arr.length &&
+          !isNaN(arr[i + 1])
+        ) {
+          arr[i] = ",";
+        }
+      }
+    }
+    return arr.join("");
+  };
 
   render() {
     return (
@@ -203,6 +221,7 @@ class Upload extends Component {
                     .map((item, index) => {
                       return (
                         <li
+                          key={index}
                           dangerouslySetInnerHTML={{
                             __html: `${item}`,
                           }}

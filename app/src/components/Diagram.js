@@ -46,7 +46,7 @@ export default class Diagram extends Component {
       currentNode: null,
       wiki: {
         flask: {
-          title: "Flask",
+          title: "Erlenmeyer Flask",
         },
         microscope: {
           title: "Microscope",
@@ -73,8 +73,8 @@ export default class Diagram extends Component {
     const APPARATUS = [
       {
         name: "flask",
-        wikiRef: "Round-bottom_flask",
-        title: "Round bottom flask",
+        wikiRef: "Erlenmeyer_flask",
+        title: "Erlenmeyer Flask",
       },
       { name: "microscope", wikiRef: "Microscope", title: "Microscope" },
     ];
@@ -542,7 +542,7 @@ export default class Diagram extends Component {
 
           graph.getModel().beginUpdate();
           try {
-            graph.insertVertex(parent, null, null, 180, 440, 480, 40, "table");
+            //graph.insertVertex(parent, null, null, 180, 440, 480, 40, "table");
           } finally {
             graph.getModel().endUpdate();
           }
@@ -612,6 +612,13 @@ export default class Diagram extends Component {
                       src="biotech-24px.svg"
                     />
                   </OverlayTrigger>
+                  {this.props.apparatus.map((item, index) => {
+                    return (
+                      <p className="item" value={item} key={index}>
+                        {item}
+                      </p>
+                    );
+                  })}
                 </Card.Body>
               </Accordion.Collapse>
             </Card>
