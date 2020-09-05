@@ -15,8 +15,11 @@ export default class Navigation extends Component {
           <Nav.Link href="/dashboard">Upload</Nav.Link>
         </Nav>
         <Navbar.Collapse className="justify-content-end">
+          <Navbar.Brand href="http://www.uct.ac.za/">
+            <img alt="" src="transparent_round_logo.gif" height="40" />{" "}
+          </Navbar.Brand>
           <Navbar.Brand href="http://www.chemistry.uct.ac.za/">
-            <img alt="" src="transparent_straight_logo.gif" height="36" />{" "}
+            <img alt="" src="uctchem.png" height="40" />{" "}
           </Navbar.Brand>
         </Navbar.Collapse>
       </Navbar>
