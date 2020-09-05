@@ -611,7 +611,7 @@ export default class Diagram extends Component {
                           alt={item}
                           className="item"
                           value={item}
-                          src={`apparatus/${item}.png`}
+                          src={`apparatus_svg/${item}.svg`}
                           key={index}
                         />
                       </OverlayTrigger>
