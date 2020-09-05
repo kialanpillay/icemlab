@@ -214,49 +214,51 @@ export default class Experiment extends Component {
               </Col>
             </Row>
           </Tab>
-          <Tab
-            eventKey="video"
-            title="Video Demonstration"
-            disabled={!this.state.videoVisible}
-          >
-            <Container style={{ marginTop: "2rem", marginBottom: "2rem" }}>
-              <Row className="justify-content-center">
-                <Col md="auto">
-                  <h2
-                    dangerouslySetInnerHTML={{
-                      __html: this.props.experiment,
-                    }}
-                  />
-                </Col>
-              </Row>
-              <Row className="justify-content-center">
-                <Col md="auto">
-                  <Badge
-                    style={{
-                      backgroundColor:
-                        this.props.experiment === {}
-                          ? "silver"
-                          : this.getCategoryColor(
-                              this.state.experiment.category
-                            ),
-                      color: "black",
-                      fontSize: "1.2rem",
-                    }}
-                  >
-                    {this.props.experiment === {}
-                      ? "CEM1XXXW"
-                      : this.state.experiment.category}
-                  </Badge>
-                </Col>
-              </Row>
-              <Row
-                className="justify-content-center"
-                style={{ marginTop: "2rem" }}
-              >
-                <ReactPlayer url={this.state.experiment.url} controls />
-              </Row>
-            </Container>
-          </Tab>
+          {this.state.hidden || this.state.experiment.url === "" ? null : (
+            <Tab
+              eventKey="video"
+              title="Video Demonstration"
+              disabled={!this.state.videoVisible}
+            >
+              <Container style={{ marginTop: "2rem", marginBottom: "2rem" }}>
+                <Row className="justify-content-center">
+                  <Col md="auto">
+                    <h2
+                      dangerouslySetInnerHTML={{
+                        __html: this.props.experiment,
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row className="justify-content-center">
+                  <Col md="auto">
+                    <Badge
+                      style={{
+                        backgroundColor:
+                          this.props.experiment === {}
+                            ? "silver"
+                            : this.getCategoryColor(
+                                this.state.experiment.category
+                              ),
+                        color: "black",
+                        fontSize: "1.2rem",
+                      }}
+                    >
+                      {this.props.experiment === {}
+                        ? "CEM1XXXW"
+                        : this.state.experiment.category}
+                    </Badge>
+                  </Col>
+                </Row>
+                <Row
+                  className="justify-content-center"
+                  style={{ marginTop: "2rem" }}
+                >
+                  <ReactPlayer url={this.state.experiment.url} controls />
+                </Row>
+              </Container>
+            </Tab>
+          )}
         </Tabs>
       </div>
     );
