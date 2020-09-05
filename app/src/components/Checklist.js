@@ -41,6 +41,9 @@ export default class Checklist extends Component {
         style={{
           width: this.props.variant === "experiment" ? "inherit" : "20rem",
           height: this.props.variant === "experiment" ? "34rem" : "20rem",
+          border:
+            this.props.variant === "experiment" ? null : "1px solid rgb(206, 212, 218)",
+          borderRadius: this.props.variant === "experiment" ? null : "5px",
           overflowY: "scroll",
         }}
       >
@@ -50,7 +53,6 @@ export default class Checklist extends Component {
           return (
             <ListItem
               key={value}
-              role={undefined}
               dense
               button
               onClick={() => this.handleToggle(value)}
@@ -61,9 +63,6 @@ export default class Checklist extends Component {
                   checked={this.state.checked.indexOf(value) !== -1}
                   tabIndex={-1}
                   disableRipple
-                  labelstyle={{ color: "#4E2E84" }}
-                  iconstyle={{ fill: "#4E2E84" }}
-                  inputstyle={{ color: "#4E2E84" }}
                   style={{ color: "#4E2E84" }}
                 />
               </ListItemIcon>

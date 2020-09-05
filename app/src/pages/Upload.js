@@ -311,7 +311,7 @@ class Upload extends Component {
                   theme="snow"
                   onChange={this.handleEditorChange}
                   modules={modules}
-                  style={{ height: "16rem" }}
+                  style={{ height: "16rem", marginLeft : "1rem" }}
                   value={this.state.method}
                 ></ReactQuill>
               </div>

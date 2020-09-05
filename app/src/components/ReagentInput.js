@@ -1,6 +1,10 @@
 import React from "react";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
+import {
+  ThemeProvider,
+  createMuiTheme,
+} from "@material-ui/core/styles";
 
 export default class ReagentInput extends React.Component {
   constructor(props) {
@@ -23,8 +27,14 @@ export default class ReagentInput extends React.Component {
   };
 
   render() {
+    const theme = createMuiTheme({
+      palette: {
+        primary: { main: "#4E2E84" },
+      },
+    });
+
     return (
-      <div className="inputBlock" style={{ width: 500 }}>
+      <div className="inputBlock">
         <Autocomplete
           multiple
           id="tags-outlined"
@@ -34,13 +44,15 @@ export default class ReagentInput extends React.Component {
           value={this.state.selected}
           onChange={this.handleChange}
           renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="outlined"
-              placeholder="Enter Reagents"
-              margin="normal"
-              fullWidth
-            />
+            <ThemeProvider theme={theme}>
+              <TextField
+                {...params}
+                variant="outlined"
+                placeholder="Enter Reagents"
+                margin="normal"
+                fullWidth
+              />
+            </ThemeProvider>
           )}
         />
       </div>
