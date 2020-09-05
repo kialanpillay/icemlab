@@ -44,6 +44,7 @@
 
 .sidebar p {
   font-size: 0.8rem;
+  margin-bottom: 10px;
   overflow-wrap: break-word;
   cursor: pointer;
 }
