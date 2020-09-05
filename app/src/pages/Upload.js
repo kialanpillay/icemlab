@@ -256,7 +256,7 @@ class Upload extends Component {
                   <Form.Control
                     placeholder="Enter Experiment Title"
                     required={true}
-                    name="name"
+                    name="title"
                     value={this.state.title}
                     onChange={this.handleChange}
                     disabled={this.props.edit}

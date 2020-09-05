@@ -7,6 +7,7 @@ import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
+import Badge from "react-bootstrap/Badge";
 import Navigation from "../components/Navigation";
 import Information from "../components/Information";
 import ManualCard from "../components/ManualCard";
@@ -60,6 +61,21 @@ export default class Experiment extends Component {
         console.log(err);
       });
   };
+
+  getCategoryColor = (category) => {
+    let color;
+    if (category === "CEM1000W") {
+      color = "#FFE0B2";
+    }
+    if (category === "CEM2005W") {
+      color = "#BBDEFB";
+    }
+    if (category === "CEM3000W") {
+      color = "#D1C4E9";
+    }
+    return color;
+  };
+
   //Calls method once the component has rendered
   componentDidMount() {
     this.getExperiment();
@@ -86,11 +102,31 @@ export default class Experiment extends Component {
                 <div>
                   <Row className="justify-content-center">
                     <Col md="auto">
-                      <h1
+                      <h2
                         dangerouslySetInnerHTML={{
                           __html: this.props.experiment,
                         }}
                       />
+                    </Col>
+                  </Row>
+                  <Row className="justify-content-center">
+                    <Col md="auto">
+                      <Badge
+                        style={{
+                          backgroundColor:
+                            this.props.experiment === {}
+                              ? "silver"
+                              : this.getCategoryColor(
+                                  this.state.experiment.category
+                                ),
+                          color: "black",
+                          fontSize: "1.2rem"
+                        }}
+                      >
+                        {this.props.experiment === {}
+                          ? "CEM1XXXW"
+                          : this.state.experiment.category}
+                      </Badge>
                     </Col>
                   </Row>
                   <Row style={{ marginTop: "2rem" }}>

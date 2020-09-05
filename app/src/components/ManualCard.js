@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Icon from "@material-ui/core/Icon";
 
-//Custom component to display practical manual data 
+//Custom component to display practical manual data
 export default function ManualCard(props) {
   return (
     <Card
@@ -23,7 +23,9 @@ export default function ManualCard(props) {
                 color: "rgb(78, 45, 132)",
               }}
             >
-              {props.variant === "Introduction" ? "emoji_objects" : "visibility"}
+              {props.variant === "Introduction"
+                ? "emoji_objects"
+                : "visibility"}
             </Icon>
           </Col>
         </Row>
