@@ -11,6 +11,7 @@ import CheckIcon from "@material-ui/icons/Check";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import main from "../assets/main.png";
+import ReagentInput from "../components/ReagentInput";
 
 const modules = {
   toolbar: [
@@ -33,18 +34,22 @@ class Upload extends Component {
       name: "",
       preamble: "",
       checked: [],
-      reagents: [],
+      userSelectedReagents: [],
       method: "",
       notes: "",
       courseCode: "CEM1000W",
       videoLink: "",
       upload: false,
       hidden: true,
+      reagentsArray: [],
+      reagentsSelected: [],
+      reagentsServerSelection: [],
     };
     //Binding of methods to the class instance
     this.handleChange = this.handleChange.bind(this);
     this.handleEditorChange = this.handleEditorChange.bind(this);
     this.callbackChecklist = this.callbackChecklist.bind(this);
+    this.callbackReagents = this.callbackReagents.bind(this);
   }
   //GET request to retrieve an array of available experiments from the API server
   getApparatus = () => {
@@ -62,12 +67,54 @@ class Upload extends Component {
         console.log(err);
       });
   };
+
+  getReagents = () => {
+    const reagentsEndpoint = "https://icemlab.herokuapp.com/reagent/";
+    fetch(reagentsEndpoint, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        this.setState({
+          reagentsArray: response.reagents,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  //convert to array with title key
+  processReagents = (reagents) => {
+    const arr = reagents.map((item) => {
+      return {
+        title: item,
+      };
+    });
+
+    return arr;
+  };
+  //format for the server
+  processReagentsSelected = (reagents) => {
+    const arr = reagents.map((item) => {
+      return item.title;
+    });
+
+    return arr;
+
+  };
+
   //Sets the state of the checked array to include items that have been selected.
   callbackChecklist = (checked) => {
     this.setState({ checked: checked });
   };
+  callbackReagents = (reagentsSelected) => {
+    this.setState({ reagentsSelected: reagentsSelected });
+  
+  };
   //Calls method once the component has rendered
   componentDidMount() {
+    this.getReagents();
     this.getApparatus();
     if (this.props.edit) {
       this.getExperiment(this.props.selection);
@@ -86,14 +133,13 @@ class Upload extends Component {
       title: this.state.name,
       information: this.state.preamble,
       apparatus: this.state.checked,
-      reagents: this.state.reagents.includes(",")
-        ? this.state.reagents.split(",")
-        : this.state.reagents,
+      reagents: this.processReagentsSelected(this.state.reagentsSelected),
       method: this.state.method,
       notes: this.state.notes,
       category: this.state.courseCode,
       url: this.state.videoLink,
     };
+    console.log(payload);
 
     const url = "https://icemlab.herokuapp.com/experiment/";
     fetch(url, {
@@ -136,7 +182,7 @@ class Upload extends Component {
           checked: response.experiment.apparatus,
           name: response.experiment.title,
           preamble: response.experiment.information,
-          reagents: response.experiment.reagents,
+          userSelectedReagents: response.experiment.reagents,
           method: response.experiment.method,
           notes: response.experiment.notes,
           courseCode: response.experiment.category,
@@ -250,15 +296,15 @@ class Upload extends Component {
                 </div>
                 <Form.Group as={Col} controlId="reagents">
                   <Form.Label>Reagents</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows="8"
-                    placeholder="Enter Reagents, seperated by a comma. E.g. Potassium, Sodium Chloride"
-                    required={true}
-                    name="reagents"
-                    value={this.state.reagents}
-                    onChange={this.handleChange}
-                  />
+                  {!this.state.hidden ? (
+                       <ReagentInput
+                       reagentsData={this.processReagents(this.state.reagentsArray)}
+                       userSelectedReagents={this.processReagents(this.state.userSelectedReagents)}
+                       callback={this.callbackReagents}
+                     />
+                    
+                    ) : null}
+                 
                 </Form.Group>
               </div>
             </div>
