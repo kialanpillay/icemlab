@@ -18,9 +18,7 @@ export default function UploadCard() {
       <div>
         <AddIcon
           style={{
-            width: "20rem",
-            height: "15rem",
-            textAlign: "left",
+            fontSize: "15rem",
             color: "#4E2E84",
           }}
         />
