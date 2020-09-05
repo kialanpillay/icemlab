@@ -251,13 +251,13 @@ class Upload extends Component {
             <div className="u-div">
               <div className="ulabel">Experiment Details</div>
               <div className="ucontent-div">
-                <Form.Group as={Col} controlId="expiermentName">
+                <Form.Group as={Col} controlId="title">
                   <Form.Label>Title </Form.Label>
                   <Form.Control
                     placeholder="Enter Experiment Title"
                     required={true}
                     name="name"
-                    value={this.state.name}
+                    value={this.state.title}
                     onChange={this.handleChange}
                     disabled={this.props.edit}
                   />
