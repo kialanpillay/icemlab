@@ -30,20 +30,18 @@ class Upload extends Component {
     //Initialising class state data
     //State is used instead of class member variables to avoid manually managing component renders
     this.state = {
-      apparatus: [], //array to store apparatus retrieved from the server
-      name: "",
+      title: "",
       preamble: "",
-      checked: [],
-      userSelectedReagents: [],
+      checkedApparatus: [],
+      selectedReagents: [],
       method: "",
       notes: "",
       courseCode: "CEM1000W",
       videoLink: "",
       upload: false,
       hidden: true,
-      reagentsArray: [],
-      reagentsSelected: [],
-      reagentsServerSelection: [],
+      apparatusData: [], //array to store apparatus retrieved from the server
+      reagentsData: [],
     };
     //Binding of methods to the class instance
     this.handleChange = this.handleChange.bind(this);
@@ -60,7 +58,7 @@ class Upload extends Component {
       .then((response) => response.json())
       .then((response) => {
         this.setState({
-          apparatus: response.apparatus,
+          apparatusData: response.apparatus,
         });
       })
       .catch((err) => {
@@ -76,7 +74,7 @@ class Upload extends Component {
       .then((response) => response.json())
       .then((response) => {
         this.setState({
-          reagentsArray: response.reagents,
+          reagentsData: response.reagents,
         });
       })
       .catch((err) => {
@@ -94,23 +92,22 @@ class Upload extends Component {
 
     return arr;
   };
+
   //format for the server
-  processReagentsSelected = (reagents) => {
+  processSelectedReagents = (reagents) => {
     const arr = reagents.map((item) => {
       return item.title;
     });
 
     return arr;
-
   };
 
   //Sets the state of the checked array to include items that have been selected.
   callbackChecklist = (checked) => {
-    this.setState({ checked: checked });
+    this.setState({ checkedApparatus: checked });
   };
-  callbackReagents = (reagentsSelected) => {
-    this.setState({ reagentsSelected: reagentsSelected });
-  
+  callbackReagents = (selected) => {
+    this.setState({ selectedReagents: selected });
   };
   //Calls method once the component has rendered
   componentDidMount() {
@@ -130,17 +127,15 @@ class Upload extends Component {
   //PUT request to send the user input (Experiment upload details) to the API server
   putPayload = () => {
     const payload = {
-      title: this.state.name,
+      title: this.state.title,
       information: this.state.preamble,
-      apparatus: this.state.checked,
-      reagents: this.processReagentsSelected(this.state.reagentsSelected),
+      apparatus: this.state.checkedApparatus,
+      reagents: this.processSelectedReagents(this.state.selectedReagents),
       method: this.state.method,
       notes: this.state.notes,
       category: this.state.courseCode,
       url: this.state.videoLink,
     };
-    console.log(payload);
-
     const url = "https://icemlab.herokuapp.com/experiment/";
     fetch(url, {
       method: "PUT",
@@ -178,11 +173,10 @@ class Upload extends Component {
       .then((response) => response.json())
       .then((response) => {
         this.setState({
-          experiment: response.experiment,
-          checked: response.experiment.apparatus,
-          name: response.experiment.title,
+          title: response.experiment.title,
           preamble: response.experiment.information,
-          userSelectedReagents: response.experiment.reagents,
+          checkedApparatus: response.experiment.apparatus,
+          selectedReagents: response.experiment.reagents,
           method: response.experiment.method,
           notes: response.experiment.notes,
           courseCode: response.experiment.category,
@@ -258,9 +252,9 @@ class Upload extends Component {
               <div className="ulabel">Experiment Details</div>
               <div className="ucontent-div">
                 <Form.Group as={Col} controlId="expiermentName">
-                  <Form.Label>Experiment Name </Form.Label>
+                  <Form.Label>Title </Form.Label>
                   <Form.Control
-                    placeholder="Enter Experiment Name"
+                    placeholder="Enter Experiment Title"
                     required={true}
                     name="name"
                     value={this.state.name}
@@ -269,7 +263,7 @@ class Upload extends Component {
                   />
                 </Form.Group>
                 <Form.Group as={Col} controlId="preamble">
-                  <Form.Label>Experiment Preamble </Form.Label>
+                  <Form.Label>Preamble </Form.Label>
                   <Form.Control
                     as="textarea"
                     rows="5"
@@ -282,11 +276,11 @@ class Upload extends Component {
                 </Form.Group>
                 <div className="u-div">
                   <Form.Group as={Col} controlId="apparatus">
-                    <Form.Label>Apparatus Checklist</Form.Label>
+                    <Form.Label>Apparatus</Form.Label>
                     {!this.state.hidden ? (
                       <Checklist
-                        data={this.state.apparatus}
-                        checked={this.state.checked}
+                        data={this.state.apparatusData}
+                        checked={this.state.checkedApparatus}
                         callback={this.callbackChecklist}
                         variant="upload"
                       />
@@ -297,14 +291,14 @@ class Upload extends Component {
                 <Form.Group as={Col} controlId="reagents">
                   <Form.Label>Reagents</Form.Label>
                   {!this.state.hidden ? (
-                       <ReagentInput
-                       reagentsData={this.processReagents(this.state.reagentsArray)}
-                       userSelectedReagents={this.processReagents(this.state.userSelectedReagents)}
-                       callback={this.callbackReagents}
-                     />
-                    
-                    ) : null}
-                 
+                    <ReagentInput
+                      data={this.processReagents(this.state.reagentsData)}
+                      selected={this.processReagents(
+                        this.state.selectedReagents
+                      )}
+                      callback={this.callbackReagents}
+                    />
+                  ) : null}
                 </Form.Group>
               </div>
             </div>
