@@ -94,9 +94,9 @@ class Upload extends Component {
   };
 
   //format for the server
-  processSelectedReagents = (reagents) => {
-    const arr = reagents.map((item) => {
-      return item.title;
+  processSelectedReagents = () => {
+    const arr = this.state.selectedReagents.map((item) => {
+      return typeof item === "object" ? item.title : item;
     });
 
     return arr;
@@ -130,7 +130,7 @@ class Upload extends Component {
       title: this.state.title,
       information: this.state.preamble,
       apparatus: this.state.checkedApparatus,
-      reagents: this.processSelectedReagents(this.state.selectedReagents),
+      reagents: this.processSelectedReagents(),
       method: this.state.method,
       notes: this.state.notes,
       category: this.state.courseCode,
@@ -311,7 +311,7 @@ class Upload extends Component {
                   theme="snow"
                   onChange={this.handleEditorChange}
                   modules={modules}
-                  style={{ height: "16rem", marginLeft : "1rem" }}
+                  style={{ height: "16rem", marginLeft: "1rem" }}
                   value={this.state.method}
                 ></ReactQuill>
               </div>
