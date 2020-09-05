@@ -27,7 +27,7 @@ export default class Experiment extends Component {
       hidden: true,
       checked: [],
       checklistComplete: false,
-      videoVisible:false
+      videoVisible: false,
     };
   }
 
@@ -214,29 +214,49 @@ export default class Experiment extends Component {
               </Col>
             </Row>
           </Tab>
-          {this.state.videoVisible ? (
-            <Tab eventKey="video" title="Video Demonstration">
+          <Tab
+            eventKey="video"
+            title="Video Demonstration"
+            disabled={!this.state.videoVisible}
+          >
+            <Container style={{ marginTop: "2rem", marginBottom: "2rem" }}>
               <Row className="justify-content-center">
-              <h2
-                        dangerouslySetInnerHTML={{
-                          __html: this.props.experiment,
-                        }}
-                        style={{
-                          display: "flex",
-                          marginTop: "1rem",
-                          paddingBottom:'1rem'
-                        }}
-
-                      />
+                <Col md="auto">
+                  <h2
+                    dangerouslySetInnerHTML={{
+                      __html: this.props.experiment,
+                    }}
+                  />
+                </Col>
               </Row>
               <Row className="justify-content-center">
-                <ReactPlayer url={this.state.experiment.url} controls  />
+                <Col md="auto">
+                  <Badge
+                    style={{
+                      backgroundColor:
+                        this.props.experiment === {}
+                          ? "silver"
+                          : this.getCategoryColor(
+                              this.state.experiment.category
+                            ),
+                      color: "black",
+                      fontSize: "1.2rem",
+                    }}
+                  >
+                    {this.props.experiment === {}
+                      ? "CEM1XXXW"
+                      : this.state.experiment.category}
+                  </Badge>
+                </Col>
               </Row>
-            </Tab>
-          ) : (
-            <Tab eventKey="video" title="Video Demonstration" disabled  ></Tab>
-          )}
-          
+              <Row
+                className="justify-content-center"
+                style={{ marginTop: "2rem" }}
+              >
+                <ReactPlayer url={this.state.experiment.url} controls />
+              </Row>
+            </Container>
+          </Tab>
         </Tabs>
       </div>
     );
