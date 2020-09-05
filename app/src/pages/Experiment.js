@@ -120,7 +120,7 @@ export default class Experiment extends Component {
             </Container>
           </Tab>
           <Tab eventKey="diagram" title="Virtual Experiment">
-            <Row style={{ margin: "0 -15px 0 0" }}>
+            <Row style={{ margin: "0  0 0 -15px" }}>
               <Col md={9}>
                 <Diagram
                   apparatus={
