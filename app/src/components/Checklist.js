@@ -13,6 +13,7 @@ export default class Checklist extends Component {
     //Initialising class state data
     this.state = {
       checked: this.props.checked,
+      
     };
     //Binding of method to the class instance
     this.handleToggle = this.handleToggle.bind(this);
@@ -33,6 +34,8 @@ export default class Checklist extends Component {
     }
     this.setChecked(newChecked);
     this.props.callback(newChecked);
+
+
   };
 
   render() {

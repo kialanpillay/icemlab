@@ -13,6 +13,8 @@ import Information from "../components/Information";
 import ManualCard from "../components/ManualCard";
 import Checklist from "../components/Checklist";
 import "bootstrap/dist/css/bootstrap.min.css";
+import ReactPlayer from "react-player";
+import Alert from "react-bootstrap/Alert";
 
 export default class Experiment extends Component {
   //Constructor
@@ -24,14 +26,27 @@ export default class Experiment extends Component {
       experiment: {},
       hidden: true,
       checked: [],
+      checklistComplete: false,
+      videoVisible:false
     };
   }
 
   //Sets the state of the checked array to include items that have been selected.
   callback = (checked) => {
     this.setState({ checked: checked });
+    const checklistItems = this.state.experiment.method.split(".").slice(0, -1);
+    if (checked.length === checklistItems.length) {
+      this.setState({ checklistComplete: true });
+      this.setState({ videoVisible: true });
+    }
   };
-
+  alertOnClose = () => {
+    this.setState({ checklistComplete: false });
+  };
+  //Sets the checklist complete boolean to true once all boxed are checked.
+  callbackComplete = (checklistComplete) => {
+    this.setState({ checklistComplete: checklistComplete });
+  };
   //Encode query parameters for a HTTP request
   encodeParameters = (params) => {
     let query = Object.keys(params)
@@ -120,7 +135,7 @@ export default class Experiment extends Component {
                                   this.state.experiment.category
                                 ),
                           color: "black",
-                          fontSize: "1.2rem"
+                          fontSize: "1.2rem",
                         }}
                       >
                         {this.props.experiment === {}
@@ -180,10 +195,48 @@ export default class Experiment extends Component {
                     callback={this.callback}
                     variant="experiment"
                   />
+                  <Alert //Indicating the upload success to the user
+                    show={this.state.checklistComplete}
+                    variant="success"
+                    dismissible
+                    onClose={() => this.alertOnClose()}
+                    style={{
+                      display: "flex",
+                      marginLeft: "0.5rem",
+                      marginRight: "0.5rem",
+                      marginTop: "0.5rem",
+                    }}
+                  >
+                    {" "}
+                    Experiment complete! You may now view the demonstration.{" "}
+                  </Alert>
                 </Card>
               </Col>
             </Row>
           </Tab>
+          {this.state.videoVisible ? (
+            <Tab eventKey="video" title="Video Demonstration">
+              <Row className="justify-content-center">
+              <h2
+                        dangerouslySetInnerHTML={{
+                          __html: this.props.experiment,
+                        }}
+                        style={{
+                          display: "flex",
+                          marginTop: "1rem",
+                          paddingBottom:'1rem'
+                        }}
+
+                      />
+              </Row>
+              <Row className="justify-content-center">
+                <ReactPlayer url={this.state.experiment.url} controls  />
+              </Row>
+            </Tab>
+          ) : (
+            <Tab eventKey="video" title="Video Demonstration" disabled  ></Tab>
+          )}
+          
         </Tabs>
       </div>
     );
