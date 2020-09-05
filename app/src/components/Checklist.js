@@ -67,7 +67,7 @@ export default class Checklist extends Component {
                   style={{ color: "#4E2E84" }}
                 />
               </ListItemIcon>
-              {this.props.type === "experiment" ? (
+              {this.props.variant === "experiment" ? (
                 <p
                   id={labelId}
                   dangerouslySetInnerHTML={{
