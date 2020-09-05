@@ -29,12 +29,11 @@ class Upload extends Component {
     //Initialising class state data
     //State is used instead of class member variables to avoid manually managing component renders
     this.state = {
-      apparatus: [],
+      apparatus: [], //array to store apparatus retrieved from the server
       name: "",
       preamble: "",
       checked: [],
-      reagents: "",
-      reagentArr: [],
+      reagents: [],
       method: "",
       notes: "",
       courseCode: "CEM1000W",
@@ -70,7 +69,7 @@ class Upload extends Component {
   //Calls method once the component has rendered
   componentDidMount() {
     this.getApparatus();
-    if (this.props.edit == true) {
+    if (this.props.edit) {
       this.getExperiment(this.props.selection);
     } else {
       this.setState({ hidden: false });
@@ -144,7 +143,6 @@ class Upload extends Component {
           videoLink: response.experiment.url,
           hidden: false,
         });
-        console.log(url);
       })
       .catch((err) => {
         console.log(err);
@@ -221,6 +219,7 @@ class Upload extends Component {
                     name="name"
                     value={this.state.name}
                     onChange={this.handleChange}
+                    disabled={this.props.edit}
                   />
                 </Form.Group>
                 <Form.Group as={Col} controlId="preamble">
@@ -243,7 +242,7 @@ class Upload extends Component {
                         data={this.state.apparatus}
                         checked={this.state.checked}
                         callback={this.callbackChecklist}
-                        type="upload"
+                        variant="upload"
                       />
                     ) : null}
                   </Form.Group>

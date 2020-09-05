@@ -11,13 +11,13 @@ export default class Information extends Component {
     return (
       <Card
         style={{
-          height: this.props.type === "Reagents" ? "10rem" : "18rem",
-          marginTop: this.props.type === "Reagents" ? "0rem" : "2rem",
+          height: this.props.variant === "Reagents" ? "10rem" : "18rem",
+          marginTop: this.props.variant === "Reagents" ? "0rem" : "2rem",
         }}
       >
         <Card.Header as="h5">
           <Row>
-            <Col md={6}>{this.props.type}</Col>
+            <Col md={6}>{this.props.variant}</Col>
             <Col md={{ span: 1, offset: 4 }}>
               <Icon
                 style={{
@@ -25,7 +25,7 @@ export default class Information extends Component {
                   color: "rgb(78, 45, 132)",
                 }}
               >
-                {this.props.type === "Reagents" ? "science" : "biotech"}
+                {this.props.variant === "Reagents" ? "science" : "biotech"}
               </Icon>
             </Col>
           </Row>
@@ -36,7 +36,7 @@ export default class Information extends Component {
             overflowY: "scroll",
           }}
         >
-          {this.props.type === "Reagents"
+          {this.props.variant === "Reagents"
             ? this.props.experiment.reagents.map((item, index) => {
                 return <ListGroup.Item key={index}>{item}</ListGroup.Item>;
               })

@@ -97,21 +97,21 @@ export default class Experiment extends Component {
                     <Col md={8}>
                       <ManualCard
                         experiment={this.state.experiment}
-                        type={"Introduction"}
+                        variant="Introduction"
                       />
                       <ManualCard
                         experiment={this.state.experiment}
-                        type={"Method"}
+                        variant="Method"
                       />
                     </Col>
                     <Col md={4}>
                       <Information
                         experiment={this.state.experiment}
-                        type={"Reagents"}
+                        variant="Reagents"
                       />
                       <Information
                         experiment={this.state.experiment}
-                        type={"Apparatus"}
+                        variant="Apparatus"
                       />
                     </Col>
                   </Row>
@@ -142,7 +142,7 @@ export default class Experiment extends Component {
                     }
                     checked={this.state.checked}
                     callback={this.callback}
-                    type="experiment"
+                    variant="experiment"
                   />
                 </Card>
               </Col>

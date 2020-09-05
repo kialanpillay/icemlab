@@ -39,8 +39,8 @@ export default class Checklist extends Component {
     return (
       <List
         style={{
-          width: this.props.type === "experiment" ? "inherit" : "20rem",
-          height: this.props.type === "experiment" ? "34rem" : "20rem",
+          width: this.props.variant === "experiment" ? "inherit" : "20rem",
+          height: this.props.variant === "experiment" ? "34rem" : "20rem",
           overflowY: "scroll",
         }}
       >

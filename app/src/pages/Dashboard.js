@@ -111,7 +111,7 @@ export default class Dashboard extends Component {
                 return item.title
                   .toLowerCase()
                   .includes(this.state.search.toLowerCase()) ? (
-                  <Col md={4}>
+                  <Col md={4} key={index}>
                     <ExperimentCard
                       experimentTitle={item.title}
                       experimentCategory={item.category}

@@ -9,13 +9,13 @@ export default function ManualCard(props) {
   return (
     <Card
       style={{
-        height: props.type === "Introduction" ? "10rem" : "18rem",
-        marginTop: props.type === "Introduction" ? "0rem" : "2rem",
+        height: props.variant === "Introduction" ? "10rem" : "18rem",
+        marginTop: props.variant === "Introduction" ? "0rem" : "2rem",
       }}
     >
       <Card.Header as="h5">
         <Row>
-          <Col md={4}>{props.type}</Col>
+          <Col md={4}>{props.variant}</Col>
           <Col md={{ span: 1, offset: 7 }}>
             <Icon
               style={{
@@ -23,7 +23,7 @@ export default function ManualCard(props) {
                 color: "rgb(78, 45, 132)",
               }}
             >
-              {props.type === "Introduction" ? "emoji_objects" : "visibility"}
+              {props.variant === "Introduction" ? "emoji_objects" : "visibility"}
             </Icon>
           </Col>
         </Row>
@@ -36,7 +36,7 @@ export default function ManualCard(props) {
         <div
           dangerouslySetInnerHTML={{
             __html:
-              props.type === "Introduction"
+              props.variant === "Introduction"
                 ? props.experiment.information
                 : props.experiment.method,
           }}
