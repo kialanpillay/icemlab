@@ -36,17 +36,13 @@ export default class Experiment extends Component {
     this.setState({ checked: checked });
     const checklistItems = this.state.experiment.method.split(".").slice(0, -1);
     if (checked.length === checklistItems.length) {
-      this.setState({ checklistComplete: true });
-      this.setState({ videoVisible: true });
+      this.setState({ checklistComplete: true, videoVisible: true });
     }
   };
   alertOnClose = () => {
     this.setState({ checklistComplete: false });
   };
-  //Sets the checklist complete boolean to true once all boxed are checked.
-  callbackComplete = (checklistComplete) => {
-    this.setState({ checklistComplete: checklistComplete });
-  };
+
   //Encode query parameters for a HTTP request
   encodeParameters = (params) => {
     let query = Object.keys(params)

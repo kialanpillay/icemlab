@@ -13,7 +13,6 @@ export default class Checklist extends Component {
     //Initialising class state data
     this.state = {
       checked: this.props.checked,
-      
     };
     //Binding of method to the class instance
     this.handleToggle = this.handleToggle.bind(this);
@@ -34,8 +33,6 @@ export default class Checklist extends Component {
     }
     this.setChecked(newChecked);
     this.props.callback(newChecked);
-
-
   };
 
   render() {
@@ -45,7 +42,9 @@ export default class Checklist extends Component {
           width: this.props.variant === "experiment" ? "inherit" : "20rem",
           height: this.props.variant === "experiment" ? "34rem" : "20rem",
           border:
-            this.props.variant === "experiment" ? null : "1px solid rgb(206, 212, 218)",
+            this.props.variant === "experiment"
+              ? null
+              : "1px solid rgb(206, 212, 218)",
           borderRadius: this.props.variant === "experiment" ? null : "5px",
           overflowY: "scroll",
         }}
