@@ -1,11 +1,21 @@
 import React, { Component } from "react";
 import "./Diagram.css";
 
+import ToggleButton from '@material-ui/lab/ToggleButton';
+
+import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import ZoomOutIcon from '@material-ui/icons/ZoomOut';
+import UndoIcon from '@material-ui/icons/Undo';
+import RedoIcon from '@material-ui/icons/Redo';
+import SaveIcon from '@material-ui/icons/Save';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Tooltip from "react-bootstrap/Tooltip";
+
 import {
   mxGraph,
   mxConstants,
@@ -33,6 +43,7 @@ import {
   mxImage,
   mxKeyHandler,
 } from "mxgraph-js";
+import { IconButton } from "@material-ui/core";
 
 //Diagramming Tool Component
 export default class Diagram extends Component {
@@ -508,11 +519,11 @@ export default class Diagram extends Component {
         new mxXmlRequest(
           "https://icemlab-export.herokuapp.com/",
           "format=png&w=" +
-            w +
-            "&h=" +
-            h +
-            "&bg=#F9F7ED&xml=" +
-            encodeURIComponent(xmlText)
+          w +
+          "&h=" +
+          h +
+          "&bg=#F9F7ED&xml=" +
+          encodeURIComponent(xmlText)
         ).simulate(document, "_blank");
       })
     );
@@ -536,7 +547,7 @@ export default class Diagram extends Component {
           this.setLayoutSetting(layout);
           this.loadGlobalSetting();
           this.setGraphSetting();
-          this.initToolbar();
+          // this.initToolbar();
           this.settingConnection();
           this.createDragElement();
 
@@ -675,7 +686,25 @@ export default class Diagram extends Component {
             </Card>
           </Accordion>
         </div>
-        <div className="toolbar" ref={this.toolbar} />
+
+        <div className="toolbar">
+          <IconButton value="left" aria-label="left aligned">
+            <ZoomInIcon />
+          </IconButton>
+          <IconButton value="left" aria-label="left aligned">
+            <ZoomOutIcon />
+          </IconButton>
+          <IconButton value="left" aria-label="left aligned">
+            <UndoIcon />
+          </IconButton>
+          <IconButton value="left" aria-label="left aligned">
+            <RedoIcon />
+          </IconButton>
+          <IconButton value="left" aria-label="left aligned">
+            <SaveIcon />
+          </IconButton>
+        </div>
+
         <div className="containerWrapper">
           <div className="graphContainer" ref={this.graphContainer} />
         </div>
