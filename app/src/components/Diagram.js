@@ -446,9 +446,7 @@ export default class Diagram extends Component {
     graph.getModel().addListener(mxEvent.UNDO, listener);
     graph.getView().addListener(mxEvent.UNDO, listener);
 
-    // this.setState({undoManager: undoManager})
     this.undoManager = undoManager;
-
   };
 
   //Loads graph with initial node and layout
