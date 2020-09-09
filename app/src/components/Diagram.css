@@ -19,12 +19,14 @@
   margin-left: 10rem;
 }
 .toolbar button {
-  font-size: 14px;
-  margin-left: 0.5rem;
   margin-right: 0.5rem;
   background: transparent;
   border-width: 0px;
   cursor: pointer;
+}
+
+.toolbar button:focus {
+  outline: none !important;
 }
 
 .sidebar {
