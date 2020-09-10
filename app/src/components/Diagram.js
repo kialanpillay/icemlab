@@ -1,18 +1,20 @@
 import React, { Component } from "react";
 import "./Diagram.css";
 
-import ZoomInIcon from '@material-ui/icons/ZoomIn';
-import ZoomOutIcon from '@material-ui/icons/ZoomOut';
-import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
-import UndoIcon from '@material-ui/icons/Undo';
-import RedoIcon from '@material-ui/icons/Redo';
-import SaveIcon from '@material-ui/icons/Save';
+import ZoomInIcon from "@material-ui/icons/ZoomIn";
+import ZoomOutIcon from "@material-ui/icons/ZoomOut";
+import ZoomOutMapIcon from "@material-ui/icons/ZoomOutMap";
+import UndoIcon from "@material-ui/icons/Undo";
+import RedoIcon from "@material-ui/icons/Redo";
+import SaveIcon from "@material-ui/icons/Save";
 
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Tooltip from "react-bootstrap/Tooltip";
+
+import PopoverStickOnHover from "./PopoverStickOnHover";
 
 import {
   mxGraph,
@@ -488,22 +490,21 @@ export default class Diagram extends Component {
       const { title, description, image, source } = this.state.wiki[name];
 
       return (
-        <Popover id="popover-basic">
-          <Popover.Title as="h3">{title}</Popover.Title>
-          <Popover.Content>
-            {image && (
-              <div>
-                <img src={image} alt={title} />
-              </div>
-            )}
-            <div style={{ marginTop: 5 }}>{description || "Loading"}</div>
-            {source && (
-              <a href={source} target="_blank" rel="noopener noreferrer">
-                More
-              </a>
-            )}
-          </Popover.Content>
-        </Popover>
+        <div style={{ textAlign: "left" }}>
+          <div style={{ marginBottom: 5 }}>{title}</div>
+
+          {image && (
+            <div>
+              <img src={image} alt={title} />
+            </div>
+          )}
+          <div style={{ marginTop: 5 }}>{description || "Loading"}</div>
+          {source && (
+            <a href={source} target="_blank" rel="noopener noreferrer">
+              More
+            </a>
+          )}
+        </div>
       );
     };
 
@@ -548,13 +549,13 @@ export default class Diagram extends Component {
       new mxXmlRequest(
         "https://icemlab-export.herokuapp.com/",
         "format=png&w=" +
-        w +
-        "&h=" +
-        h +
-        "&bg=#F9F7ED&xml=" +
-        encodeURIComponent(xmlText)
+          w +
+          "&h=" +
+          h +
+          "&bg=#F9F7ED&xml=" +
+          encodeURIComponent(xmlText)
       ).simulate(document, "_blank");
-    }
+    };
 
     return (
       <div>
@@ -572,14 +573,20 @@ export default class Diagram extends Component {
               </Card.Header>
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
-                  <OverlayTrigger placement="right" overlay={popover("flask")}>
+                  <PopoverStickOnHover
+                    component={<div>{popover("flask")}</div>}
+                    placement="right"
+                    onMouseEnter={() => {}}
+                    delay={200}
+                  >
                     <img
                       alt="Flask"
                       className="item"
                       value="Flask"
                       src="science-24px.svg"
                     />
-                  </OverlayTrigger>
+                  </PopoverStickOnHover>
+
                   {this.props.apparatus.map((item, index) => {
                     return (
                       <OverlayTrigger
@@ -681,18 +688,12 @@ export default class Diagram extends Component {
               <ZoomOutMapIcon />
             </IconButton>
           </OverlayTrigger>
-          <OverlayTrigger
-            placement="bottom"
-            overlay={<Tooltip>Undo</Tooltip>}
-          >
+          <OverlayTrigger placement="bottom" overlay={<Tooltip>Undo</Tooltip>}>
             <IconButton onClick={() => this.undoManager.undo()}>
               <UndoIcon />
             </IconButton>
           </OverlayTrigger>
-          <OverlayTrigger
-            placement="bottom"
-            overlay={<Tooltip>Redo</Tooltip>}
-          >
+          <OverlayTrigger placement="bottom" overlay={<Tooltip>Redo</Tooltip>}>
             <IconButton onClick={() => this.undoManager.redo()}>
               <RedoIcon />
             </IconButton>
