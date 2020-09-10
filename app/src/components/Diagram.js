@@ -9,12 +9,10 @@ import RedoIcon from "@material-ui/icons/Redo";
 import SaveIcon from "@material-ui/icons/Save";
 
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Popover from "react-bootstrap/Popover";
+import PopoverStickOnHover from "./PopoverStickOnHover";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Tooltip from "react-bootstrap/Tooltip";
-
-import PopoverStickOnHover from "./PopoverStickOnHover";
 
 import {
   mxGraph,
@@ -58,7 +56,10 @@ export default class Diagram extends Component {
       currentNode: null,
       wiki: {
         flask: {
-          title: "Erlenmeyer Flask",
+          title: "Conical flask",
+          description: "Laboratory flask which features a flat bottom, a conical body, and a cylindrical neck.",
+          image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/20150320-OSEC-LSC-0080_%2816299658674%29.jpg/58px-20150320-OSEC-LSC-0080_%2816299658674%29.jpg",
+          source: "https://en.wikipedia.org/wiki/Erlenmeyer_flask"
         },
         microscope: {
           title: "Microscope",
@@ -82,52 +83,6 @@ export default class Diagram extends Component {
       const response = await fetch(url);
       return await response.json();
     };
-
-    const APPARATUS = [
-      {
-        name: "flask",
-        wikiRef: "Erlenmeyer_flask",
-        title: "Erlenmeyer Flask",
-      },
-      { name: "microscope", wikiRef: "Microscope", title: "Microscope" },
-    ];
-
-    APPARATUS.forEach(async ({ name, wikiRef, title }) => {
-      const base =
-        "https://wikipedia-cors.herokuapp.com/w/api.php?action=query&format=json";
-
-      try {
-        const descResponse = await fetchJson(
-          `${base}&prop=description&titles=${wikiRef}`
-        );
-        const description = Object.values(descResponse.query.pages)[0]
-          .description;
-
-        const imgResponse = await fetchJson(
-          `${base}&prop=pageimages&titles=${wikiRef}&pithumbsize=100`
-        );
-        const image = Object.values(imgResponse.query.pages)[0].thumbnail
-          .source;
-
-        const srcResponse = await fetchJson(
-          `${base}&prop=info&inprop=url&titles=${wikiRef}`
-        );
-        const source = Object.values(srcResponse.query.pages)[0].fullurl;
-
-        this.setState((prev) => {
-          let prevWiki = { ...prev.wiki };
-          prevWiki[name] = {
-            title,
-            description,
-            image,
-            source,
-          };
-          return { ...prev, wiki: prevWiki };
-        });
-      } catch (error) {
-        console.error("Could not get wikipedia data", error);
-      }
-    });
   }
   //Functor to return current graph
   graphF = (evt) => {
