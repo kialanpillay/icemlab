@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import "./Diagram.css";
 
-import ZoomInIcon from '@material-ui/icons/ZoomIn';
-import ZoomOutIcon from '@material-ui/icons/ZoomOut';
-import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
-import UndoIcon from '@material-ui/icons/Undo';
-import RedoIcon from '@material-ui/icons/Redo';
-import SaveIcon from '@material-ui/icons/Save';
+import ZoomInIcon from "@material-ui/icons/ZoomIn";
+import ZoomOutIcon from "@material-ui/icons/ZoomOut";
+import ZoomOutMapIcon from "@material-ui/icons/ZoomOutMap";
+import UndoIcon from "@material-ui/icons/Undo";
+import RedoIcon from "@material-ui/icons/Redo";
+import SaveIcon from "@material-ui/icons/Save";
 
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Popover from "react-bootstrap/Popover";
+import PopoverStickOnHover from "./PopoverStickOnHover";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Tooltip from "react-bootstrap/Tooltip";
@@ -55,11 +55,80 @@ export default class Diagram extends Component {
       createVisible: false,
       currentNode: null,
       wiki: {
-        flask: {
+        "Erlenmeyer Flask": {
           title: "Erlenmeyer Flask",
+          description:
+            "Flask which features a flat bottom, a conical body, and a cylindrical neck.",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/20150320-OSEC-LSC-0080_%2816299658674%29.jpg/58px-20150320-OSEC-LSC-0080_%2816299658674%29.jpg",
+          source: "https://en.wikipedia.org/wiki/Erlenmeyer_flask",
         },
-        microscope: {
-          title: "Microscope",
+        Beaker: {
+          title: "Beaker",
+          description: "Cylindrical container with a flat bottom",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Beakers.jpg/100px-Beakers.jpg",
+          source: "https://en.wikipedia.org/wiki/Beaker_(laboratory_equipment)",
+        },
+        "Ice Bath": {
+          title: "Ice Bath",
+          description:
+            "Liquid mixture which is used to maintain low temperatures",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Aldolrxnpic.jpg/100px-Aldolrxnpic.jpg",
+          source: "https://en.wikipedia.org/wiki/Cooling_bath",
+        },
+        "Hirsch Funnel": {
+          title: "Hirsch Funnel",
+          description: "Used to assist in collecting recrystallized compounds",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Embudo_B%C3%BCchner.jpeg/75px-Embudo_B%C3%BCchner.jpeg",
+          source: "https://en.wikipedia.org/wiki/B%C3%BCchner_funnel",
+        },
+        "Büchner Funnel": {
+          title: "Büchner Funnel",
+          description: "Used to assist in collecting recrystallized compounds",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Embudo_B%C3%BCchner.jpeg/75px-Embudo_B%C3%BCchner.jpeg",
+          source: "https://en.wikipedia.org/wiki/B%C3%BCchner_funnel",
+        },
+        "Glass Rod": {
+          title: "Glass Rod",
+          description: "Used to mix chemicals",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Stirring_rod.jpg/60px-Stirring_rod.jpg",
+          wiki: "https://en.wikipedia.org/wiki/Glass_rod",
+        },
+        Hotplate: {
+          title: "Hotplate",
+          description: "Generally used to heat glassware or its contents",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Light_Label_Electric_tabletop_burner_KCK-L103.jpg/100px-Light_Label_Electric_tabletop_burner_KCK-L103.jpg",
+          source: "https://en.wikipedia.org/wiki/Hot_plate",
+        },
+        "Reflux Condenser": {//used in more complex reactions that require the controlled mixing of multiple reagents
+          title: "Reflux Condenser",
+          description:
+            "Used to condense vapors — that is, turn them into liquids — by cooling them down.",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Distillation_2-3.jpg/100px-Distillation_2-3.jpg",
+          source: "https://en.wikipedia.org/wiki/Condenser_(laboratory)",
+        },
+        "Two-necked Flask": {
+          title: "Two-necked Flask",
+          description:
+            "Used in more complex reactions that require the controlled mixing of multiple reagents",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Erlenmeyer_Flasks.jpg/100px-Erlenmeyer_Flasks.jpg",
+          source: "https://en.wikipedia.org/wiki/Schlenk_flask",
+        },
+        "Burner": {
+          title: "Bunsen burner",
+          description:
+            "Produces a single open gas flame, and is used for heating, sterilization, and combustion",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Bunsen_burner.jpg/58px-Bunsen_burner.jpg",
+          source: "https://en.wikipedia.org/wiki/Bunsen_burner",
         },
       },
       loaded: false,
@@ -73,59 +142,6 @@ export default class Diagram extends Component {
 
   componentDidMount() {
     this.loadGraph();
-
-    //Logic to retrieve apparatus images and descriptions from Wikipedia service
-
-    const fetchJson = async (url) => {
-      const response = await fetch(url);
-      return await response.json();
-    };
-
-    const APPARATUS = [
-      {
-        name: "flask",
-        wikiRef: "Erlenmeyer_flask",
-        title: "Erlenmeyer Flask",
-      },
-      { name: "microscope", wikiRef: "Microscope", title: "Microscope" },
-    ];
-
-    APPARATUS.forEach(async ({ name, wikiRef, title }) => {
-      const base =
-        "https://wikipedia-cors.herokuapp.com/w/api.php?action=query&format=json";
-
-      try {
-        const descResponse = await fetchJson(
-          `${base}&prop=description&titles=${wikiRef}`
-        );
-        const description = Object.values(descResponse.query.pages)[0]
-          .description;
-
-        const imgResponse = await fetchJson(
-          `${base}&prop=pageimages&titles=${wikiRef}&pithumbsize=100`
-        );
-        const image = Object.values(imgResponse.query.pages)[0].thumbnail
-          .source;
-
-        const srcResponse = await fetchJson(
-          `${base}&prop=info&inprop=url&titles=${wikiRef}`
-        );
-        const source = Object.values(srcResponse.query.pages)[0].fullurl;
-
-        this.setState((prev) => {
-          let prevWiki = { ...prev.wiki };
-          prevWiki[name] = {
-            title,
-            description,
-            image,
-            source,
-          };
-          return { ...prev, wiki: prevWiki };
-        });
-      } catch (error) {
-        console.error("Could not get wikipedia data", error);
-      }
-    });
   }
   //Functor to return current graph
   graphF = (evt) => {
@@ -485,25 +501,30 @@ export default class Diagram extends Component {
 
   render() {
     const popover = (name) => {
+      const wiki = this.state.wiki[name];
+
+      if (!wiki) {
+        return name;
+      }
+
       const { title, description, image, source } = this.state.wiki[name];
 
       return (
-        <Popover id="popover-basic">
-          <Popover.Title as="h3">{title}</Popover.Title>
-          <Popover.Content>
-            {image && (
-              <div>
-                <img src={image} alt={title} />
-              </div>
-            )}
-            <div style={{ marginTop: 5 }}>{description || "Loading"}</div>
-            {source && (
-              <a href={source} target="_blank" rel="noopener noreferrer">
-                More
-              </a>
-            )}
-          </Popover.Content>
-        </Popover>
+        <div style={{ textAlign: "left" }}>
+          <div style={{ marginBottom: 5 }}>{title}</div>
+
+          {image && (
+            <div>
+              <img src={image} alt={title} />
+            </div>
+          )}
+          <div style={{ marginTop: 5 }}>{description || "Loading"}</div>
+          {source && (
+            <a href={source} target="_blank" rel="noopener noreferrer">
+              More
+            </a>
+          )}
+        </div>
       );
     };
 
@@ -548,13 +569,13 @@ export default class Diagram extends Component {
       new mxXmlRequest(
         "https://icemlab-export.herokuapp.com/",
         "format=png&w=" +
-        w +
-        "&h=" +
-        h +
-        "&bg=#F9F7ED&xml=" +
-        encodeURIComponent(xmlText)
+          w +
+          "&h=" +
+          h +
+          "&bg=#F9F7ED&xml=" +
+          encodeURIComponent(xmlText)
       ).simulate(document, "_blank");
-    }
+    };
 
     return (
       <div>
@@ -572,20 +593,13 @@ export default class Diagram extends Component {
               </Card.Header>
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
-                  <OverlayTrigger placement="right" overlay={popover("flask")}>
-                    <img
-                      alt="Flask"
-                      className="item"
-                      value="Flask"
-                      src="science-24px.svg"
-                    />
-                  </OverlayTrigger>
                   {this.props.apparatus.map((item, index) => {
                     return (
-                      <OverlayTrigger
+                      <PopoverStickOnHover
+                        component={<div>{popover(item)}</div>}
                         placement="right"
-                        overlay={<Tooltip>{item}</Tooltip>}
-                        key={index}
+                        onMouseEnter={() => {}}
+                        delay={200}
                       >
                         <img
                           alt={item}
@@ -594,7 +608,7 @@ export default class Diagram extends Component {
                           src={`apparatus_svg/${item}.svg`}
                           key={index}
                         />
-                      </OverlayTrigger>
+                      </PopoverStickOnHover>
                     );
                   })}
                 </Card.Body>
@@ -681,18 +695,12 @@ export default class Diagram extends Component {
               <ZoomOutMapIcon />
             </IconButton>
           </OverlayTrigger>
-          <OverlayTrigger
-            placement="bottom"
-            overlay={<Tooltip>Undo</Tooltip>}
-          >
+          <OverlayTrigger placement="bottom" overlay={<Tooltip>Undo</Tooltip>}>
             <IconButton onClick={() => this.undoManager.undo()}>
               <UndoIcon />
             </IconButton>
           </OverlayTrigger>
-          <OverlayTrigger
-            placement="bottom"
-            overlay={<Tooltip>Redo</Tooltip>}
-          >
+          <OverlayTrigger placement="bottom" overlay={<Tooltip>Redo</Tooltip>}>
             <IconButton onClick={() => this.undoManager.redo()}>
               <RedoIcon />
             </IconButton>
