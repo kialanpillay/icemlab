@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Overlay, Popover } from 'react-bootstrap'
+import { Overlay } from 'react-bootstrap'
 
 import Tooltip from 'react-bootstrap/Tooltip'
 

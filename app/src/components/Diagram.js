@@ -111,13 +111,6 @@ export default class Diagram extends Component {
 
   componentDidMount() {
     this.loadGraph();
-
-    //Logic to retrieve apparatus images and descriptions from Wikipedia service
-
-    const fetchJson = async (url) => {
-      const response = await fetch(url);
-      return await response.json();
-    };
   }
   //Functor to return current graph
   graphF = (evt) => {
