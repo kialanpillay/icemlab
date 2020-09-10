@@ -57,12 +57,47 @@ export default class Diagram extends Component {
       wiki: {
         flask: {
           title: "Conical flask",
-          description: "Laboratory flask which features a flat bottom, a conical body, and a cylindrical neck.",
-          image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/20150320-OSEC-LSC-0080_%2816299658674%29.jpg/58px-20150320-OSEC-LSC-0080_%2816299658674%29.jpg",
-          source: "https://en.wikipedia.org/wiki/Erlenmeyer_flask"
+          description:
+            "Flask which features a flat bottom, a conical body, and a cylindrical neck.",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/20150320-OSEC-LSC-0080_%2816299658674%29.jpg/58px-20150320-OSEC-LSC-0080_%2816299658674%29.jpg",
+          source: "https://en.wikipedia.org/wiki/Erlenmeyer_flask",
         },
-        microscope: {
-          title: "Microscope",
+        Beaker: {
+          title: "Beaker",
+          description: "Cylindrical container with a flat bottom",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Beakers.jpg/100px-Beakers.jpg",
+          source: "https://en.wikipedia.org/wiki/Beaker_(laboratory_equipment)",
+        },
+        "Ice Bath": {
+          title: "Ice Bath",
+          description:
+            "Liquid mixture which is used to maintain low temperatures",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Aldolrxnpic.jpg/100px-Aldolrxnpic.jpg",
+          source: "https://en.wikipedia.org/wiki/Cooling_bath",
+        },
+        "Hirsch Funnel": {
+          title: "Hirsch Funnel",
+          description: "Used to assist in collecting recrystallized compounds",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Embudo_B%C3%BCchner.jpeg/75px-Embudo_B%C3%BCchner.jpeg",
+          source: "https://en.wikipedia.org/wiki/B%C3%BCchner_funnel",
+        },
+        "Glass Rod": {
+          title: "Glass Rod",
+          description: "Used to mix chemicals",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Stirring_rod.jpg/60px-Stirring_rod.jpg",
+          wiki: "https://en.wikipedia.org/wiki/Glass_rod",
+        },
+        Hotplate: {
+          title: "Hotplate",
+          description: "Generally used to heat glassware or its contents",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Light_Label_Electric_tabletop_burner_KCK-L103.jpg/100px-Light_Label_Electric_tabletop_burner_KCK-L103.jpg",
+          source: "https://en.wikipedia.org/wiki/Hot_plate",
         },
       },
       loaded: false,
@@ -442,6 +477,12 @@ export default class Diagram extends Component {
 
   render() {
     const popover = (name) => {
+      const wiki = this.state.wiki[name];
+
+      if (!wiki) {
+        return name;
+      }
+
       const { title, description, image, source } = this.state.wiki[name];
 
       return (
@@ -544,10 +585,11 @@ export default class Diagram extends Component {
 
                   {this.props.apparatus.map((item, index) => {
                     return (
-                      <OverlayTrigger
+                      <PopoverStickOnHover
+                        component={<div>{popover(item)}</div>}
                         placement="right"
-                        overlay={<Tooltip>{item}</Tooltip>}
-                        key={index}
+                        onMouseEnter={() => {}}
+                        delay={200}
                       >
                         <img
                           alt={item}
@@ -556,7 +598,7 @@ export default class Diagram extends Component {
                           src={`apparatus_svg/${item}.svg`}
                           key={index}
                         />
-                      </OverlayTrigger>
+                      </PopoverStickOnHover>
                     );
                   })}
                 </Card.Body>
