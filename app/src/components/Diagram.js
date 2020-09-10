@@ -55,8 +55,8 @@ export default class Diagram extends Component {
       createVisible: false,
       currentNode: null,
       wiki: {
-        flask: {
-          title: "Conical flask",
+        "Erlenmeyer Flask": {
+          title: "Erlenmeyer Flask",
           description:
             "Flask which features a flat bottom, a conical body, and a cylindrical neck.",
           image:
@@ -85,6 +85,13 @@ export default class Diagram extends Component {
             "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Embudo_B%C3%BCchner.jpeg/75px-Embudo_B%C3%BCchner.jpeg",
           source: "https://en.wikipedia.org/wiki/B%C3%BCchner_funnel",
         },
+        "Büchner Funnel": {
+          title: "Büchner Funnel",
+          description: "Used to assist in collecting recrystallized compounds",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Embudo_B%C3%BCchner.jpeg/75px-Embudo_B%C3%BCchner.jpeg",
+          source: "https://en.wikipedia.org/wiki/B%C3%BCchner_funnel",
+        },
         "Glass Rod": {
           title: "Glass Rod",
           description: "Used to mix chemicals",
@@ -98,6 +105,30 @@ export default class Diagram extends Component {
           image:
             "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Light_Label_Electric_tabletop_burner_KCK-L103.jpg/100px-Light_Label_Electric_tabletop_burner_KCK-L103.jpg",
           source: "https://en.wikipedia.org/wiki/Hot_plate",
+        },
+        "Reflux Condenser": {//used in more complex reactions that require the controlled mixing of multiple reagents
+          title: "Reflux Condenser",
+          description:
+            "Used to condense vapors — that is, turn them into liquids — by cooling them down.",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Distillation_2-3.jpg/100px-Distillation_2-3.jpg",
+          source: "https://en.wikipedia.org/wiki/Condenser_(laboratory)",
+        },
+        "Two-necked Flask": {
+          title: "Two-necked Flask",
+          description:
+            "Used in more complex reactions that require the controlled mixing of multiple reagents",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Erlenmeyer_Flasks.jpg/100px-Erlenmeyer_Flasks.jpg",
+          source: "https://en.wikipedia.org/wiki/Schlenk_flask",
+        },
+        "Burner": {
+          title: "Bunsen burner",
+          description:
+            "Produces a single open gas flame, and is used for heating, sterilization, and combustion",
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Bunsen_burner.jpg/58px-Bunsen_burner.jpg",
+          source: "https://en.wikipedia.org/wiki/Bunsen_burner",
         },
       },
       loaded: false,
@@ -562,20 +593,6 @@ export default class Diagram extends Component {
               </Card.Header>
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
-                  <PopoverStickOnHover
-                    component={<div>{popover("flask")}</div>}
-                    placement="right"
-                    onMouseEnter={() => {}}
-                    delay={200}
-                  >
-                    <img
-                      alt="Flask"
-                      className="item"
-                      value="Flask"
-                      src="science-24px.svg"
-                    />
-                  </PopoverStickOnHover>
-
                   {this.props.apparatus.map((item, index) => {
                     return (
                       <PopoverStickOnHover
