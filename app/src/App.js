@@ -11,15 +11,15 @@ import Dashboard from "./pages/Dashboard";
 export default function App() {
   return (
     <div>
-      <Router>
-        <Switch>
-          <Route exact path="/">
+      <Router data-testid="router">
+        <Switch data-testid="switch">
+          <Route exact path="/" data-testid="route">
             <Home />
           </Route>
-          <Route exact path="/dashboard">
+          <Route exact path="/dashboard" data-testid="route">
             <Dashboard />
           </Route>
-          <Route exact path="/upload">
+          <Route exact path="/upload" data-testid="route">
             <Upload edit={false} />
           </Route>
         </Switch>
