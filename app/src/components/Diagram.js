@@ -37,7 +37,6 @@ import {
   mxCodec,
   mxXmlCanvas2D,
   mxImageExport,
-  mxXmlRequest,
   mxImage,
   mxKeyHandler,
 } from "mxgraph-js";
@@ -301,7 +300,7 @@ export default class Diagram extends Component {
     if (src !== null) {
       const style =`${mxConstants.STYLE_SHAPE}=${mxConstants.SHAPE_IMAGE};`
         + `${mxConstants.STYLE_PERIMETER}=${mxPerimeter.RectanglePerimeter};`
-        + `${mxConstants.STYLE_IMAGE}=${window.location.href}/${src};`
+        + `${mxConstants.STYLE_IMAGE}=${window.location.href}${src};`
         + `${mxConstants.STYLE_FONTCOLOR}:#FFFFFF`;
 
       let parent = graph.getDefaultParent();
@@ -526,22 +525,22 @@ export default class Diagram extends Component {
       );
     };
 
-    const exportDiagram = () => {
+    const exportDiagram = async () => {
       const { graph } = this.state;
 
       // save/download XML
       const encoder = new mxCodec();
       const result = encoder.encode(graph.getModel());
       const xml = mxUtils.getXml(result);
-      const blob = new Blob([xml], { type: "text/xml" });
-      const filename = "experiment.xml";
+      const xmlBlob = new Blob([xml], { type: "text/xml" });
+      const xmlFilename = "Experiment.xml";
 
       if (window.navigator.msSaveOrOpenBlob) {
-        window.navigator.msSaveBlob(blob, filename);
+        window.navigator.msSaveBlob(xmlBlob, xmlFilename);
       } else {
-        const element = window.document.createElement("a");
-        element.href = window.URL.createObjectURL(blob);
-        element.download = filename;
+        let element = window.document.createElement("a");
+        element.href = window.URL.createObjectURL(xmlBlob);
+        element.download = xmlFilename;
         document.body.appendChild(element);
         element.click();
         document.body.removeChild(element);
@@ -563,16 +562,32 @@ export default class Diagram extends Component {
       var w = Math.ceil(bounds.x + bounds.width);
       var h = Math.ceil(bounds.y + bounds.height);
 
-      var xmlText = mxUtils.getXml(root);
-      new mxXmlRequest(
-        "https://icemlab-export.herokuapp.com/",
-        "format=png&w=" +
-        w +
-        "&h=" +
-        h +
-        "&bg=#F9F7ED&xml=" +
-        encodeURIComponent(xmlText)
-      ).simulate(document, "_blank");
+      const response = await fetch('https://icemlab-export.herokuapp.com/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          w,
+          h,
+          xml
+        })
+      });
+
+      const imageBlob = await response.blob()
+      const imageFilename = "Experiment.png";
+
+      if (window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveBlob(imageBlob, imageFilename);
+      } else {
+        let element = window.document.createElement("a");
+        element.href = window.URL.createObjectURL(imageBlob);
+        element.download = imageFilename;
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      }
+
     };
 
     return (
