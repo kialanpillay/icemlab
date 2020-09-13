@@ -299,12 +299,10 @@ export default class Diagram extends Component {
   //Functor used create a styled graph node
   funct = (graph, evt, target, x, y, value, src, type) => {
     if (src !== null) {
-      let style = {};
-      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
-      style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-      style[mxConstants.STYLE_IMAGE] = src;
-      style[mxConstants.STYLE_FONTCOLOR] = "#FFFFFF";
-      graph.getStylesheet().putCellStyle(`item${src}`, style);
+      const style =`${mxConstants.STYLE_SHAPE}=${mxConstants.SHAPE_IMAGE};`
+        + `${mxConstants.STYLE_PERIMETER}=${mxPerimeter.RectanglePerimeter};`
+        + `${mxConstants.STYLE_IMAGE}=${window.location.href}/${src};`
+        + `${mxConstants.STYLE_FONTCOLOR}:#FFFFFF`;
 
       let parent = graph.getDefaultParent();
       let cell = graph.insertVertex(
@@ -315,7 +313,7 @@ export default class Diagram extends Component {
         y,
         100,
         100,
-        `item${src}`
+        style
       );
       graph.setSelectionCell(cell);
       this.selectionChanged(graph, value);
@@ -569,11 +567,11 @@ export default class Diagram extends Component {
       new mxXmlRequest(
         "https://icemlab-export.herokuapp.com/",
         "format=png&w=" +
-          w +
-          "&h=" +
-          h +
-          "&bg=#F9F7ED&xml=" +
-          encodeURIComponent(xmlText)
+        w +
+        "&h=" +
+        h +
+        "&bg=#F9F7ED&xml=" +
+        encodeURIComponent(xmlText)
       ).simulate(document, "_blank");
     };
 
