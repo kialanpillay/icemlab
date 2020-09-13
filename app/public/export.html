@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>mxGraph Demo</title>
+
+    <script type="text/javascript">
+        mxBasePath = './mxgraph-4.2.0/src';
+    </script>
+
+    <script type="text/javascript" src="./mxgraph-4.2.0/src/js/mxClient.js"></script>
+
+    <script type="text/javascript">
+        function main(container, xml) {
+            if (!mxClient.isBrowserSupported()) {
+                mxUtils.error('Browser is not supported!', 200, false)
+            } else {
+                var graph = new mxGraph(container);
+                new mxRubberband(graph)
+
+                var parent = graph.getDefaultParent();
+
+                graph.getModel().beginUpdate();
+                try {
+                    var doc = mxUtils.parseXml(xml);
+                    var codec = new mxCodec(doc);
+                    codec.decode(doc.documentElement, graph.getModel());
+                } finally {
+                    graph.getModel().endUpdate();
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div id="graphContainer" style="overflow:hidden;width:1500px;height:1500px;background:url('grid.gif')"></div>
+</body>
+
+</html>
