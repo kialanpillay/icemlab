@@ -1,6 +1,6 @@
 .containerWrapper {
   overflow: visible;
-  margin-left: 10rem;
+  margin-left: 11.5rem;
   background: #ebebeb;
   height: 37rem;
 }
@@ -16,7 +16,7 @@
   align-items: center;
   justify-content: left;
   margin: 0.5rem;
-  margin-left: 10rem;
+  margin-left: 11.5rem;
 }
 .toolbar button {
   margin-right: 0.5rem;
@@ -31,8 +31,8 @@
 
 .sidebar {
   position: absolute;
-  width: 9rem;
-  height: 39rem;
+  width: 9.5rem;
+  height: 37rem;
   margin-top: 0.5rem;
   overflow-y: scroll;
   overflow-x: none;
@@ -47,7 +47,7 @@
 .sidebar p {
   font-size: 0.8rem;
   margin-bottom: 10px;
-  overflow-wrap: break-word;
+  overflow-wrap: normal;
   cursor: pointer;
 }
 
