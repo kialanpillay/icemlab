@@ -14,6 +14,9 @@ import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Tooltip from "react-bootstrap/Tooltip";
 
+import FormControl from "react-bootstrap/FormControl";
+import InputGroup from "react-bootstrap/InputGroup";
+
 import {
   mxGraph,
   mxConstants,
@@ -131,6 +134,7 @@ export default class Diagram extends Component {
         },
       },
       loaded: false,
+      search: "",
     };
     this.sidebar = React.createRef();
     this.toolbar = React.createRef();
@@ -298,7 +302,7 @@ export default class Diagram extends Component {
   //Functor used create a styled graph node
   funct = (graph, evt, target, x, y, value, src, type) => {
     if (src !== null) {
-      const style =`${mxConstants.STYLE_SHAPE}=${mxConstants.SHAPE_IMAGE};`
+      const style = `${mxConstants.STYLE_SHAPE}=${mxConstants.SHAPE_IMAGE};`
         + `${mxConstants.STYLE_PERIMETER}=${mxPerimeter.RectanglePerimeter};`
         + `${mxConstants.STYLE_IMAGE}=${window.location.href}${src};`
         + `${mxConstants.STYLE_FONTCOLOR}:#FFFFFF`;
@@ -590,9 +594,22 @@ export default class Diagram extends Component {
 
     };
 
+    const handleSearch = (event) => {
+      this.setState({ search: event.target.value });
+    };
+
     return (
       <div>
         <div className="sidebar" ref={this.sidebar}>
+
+          <InputGroup className="mb-3" style={{ padding: 3 }}>
+            <FormControl
+              placeholder={'Search'}
+              value={this.state.search}
+              onChange={handleSearch}
+            />
+          </InputGroup>
+
           <Accordion defaultActiveKey="0">
             <Card>
               <Card.Header>
@@ -606,24 +623,26 @@ export default class Diagram extends Component {
               </Card.Header>
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
-                  {this.props.apparatus.map((item, index) => {
-                    return (
-                      <PopoverStickOnHover
-                        component={<div>{popover(item)}</div>}
-                        placement="right"
-                        onMouseEnter={() => {}}
-                        delay={200}
-                      >
-                        <img
-                          alt={item}
-                          className="item"
-                          value={item}
-                          src={`apparatus_svg/${item}.svg`}
-                          key={index}
-                        />
-                      </PopoverStickOnHover>
-                    );
-                  })}
+                  {this.props.apparatus
+                    .filter(item => item.toLowerCase().includes(this.state.search.toLowerCase()))
+                    .map((item, index) => {
+                      return (
+                        <PopoverStickOnHover
+                          component={<div>{popover(item)}</div>}
+                          placement="right"
+                          onMouseEnter={() => { }}
+                          delay={200}
+                        >
+                          <img
+                            alt={item}
+                            className="item"
+                            value={item}
+                            src={`apparatus_svg/${item}.svg`}
+                            key={index}
+                          />
+                        </PopoverStickOnHover>
+                      );
+                    })}
                 </Card.Body>
               </Accordion.Collapse>
             </Card>
@@ -640,13 +659,15 @@ export default class Diagram extends Component {
 
               <Accordion.Collapse eventKey="1">
                 <Card.Body>
-                  {this.props.reagents.map((item, index) => {
-                    return (
-                      <p className="item" value={item} key={index}>
-                        {item}
-                      </p>
-                    );
-                  })}
+                  {this.props.reagents
+                    .filter(item => item.toLowerCase().includes(this.state.search.toLowerCase()))
+                    .map((item, index) => {
+                      return (
+                        <p className="item" value={item} key={index}>
+                          {item}
+                        </p>
+                      );
+                    })}
                 </Card.Body>
               </Accordion.Collapse>
             </Card>
