@@ -40,7 +40,7 @@ export default function ManualCard(props) {
             __html:
               props.variant === "Introduction"
                 ? props.experiment.information
-                : props.experiment.method,
+                : `${props.experiment.method}\n${props.experiment.image}`,
           }}
         />
       </Card.Body>

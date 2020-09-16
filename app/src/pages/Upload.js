@@ -13,11 +13,20 @@ import "react-quill/dist/quill.snow.css";
 import main from "../assets/main.png";
 import ReagentInput from "../components/ReagentInput";
 
-const modules = {
+const EDITOR_MODULES = {
   toolbar: [
     [{ header: [1, 2, false] }],
     ["bold", "italic", "underline", "strike"],
     [{ script: "sub" }, { script: "super" }],
+    ["link", "formula"],
+    ["clean"],
+  ],
+};
+const IMAGE_MODULES = {
+  toolbar: [
+    ["bold", "italic", "underline", "strike"],
+    [{ script: "sub" }, { script: "super" }],
+    ["image", "formula"],
     ["clean"],
   ],
 };
@@ -42,10 +51,12 @@ class Upload extends Component {
       hidden: true,
       apparatusData: [], //array to store apparatus retrieved from the server
       reagentsData: [],
+      image: "",
     };
     //Binding of methods to the class instance
     this.handleChange = this.handleChange.bind(this);
     this.handleEditorChange = this.handleEditorChange.bind(this);
+    this.handleImageChange = this.handleImageChange.bind(this);
     this.callbackChecklist = this.callbackChecklist.bind(this);
     this.callbackReagents = this.callbackReagents.bind(this);
   }
@@ -135,6 +146,7 @@ class Upload extends Component {
       notes: this.state.notes,
       category: this.state.courseCode,
       url: this.state.videoLink,
+      image: this.state.image,
     };
     const url = "https://icemlab.herokuapp.com/experiment/";
     fetch(url, {
@@ -181,6 +193,7 @@ class Upload extends Component {
           notes: response.experiment.notes,
           courseCode: response.experiment.category,
           videoLink: response.experiment.url,
+          image: response.experiment.image,
           hidden: false,
         });
       })
@@ -197,6 +210,12 @@ class Upload extends Component {
   handleEditorChange(content, delta, source, editor) {
     this.setState({
       method: this.convertDecimalPoint(content),
+    });
+  }
+
+  handleImageChange(content, delta, source, editor) {
+    this.setState({
+      image: content,
     });
   }
 
@@ -310,7 +329,7 @@ class Upload extends Component {
                 <ReactQuill
                   theme="snow"
                   onChange={this.handleEditorChange}
-                  modules={modules}
+                  modules={EDITOR_MODULES}
                   style={{ height: "16rem", marginLeft: "1rem" }}
                   value={this.state.method}
                 ></ReactQuill>
@@ -341,6 +360,19 @@ class Upload extends Component {
               </div>
             </div>
             <hr />
+            <div className="u-div">
+              <div className="ulabel">Experiment Graphics</div>
+              <div className="ucontent-div" style={{ height: "20rem" }}>
+                <ReactQuill
+                  theme="snow"
+                  onChange={this.handleImageChange}
+                  modules={IMAGE_MODULES}
+                  style={{ height: "16rem", marginLeft: "1rem" }}
+                  value={this.state.image}
+                  placeholder={"Maximum image file size: 300KB"}
+                ></ReactQuill>
+              </div>
+            </div>
             {/*Div used for experiment video */}
             <div className="u-div">
               <div className="ulabel">Experiment Demonstration</div>

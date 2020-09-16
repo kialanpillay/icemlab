@@ -108,7 +108,8 @@ export default class Diagram extends Component {
             "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Light_Label_Electric_tabletop_burner_KCK-L103.jpg/100px-Light_Label_Electric_tabletop_burner_KCK-L103.jpg",
           source: "https://en.wikipedia.org/wiki/Hot_plate",
         },
-        "Reflux Condenser": {//used in more complex reactions that require the controlled mixing of multiple reagents
+        "Reflux Condenser": {
+          //used in more complex reactions that require the controlled mixing of multiple reagents
           title: "Reflux Condenser",
           description:
             "Used to condense vapors — that is, turn them into liquids — by cooling them down.",
@@ -124,7 +125,7 @@ export default class Diagram extends Component {
             "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Erlenmeyer_Flasks.jpg/100px-Erlenmeyer_Flasks.jpg",
           source: "https://en.wikipedia.org/wiki/Schlenk_flask",
         },
-        "Burner": {
+        Burner: {
           title: "Bunsen burner",
           description:
             "Produces a single open gas flame, and is used for heating, sterilization, and combustion",
@@ -302,22 +303,14 @@ export default class Diagram extends Component {
   //Functor used create a styled graph node
   funct = (graph, evt, target, x, y, value, src, type) => {
     if (src !== null) {
-      const style = `${mxConstants.STYLE_SHAPE}=${mxConstants.SHAPE_IMAGE};`
-        + `${mxConstants.STYLE_PERIMETER}=${mxPerimeter.RectanglePerimeter};`
-        + `${mxConstants.STYLE_IMAGE}=${window.location.href}${src};`
-        + `${mxConstants.STYLE_FONTCOLOR}:#FFFFFF`;
+      const style =
+        `${mxConstants.STYLE_SHAPE}=${mxConstants.SHAPE_IMAGE};` +
+        `${mxConstants.STYLE_PERIMETER}=${mxPerimeter.RectanglePerimeter};` +
+        `${mxConstants.STYLE_IMAGE}=${window.location.href}${src};` +
+        `${mxConstants.STYLE_FONTCOLOR}:#FFFFFF`;
 
       let parent = graph.getDefaultParent();
-      let cell = graph.insertVertex(
-        parent,
-        target,
-        "",
-        x,
-        y,
-        100,
-        100,
-        style
-      );
+      let cell = graph.insertVertex(parent, target, "", x, y, 100, 100, style);
       graph.setSelectionCell(cell);
       this.selectionChanged(graph, value);
     } else if (type === null) {
@@ -566,19 +559,19 @@ export default class Diagram extends Component {
       var w = Math.ceil(bounds.x + bounds.width);
       var h = Math.ceil(bounds.y + bounds.height);
 
-      const response = await fetch('https://icemlab-export.herokuapp.com/', {
-        method: 'POST',
+      const response = await fetch("https://icemlab-export.herokuapp.com/", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           w,
           h,
-          xml
-        })
+          xml,
+        }),
       });
 
-      const imageBlob = await response.blob()
+      const imageBlob = await response.blob();
       const imageFilename = "Experiment.png";
 
       if (window.navigator.msSaveOrOpenBlob) {
@@ -591,7 +584,6 @@ export default class Diagram extends Component {
         element.click();
         document.body.removeChild(element);
       }
-
     };
 
     const handleSearch = (event) => {
@@ -601,10 +593,9 @@ export default class Diagram extends Component {
     return (
       <div>
         <div className="sidebar" ref={this.sidebar}>
-
-          <InputGroup className="mb-3" style={{ padding: 3 }}>
+          <InputGroup className="mb-3">
             <FormControl
-              placeholder={'Search'}
+              placeholder={"Search"}
               value={this.state.search}
               onChange={handleSearch}
             />
@@ -624,13 +615,17 @@ export default class Diagram extends Component {
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
                   {this.props.apparatus
-                    .filter(item => item.toLowerCase().includes(this.state.search.toLowerCase()))
+                    .filter((item) =>
+                      item
+                        .toLowerCase()
+                        .includes(this.state.search.toLowerCase())
+                    )
                     .map((item, index) => {
                       return (
                         <PopoverStickOnHover
                           component={<div>{popover(item)}</div>}
                           placement="right"
-                          onMouseEnter={() => { }}
+                          onMouseEnter={() => {}}
                           delay={200}
                         >
                           <img
@@ -660,7 +655,11 @@ export default class Diagram extends Component {
               <Accordion.Collapse eventKey="1">
                 <Card.Body>
                   {this.props.reagents
-                    .filter(item => item.toLowerCase().includes(this.state.search.toLowerCase()))
+                    .filter((item) =>
+                      item
+                        .toLowerCase()
+                        .includes(this.state.search.toLowerCase())
+                    )
                     .map((item, index) => {
                       return (
                         <p className="item" value={item} key={index}>
