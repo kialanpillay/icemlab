@@ -7,6 +7,10 @@ import ZoomOutMapIcon from "@material-ui/icons/ZoomOutMap";
 import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
 import SaveIcon from "@material-ui/icons/Save";
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+
+import { IconButton } from "@material-ui/core";
 
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import PopoverStickOnHover from "./PopoverStickOnHover";
@@ -16,6 +20,12 @@ import Tooltip from "react-bootstrap/Tooltip";
 
 import FormControl from "react-bootstrap/FormControl";
 import InputGroup from "react-bootstrap/InputGroup";
+
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
 
 import {
   mxGraph,
@@ -43,7 +53,6 @@ import {
   mxImage,
   mxKeyHandler,
 } from "mxgraph-js";
-import { IconButton } from "@material-ui/core";
 
 //Diagramming Tool Component
 export default class Diagram extends Component {
@@ -136,6 +145,8 @@ export default class Diagram extends Component {
       },
       loaded: false,
       search: "",
+      anchorEl: null,
+      open: false,
     };
     this.sidebar = React.createRef();
     this.toolbar = React.createRef();
@@ -522,26 +533,12 @@ export default class Diagram extends Component {
       );
     };
 
-    const exportDiagram = async () => {
+    const exportPNG = async () => {
       const { graph } = this.state;
 
-      // save/download XML
       const encoder = new mxCodec();
       const result = encoder.encode(graph.getModel());
       const xml = mxUtils.getXml(result);
-      const xmlBlob = new Blob([xml], { type: "text/xml" });
-      const xmlFilename = "Experiment.xml";
-
-      if (window.navigator.msSaveOrOpenBlob) {
-        window.navigator.msSaveBlob(xmlBlob, xmlFilename);
-      } else {
-        let element = window.document.createElement("a");
-        element.href = window.URL.createObjectURL(xmlBlob);
-        element.download = xmlFilename;
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-      }
 
       // export PNG
       var xmlDoc = mxUtils.createXmlDocument();
@@ -586,8 +583,50 @@ export default class Diagram extends Component {
       }
     };
 
+    const exportXML = async () => {
+      const { graph } = this.state;
+
+      // save/download XML
+      const encoder = new mxCodec();
+      const result = encoder.encode(graph.getModel());
+      const xml = mxUtils.getXml(result);
+      const xmlBlob = new Blob([xml], { type: "text/xml" });
+      const xmlFilename = "Experiment.xml";
+
+      if (window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveBlob(xmlBlob, xmlFilename);
+      } else {
+        let element = window.document.createElement("a");
+        element.href = window.URL.createObjectURL(xmlBlob);
+        element.download = xmlFilename;
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      }
+    };
+
     const handleSearch = (event) => {
       this.setState({ search: event.target.value });
+    };
+
+    const handleClick = (event) => {
+      this.setState({ anchorEl: event.currentTarget });
+    };
+
+    const handleClose = () => {
+      this.setState({ anchorEl: null });
+    };
+
+    const showGeneratingPng = () => {
+      this.setState({ open: true });
+    };
+
+    const closeGeneratingPng = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+
+      this.setState({ open: false });
     };
 
     return (
@@ -739,18 +778,48 @@ export default class Diagram extends Component {
             </IconButton>
           </OverlayTrigger>
           <OverlayTrigger
-            placement="bottom"
-            overlay={<Tooltip>Export to PNG</Tooltip>}
+            placement="top"
+            overlay={<Tooltip>Export</Tooltip>}
           >
-            <IconButton onClick={() => exportDiagram()}>
+            <ToggleButton value="color" aria-label="color" aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
               <SaveIcon />
-            </IconButton>
+              <ArrowDropDownIcon />
+            </ToggleButton>
           </OverlayTrigger>
         </div>
+
+        <Menu
+          id="simple-menu"
+          anchorEl={this.state.anchorEl}
+          keepMounted
+          open={Boolean(this.state.anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={() => { handleClose(); exportPNG(); showGeneratingPng() }}>PNG</MenuItem>
+          <MenuItem onClick={() => { handleClose(); exportXML(); }}>Draw.io</MenuItem>
+        </Menu>
 
         <div className="containerWrapper">
           <div className="graphContainer" ref={this.graphContainer} />
         </div>
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.open}
+          autoHideDuration={6000}
+          onClose={closeGeneratingPng}
+          message="Generating image..."
+          action={
+            <React.Fragment>
+              <IconButton size="small" aria-label="close" color="inherit" onClick={closeGeneratingPng}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </React.Fragment>
+          }
+        />
       </div>
     );
   }
