@@ -7,8 +7,8 @@ import ZoomOutMapIcon from "@material-ui/icons/ZoomOutMap";
 import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
 import SaveIcon from "@material-ui/icons/Save";
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ToggleButton from '@material-ui/lab/ToggleButton';
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import ToggleButton from "@material-ui/lab/ToggleButton";
 
 import { IconButton } from "@material-ui/core";
 
@@ -21,11 +21,11 @@ import Tooltip from "react-bootstrap/Tooltip";
 import FormControl from "react-bootstrap/FormControl";
 import InputGroup from "react-bootstrap/InputGroup";
 
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
-import Snackbar from '@material-ui/core/Snackbar';
-import CloseIcon from '@material-ui/icons/Close';
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
 
 import {
   mxGraph,
@@ -490,7 +490,6 @@ export default class Diagram extends Component {
           this.setGraphSetting();
           this.initUndo();
           this.settingConnection();
-          this.createDragElement();
 
           graph.getModel().beginUpdate();
           try {
@@ -622,7 +621,7 @@ export default class Diagram extends Component {
     };
 
     const closeGeneratingPng = (event, reason) => {
-      if (reason === 'clickaway') {
+      if (reason === "clickaway") {
         return;
       }
 
@@ -777,11 +776,14 @@ export default class Diagram extends Component {
               <RedoIcon />
             </IconButton>
           </OverlayTrigger>
-          <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip>Export</Tooltip>}
-          >
-            <ToggleButton value="color" aria-label="color" aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+          <OverlayTrigger placement="top" overlay={<Tooltip>Export</Tooltip>}>
+            <ToggleButton
+              value="color"
+              aria-label="color"
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              onClick={handleClick}
+            >
               <SaveIcon />
               <ArrowDropDownIcon />
             </ToggleButton>
@@ -795,8 +797,23 @@ export default class Diagram extends Component {
           open={Boolean(this.state.anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={() => { handleClose(); exportPNG(); showGeneratingPng() }}>PNG</MenuItem>
-          <MenuItem onClick={() => { handleClose(); exportXML(); }}>Draw.io</MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              exportPNG();
+              showGeneratingPng();
+            }}
+          >
+            PNG
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              exportXML();
+            }}
+          >
+            Draw.io
+          </MenuItem>
         </Menu>
 
         <div className="containerWrapper">
@@ -805,8 +822,8 @@ export default class Diagram extends Component {
 
         <Snackbar
           anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
+            vertical: "bottom",
+            horizontal: "left",
           }}
           open={this.state.open}
           autoHideDuration={6000}
@@ -814,7 +831,12 @@ export default class Diagram extends Component {
           message="Generating image..."
           action={
             <React.Fragment>
-              <IconButton size="small" aria-label="close" color="inherit" onClick={closeGeneratingPng}>
+              <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={closeGeneratingPng}
+              >
                 <CloseIcon fontSize="small" />
               </IconButton>
             </React.Fragment>
