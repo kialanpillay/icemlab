@@ -24,6 +24,9 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
+
 import {
   mxGraph,
   mxConstants,
@@ -141,7 +144,8 @@ export default class Diagram extends Component {
       },
       loaded: false,
       search: "",
-      anchorEl: null
+      anchorEl: null,
+      open: false,
     };
     this.sidebar = React.createRef();
     this.toolbar = React.createRef();
@@ -621,6 +625,18 @@ export default class Diagram extends Component {
       this.setState({ anchorEl: null });
     };
 
+    const showGeneratingPng = () => {
+      this.setState({ open: true });
+    };
+
+    const closeGeneratingPng = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+
+      this.setState({ open: false });
+    };
+
     return (
       <div>
         <div className="sidebar" ref={this.sidebar}>
@@ -780,13 +796,31 @@ export default class Diagram extends Component {
           open={Boolean(this.state.anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={() => { handleClose(); exportPNG(); }}>PNG</MenuItem>
+          <MenuItem onClick={() => { handleClose(); exportPNG(); showGeneratingPng() }}>PNG</MenuItem>
           <MenuItem onClick={() => { handleClose(); exportXML(); }}>Draw.io</MenuItem>
         </Menu>
 
         <div className="containerWrapper">
           <div className="graphContainer" ref={this.graphContainer} />
         </div>
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.open}
+          autoHideDuration={6000}
+          onClose={closeGeneratingPng}
+          message="Generating image..."
+          action={
+            <React.Fragment>
+              <IconButton size="small" aria-label="close" color="inherit" onClick={closeGeneratingPng}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </React.Fragment>
+          }
+        />
       </div>
     );
   }
