@@ -2,16 +2,18 @@ import React, { Component } from "react";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
-import "./Upload.css";
-import Navigation from "../components/Navigation";
 import Button from "react-bootstrap/Button";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
+import Navigation from "../components/Navigation";
+import ReagentInput from "../components/ReagentInput";
 import Checklist from "../components/Checklist";
 import Alert from "react-bootstrap/Alert";
 import CheckIcon from "@material-ui/icons/Check";
 import ReactQuill from "react-quill";
+import "./Upload.css";
 import "react-quill/dist/quill.snow.css";
 import main from "../assets/main.png";
-import ReagentInput from "../components/ReagentInput";
 
 const EDITOR_MODULES = {
   toolbar: [
@@ -250,7 +252,16 @@ class Upload extends Component {
               <div className="ulabel">Course</div>
               <div className="ucontent-div">
                 <Form.Group as={Col} controlId="courseCode">
-                  <Form.Label>Course Code</Form.Label>
+                  <OverlayTrigger
+                    placement="left"
+                    overlay={
+                      <Tooltip>
+                        Select the appropriate course code for this experiment.
+                      </Tooltip>
+                    }
+                  >
+                    <Form.Label>Course Code</Form.Label>
+                  </OverlayTrigger>
                   <Form.Control
                     as="select"
                     required={true}
@@ -271,7 +282,17 @@ class Upload extends Component {
               <div className="ulabel">Experiment Details</div>
               <div className="ucontent-div">
                 <Form.Group as={Col} controlId="title">
-                  <Form.Label>Title </Form.Label>
+                  <OverlayTrigger
+                    placement="left"
+                    overlay={
+                      <Tooltip>
+                        Enter a title for this experiment. Note that this cannot
+                        be changed once the experiment is uploaded.
+                      </Tooltip>
+                    }
+                  >
+                    <Form.Label>Title</Form.Label>
+                  </OverlayTrigger>
                   <Form.Control
                     placeholder="Enter Experiment Title"
                     required={true}
@@ -282,7 +303,17 @@ class Upload extends Component {
                   />
                 </Form.Group>
                 <Form.Group as={Col} controlId="preamble">
-                  <Form.Label>Preamble </Form.Label>
+                  <OverlayTrigger
+                    placement="left"
+                    overlay={
+                      <Tooltip>
+                        Enter a introduction, preamble or description for this
+                        experiment into the text area.
+                      </Tooltip>
+                    }
+                  >
+                    <Form.Label>Preamble</Form.Label>
+                  </OverlayTrigger>
                   <Form.Control
                     as="textarea"
                     rows="5"
@@ -295,7 +326,17 @@ class Upload extends Component {
                 </Form.Group>
                 <div className="u-div">
                   <Form.Group as={Col} controlId="apparatus">
-                    <Form.Label>Apparatus</Form.Label>
+                    <OverlayTrigger
+                      placement="left"
+                      overlay={
+                        <Tooltip>
+                          Select the requisite apparatus for this experiment
+                          using this checklist.
+                        </Tooltip>
+                      }
+                    >
+                      <Form.Label>Apparatus</Form.Label>
+                    </OverlayTrigger>
                     {!this.state.hidden ? (
                       <Checklist
                         data={this.state.apparatusData}
@@ -308,7 +349,19 @@ class Upload extends Component {
                   <img src={main} height="350" alt="Graphic"></img>
                 </div>
                 <Form.Group as={Col} controlId="reagents">
-                  <Form.Label>Reagents</Form.Label>
+                  <OverlayTrigger
+                    placement="left"
+                    overlay={
+                      <Tooltip>
+                        Search for and select reagents for this experiment.
+                        Typing into the component will display a list of
+                        matching items. To delete a selection, click the button
+                        on the reagent chip.
+                      </Tooltip>
+                    }
+                  >
+                    <Form.Label>Reagents</Form.Label>
+                  </OverlayTrigger>
                   {!this.state.hidden ? (
                     <ReagentInput
                       data={this.processReagents(this.state.reagentsData)}
@@ -326,13 +379,24 @@ class Upload extends Component {
             <div className="u-div">
               <div className="ulabel">Experiment Method</div>
               <div className="ucontent-div" style={{ height: "20rem" }}>
-                <ReactQuill
-                  theme="snow"
-                  onChange={this.handleEditorChange}
-                  modules={EDITOR_MODULES}
-                  style={{ height: "16rem", marginLeft: "1rem" }}
-                  value={this.state.method}
-                ></ReactQuill>
+                <OverlayTrigger
+                  placement="left"
+                  overlay={
+                    <Tooltip>
+                      Enter a method for this experiment. Use the buttons in the
+                      editor toolbar to add headings, text decoration, links and
+                      formulas.
+                    </Tooltip>
+                  }
+                >
+                  <ReactQuill
+                    theme="snow"
+                    onChange={this.handleEditorChange}
+                    modules={EDITOR_MODULES}
+                    style={{ height: "16rem", marginLeft: "1rem" }}
+                    value={this.state.method}
+                  ></ReactQuill>
+                </OverlayTrigger>
               </div>
             </div>
             <hr />
@@ -363,22 +427,44 @@ class Upload extends Component {
             <div className="u-div">
               <div className="ulabel">Experiment Graphics</div>
               <div className="ucontent-div" style={{ height: "20rem" }}>
-                <ReactQuill
-                  theme="snow"
-                  onChange={this.handleImageChange}
-                  modules={IMAGE_MODULES}
-                  style={{ height: "16rem", marginLeft: "1rem" }}
-                  value={this.state.image}
-                  placeholder={"Maximum image file size: 300KB"}
-                ></ReactQuill>
+                <OverlayTrigger
+                  placement="left"
+                  overlay={
+                    <Tooltip>
+                      Upload an image or diagram for this experiment by clicking
+                      on the Image button in the toolbar and add a caption or
+                      description.
+                    </Tooltip>
+                  }
+                >
+                  <ReactQuill
+                    theme="snow"
+                    onChange={this.handleImageChange}
+                    modules={IMAGE_MODULES}
+                    style={{ height: "16rem", marginLeft: "1rem" }}
+                    value={this.state.image}
+                    placeholder={"Maximum image file size: 300KB"}
+                  ></ReactQuill>
+                </OverlayTrigger>
               </div>
             </div>
+            <hr />
             {/*Div used for experiment video */}
             <div className="u-div">
               <div className="ulabel">Experiment Demonstration</div>
               <div className="ucontent-div">
                 <Form.Group as={Col} controlId="videoLink">
-                  <Form.Label>Video URL </Form.Label>
+                  <OverlayTrigger
+                    placement="left"
+                    overlay={
+                      <Tooltip>
+                        Enter a URL for a video of a demonstration of this
+                        experiment.
+                      </Tooltip>
+                    }
+                  >
+                    <Form.Label>Video URL</Form.Label>
+                  </OverlayTrigger>
                   <Form.Control
                     placeholder=""
                     required={true}
@@ -395,7 +481,17 @@ class Upload extends Component {
               <div className="ulabel">Additional Notes</div>
               <div className="ucontent-div">
                 <Form.Group as={Col} controlId="additionalNotes">
-                  <Form.Label>Notes</Form.Label>
+                  <OverlayTrigger
+                    placement="left"
+                    overlay={
+                      <Tooltip>
+                        Enter additional notes or supplemental information for
+                        this experiment.
+                      </Tooltip>
+                    }
+                  >
+                    <Form.Label>Notes</Form.Label>
+                  </OverlayTrigger>
                   <Form.Control
                     as="textarea"
                     rows="6"
