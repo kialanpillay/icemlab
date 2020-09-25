@@ -177,11 +177,7 @@ export default class Diagram extends Component {
       return !mxEvent.isAltDown(evt);
     };
     mxEdgeHandler.prototype.snapToTerminals = true;
-    mxConstraintHandler.prototype.pointImage = new mxImage(
-      "https://uploads.codesandbox.io/uploads/user/4bf4b6b3-3aa9-4999-8b70-bbc1b287a968/-q_3-point.gif",
-      5,
-      5
-    );
+    mxConstraintHandler.prototype.pointImage = new mxImage("point.gif", 5, 5);
   };
 
   //Creates a draggable element from sidebar items (apparatus)
@@ -263,18 +259,6 @@ export default class Diagram extends Component {
 
     //Initialising style objects
     let style = {};
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-    style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-    style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-    style[mxConstants.STYLE_FILLCOLOR] = "sandybrown";
-    style[mxConstants.STYLE_STROKECOLOR] = "black";
-    style[mxConstants.STYLE_STROKEWIDTH] = 3;
-    style[mxConstants.STYLE_ROUNDED] = true;
-    style[mxConstants.STYLE_ARCSIZE] = 10;
-    graph.getStylesheet().putCellStyle("table", style);
-
-    style = {};
     style[mxConstants.STYLE_STROKECOLOR] = "black";
     style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_CONNECTOR;
     style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
@@ -300,8 +284,8 @@ export default class Diagram extends Component {
     style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
     style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
     style[mxConstants.STYLE_FILLCOLOR] = "none";
-    style[mxConstants.STYLE_STROKECOLOR] = "black";
-    style[mxConstants.STYLE_STROKEWIDTH] = 1;
+    style[mxConstants.STYLE_STROKECOLOR] = "none";
+    style[mxConstants.STYLE_STROKEWIDTH] = 0;
     style[mxConstants.STYLE_FONTSIZE] = "14";
     style[mxConstants.STYLE_FONTCOLOR] = "black";
     graph.getStylesheet().putCellStyle("text", style);
@@ -317,8 +301,7 @@ export default class Diagram extends Component {
       const style =
         `${mxConstants.STYLE_SHAPE}=${mxConstants.SHAPE_IMAGE};` +
         `${mxConstants.STYLE_PERIMETER}=${mxPerimeter.RectanglePerimeter};` +
-        `${mxConstants.STYLE_IMAGE}=${window.location.href}${src};` +
-        `${mxConstants.STYLE_FONTCOLOR}:#FFFFFF`;
+        `${mxConstants.STYLE_IMAGE}=${window.location.href}${src};`;
 
       let parent = graph.getDefaultParent();
       let cell = graph.insertVertex(parent, target, "", x, y, 100, 100, style);
@@ -338,7 +321,7 @@ export default class Diagram extends Component {
       );
       graph.setSelectionCell(cell);
       this.selectionChanged(graph, value);
-    } else {
+    } else if (type === "text") {
       let parent = graph.getDefaultParent();
       let cell = graph.insertVertex(
         parent,
@@ -350,6 +333,18 @@ export default class Diagram extends Component {
         40,
         "text"
       );
+      graph.setSelectionCell(cell);
+      this.selectionChanged(graph, value);
+    } else {
+      const style =
+        `${mxConstants.STYLE_SHAPE}=${mxConstants.SHAPE_ELLIPSE};` +
+        `${mxConstants.STYLE_PERIMETER}=${mxPerimeter.EllipsePerimeter};` +
+        `${mxConstants.STYLE_STROKECOLOR}=none;` +
+        `${mxConstants.STYLE_STROKEWIDTH}=none;` +
+        `${mxConstants.STYLE_FILLCOLOR}=${type}`;
+
+      let parent = graph.getDefaultParent();
+      let cell = graph.insertVertex(parent, target, "", x, y, 30, 30, style);
       graph.setSelectionCell(cell);
       this.selectionChanged(graph, value);
     }
@@ -502,6 +497,16 @@ export default class Diagram extends Component {
       mxEvent.disableContextMenu(container);
     }
   }
+
+  reagentColor = (item, index) => {
+    if (item === "Water") {
+      return "rgb(133,193,233)";
+    } else {
+      return `rgb(${(index + 1) * 20}, ${(index + 1) * 10}, ${
+        (index + 1) * 20
+      })`;
+    }
+  };
 
   render() {
     const popover = (name) => {
@@ -700,9 +705,31 @@ export default class Diagram extends Component {
                     )
                     .map((item, index) => {
                       return (
-                        <p className="item" value={item} key={index}>
-                          {item}
-                        </p>
+                        <div key={index}>
+                          <p className="item" value={item} key={index}>
+                            {item}
+                          </p>
+                          <OverlayTrigger
+                            placement="bottom"
+                            overlay={<Tooltip>{item}</Tooltip>}
+                            key={index}
+                          >
+                            <div
+                              className="item"
+                              value=""
+                              style={{
+                                backgroundColor: this.reagentColor(item, index),
+                                padding: "0.5rem",
+                                margin: "-5px 0 10px 0",
+                                textAlign: "center",
+                                cursor: "pointer",
+                                borderRadius: "100%",
+                                width: "15px",
+                              }}
+                              type={this.reagentColor(item, index)}
+                            ></div>
+                          </OverlayTrigger>
+                        </div>
                       );
                     })}
                 </Card.Body>
@@ -724,7 +751,7 @@ export default class Diagram extends Component {
                   <div
                     className="item"
                     value="Text"
-                    type="General"
+                    type="text"
                     style={{
                       border: "1px solid black",
                       padding: "0.5rem",
