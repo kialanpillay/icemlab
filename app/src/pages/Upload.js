@@ -137,6 +137,16 @@ class Upload extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  validatePayload = () => {
+    return (
+      this.state.title !== "" &&
+      this.state.preamble.information !== "" &&
+      this.state.checkedApparatus.length !== 0 &&
+      this.processSelectedReagents().length !== 0 &&
+      this.state.method.length !== 0
+    );
+  };
+
   //PUT request to send the user input (Experiment upload details) to the API server
   putPayload = () => {
     const payload = {
@@ -509,6 +519,7 @@ class Upload extends Component {
                   <Button
                     className="ubutton"
                     onClick={() => this.putPayload()} // Calling the PUT method to upload the experiment
+                    disabled={!this.validatePayload()}
                     style={{
                       marginLeft: "30px",
                       backgroundColor: "#4E2E84",
