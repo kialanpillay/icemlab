@@ -64,7 +64,7 @@ class Upload extends Component {
   }
   //GET request to retrieve an array of available experiments from the API server
   getApparatus = () => {
-    const apparatusEndpoint = "https://icemlab.herokuapp.com/apparatus/";
+    const apparatusEndpoint = "https://icemlab-service.herokuapp.com/apparatus/";
     fetch(apparatusEndpoint, {
       method: "GET",
     })
@@ -80,7 +80,7 @@ class Upload extends Component {
   };
 
   getReagents = () => {
-    const reagentsEndpoint = "https://icemlab.herokuapp.com/reagent/";
+    const reagentsEndpoint = "https://icemlab-service.herokuapp.com/reagent/";
     fetch(reagentsEndpoint, {
       method: "GET",
     })
@@ -160,7 +160,7 @@ class Upload extends Component {
       url: this.state.videoLink,
       image: this.state.image,
     };
-    const url = "https://icemlab.herokuapp.com/experiment/";
+    const url = "https://icemlab-service.herokuapp.com/experiment/";
     fetch(url, {
       method: "PUT",
       headers: {
@@ -186,7 +186,7 @@ class Upload extends Component {
     return `?${query}`;
   };
   getExperiment = () => {
-    const endpoint = "https://icemlab.herokuapp.com/experiment/";
+    const endpoint = "https://icemlab-service.herokuapp.com/experiment/";
     const query = {
       title: this.props.experimentTitle,
     };

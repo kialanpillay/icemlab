@@ -65,7 +65,7 @@ export default class Experiment extends Component {
 
   //GET request to retrieve a experiment data from the API server
   getExperiment = () => {
-    const endpoint = "https://icemlab.herokuapp.com/experiment/";
+    const endpoint = "https://icemlab-service.herokuapp.com/experiment/";
     const query = {
       title: this.props.experiment,
     };
