@@ -348,6 +348,7 @@ export default class Diagram extends Component {
       graph.setSelectionCell(cell);
       this.selectionChanged(graph, value);
     }
+    this.props.callback(Object.keys(this.state.graph.model.cells).length - 2);
   };
 
   componentDidUpdate() {
@@ -670,13 +671,13 @@ export default class Diagram extends Component {
                           placement="right"
                           onMouseEnter={() => {}}
                           delay={200}
+                          key={index}
                         >
                           <img
                             alt={item}
                             className="item"
                             value={item}
                             src={`apparatus_svg/${item}.svg`}
-                            key={index}
                           />
                         </PopoverStickOnHover>
                       );
@@ -706,13 +707,12 @@ export default class Diagram extends Component {
                     .map((item, index) => {
                       return (
                         <div key={index}>
-                          <p className="item" value={item} key={index}>
+                          <p className="item" value={item}>
                             {item}
                           </p>
                           <OverlayTrigger
                             placement="bottom"
                             overlay={<Tooltip>{item}</Tooltip>}
-                            key={index}
                           >
                             <div
                               className="item"

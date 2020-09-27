@@ -28,6 +28,7 @@ export default class Experiment extends Component {
       checked: [],
       checklistComplete: false,
       videoVisible: false,
+      diagramComplete: false,
     };
   }
 
@@ -39,8 +40,19 @@ export default class Experiment extends Component {
       this.setState({ checklistComplete: true, videoVisible: true });
     }
   };
+
   alertOnClose = () => {
     this.setState({ checklistComplete: false });
+  };
+
+  //Callback function to compare the number of diagram notes to experiment items
+  callbackDiagram = (nodes) => {
+    const numItems =
+      this.state.experiment.apparatus.length +
+      this.state.experiment.reagents.length;
+    if (nodes >= numItems) {
+      this.setState({ diagramComplete: true });
+    }
   };
 
   //Encode query parameters for a HTTP request
@@ -176,6 +188,7 @@ export default class Experiment extends Component {
                   reagents={
                     this.state.hidden ? [] : this.state.experiment.reagents
                   }
+                  callback={this.callbackDiagram}
                 />
               </Col>
               <Col md={3}>
@@ -191,9 +204,9 @@ export default class Experiment extends Component {
                     callback={this.callback}
                     variant="experiment"
                   />
-                  <Alert //Indicating the upload success to the user
+                  <Alert //Indicating the successful experiment completion to the user
                     show={this.state.checklistComplete}
-                    variant="success"
+                    variant={this.state.diagramComplete ? "success" : "warning"}
                     dismissible
                     onClose={() => this.alertOnClose()}
                     style={{
@@ -203,8 +216,9 @@ export default class Experiment extends Component {
                       marginTop: "0.5rem",
                     }}
                   >
-                    {" "}
-                    Experiment complete! You may now view the demonstration.{" "}
+                    {this.state.diagramComplete
+                      ? "Experiment complete! You may now view the demonstration."
+                      : "Hold up! Check that you have added all required apparautus and reagents to your diagram."}
                   </Alert>
                 </Card>
               </Col>
