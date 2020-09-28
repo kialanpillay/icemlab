@@ -270,26 +270,6 @@ export default class Diagram extends Component {
 
     graph.getStylesheet().putDefaultEdgeStyle(style);
 
-    style = {};
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-    style[mxConstants.STYLE_FILLCOLOR] = "none";
-    style[mxConstants.STYLE_STROKECOLOR] = "none";
-    style[mxConstants.STYLE_STROKEWIDTH] = 0;
-    style[mxConstants.STYLE_FONTSIZE] = "14";
-    style[mxConstants.STYLE_FONTCOLOR] = "black";
-    graph.getStylesheet().putCellStyle("reagent", style);
-
-    style = {};
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-    style[mxConstants.STYLE_FILLCOLOR] = "none";
-    style[mxConstants.STYLE_STROKECOLOR] = "none";
-    style[mxConstants.STYLE_STROKEWIDTH] = 0;
-    style[mxConstants.STYLE_FONTSIZE] = "14";
-    style[mxConstants.STYLE_FONTCOLOR] = "black";
-    graph.getStylesheet().putCellStyle("text", style);
-
     graph.popupMenuHandler.factoryMethod = function (menu, cell, evt) {
       return node.createPopupMenu(graph, menu, cell, evt);
     };
@@ -322,6 +302,15 @@ export default class Diagram extends Component {
       graph.setSelectionCell(cell);
       this.selectionChanged(graph, value);
     } else if (type === "text") {
+      const style =
+        `${mxConstants.STYLE_SHAPE}=${mxConstants.SHAPE_RECTANGLE};` +
+        `${mxConstants.STYLE_PERIMETER}=${mxPerimeter.RectanglePerimeter};` +
+        `${mxConstants.STYLE_FILLCOLOR}=none;` +
+        `${mxConstants.STYLE_STROKECOLOR}=none;` +
+        `${mxConstants.STYLE_STROKEWIDTH}=0;` +
+        `${mxConstants.STYLE_FONTSIZE}=14;` +
+        `${mxConstants.STYLE_FONTCOLOR}=black`;
+
       let parent = graph.getDefaultParent();
       let cell = graph.insertVertex(
         parent,
@@ -331,7 +320,7 @@ export default class Diagram extends Component {
         y,
         100,
         40,
-        "text"
+        style
       );
       graph.setSelectionCell(cell);
       this.selectionChanged(graph, value);
@@ -697,7 +686,7 @@ export default class Diagram extends Component {
                     .map((reagent, index) => {
                       return (
                         <div key={index}>
-                          <p className="item" value={reagent.name}>
+                          <p className="item" value={reagent.name} type="text">
                             {reagent.name}
                           </p>
                           <OverlayTrigger
