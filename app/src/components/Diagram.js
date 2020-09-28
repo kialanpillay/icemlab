@@ -499,16 +499,6 @@ export default class Diagram extends Component {
     }
   }
 
-  reagentColor = (item, index) => {
-    if (item === "Water") {
-      return "rgb(133,193,233)";
-    } else {
-      return `rgb(${(index + 1) * 20}, ${(index + 1) * 10}, ${
-        (index + 1) * 20
-      })`;
-    }
-  };
-
   render() {
     const popover = (name) => {
       const wiki = this.state.wiki[name];
@@ -699,26 +689,26 @@ export default class Diagram extends Component {
               <Accordion.Collapse eventKey="1">
                 <Card.Body>
                   {this.props.reagents
-                    .filter((item) =>
-                      item
+                    .filter((reagent) =>
+                      reagent.name
                         .toLowerCase()
                         .includes(this.state.search.toLowerCase())
                     )
-                    .map((item, index) => {
+                    .map((reagent, index) => {
                       return (
                         <div key={index}>
-                          <p className="item" value={item}>
-                            {item}
+                          <p className="item" value={reagent.name}>
+                            {reagent.name}
                           </p>
                           <OverlayTrigger
                             placement="bottom"
-                            overlay={<Tooltip>{item}</Tooltip>}
+                            overlay={<Tooltip>{reagent.name}</Tooltip>}
                           >
                             <div
                               className="item"
                               value=""
                               style={{
-                                backgroundColor: this.reagentColor(item, index),
+                                backgroundColor: reagent.color,
                                 padding: "0.5rem",
                                 margin: "-5px 0 10px 0",
                                 textAlign: "center",
@@ -726,7 +716,7 @@ export default class Diagram extends Component {
                                 borderRadius: "100%",
                                 width: "15px",
                               }}
-                              type={this.reagentColor(item, index)}
+                              type={reagent.color}
                             ></div>
                           </OverlayTrigger>
                         </div>

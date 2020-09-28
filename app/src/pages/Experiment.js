@@ -15,6 +15,7 @@ import Checklist from "../components/Checklist";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ReactPlayer from "react-player";
 import Alert from "react-bootstrap/Alert";
+import { ICEMLAB_SERVICE } from "../apiUrls"
 
 export default class Experiment extends Component {
   //Constructor
@@ -29,6 +30,7 @@ export default class Experiment extends Component {
       checklistComplete: false,
       videoVisible: false,
       diagramComplete: false,
+      reagents: []
     };
   }
 
@@ -65,7 +67,7 @@ export default class Experiment extends Component {
 
   //GET request to retrieve a experiment data from the API server
   getExperiment = () => {
-    const endpoint = "https://icemlab.herokuapp.com/experiment/";
+    const endpoint = `${ICEMLAB_SERVICE}/experiment/`;
     const query = {
       title: this.props.experiment,
     };
@@ -78,6 +80,23 @@ export default class Experiment extends Component {
         this.setState({
           experiment: response.experiment,
           hidden: false,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  //GET request to retrieve a reagent meta-deta from the API server
+  getReagents = () => {
+    const endpoint = `${ICEMLAB_SERVICE}/reagent/`;
+    fetch(endpoint, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        this.setState({
+          reagents: response.reagents,
         });
       })
       .catch((err) => {
@@ -102,6 +121,7 @@ export default class Experiment extends Component {
   //Calls method once the component has rendered
   componentDidMount() {
     this.getExperiment();
+    this.getReagents();
   }
 
   render() {
@@ -122,60 +142,60 @@ export default class Experiment extends Component {
                   </Spinner>{" "}
                 </Row> //Spinner component displays while waiting for a server response
               ) : (
-                <div>
-                  <Row className="justify-content-center">
-                    <Col md="auto">
-                      <h2
-                        dangerouslySetInnerHTML={{
-                          __html: this.props.experiment,
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                  <Row className="justify-content-center">
-                    <Col md="auto">
-                      <Badge
-                        style={{
-                          backgroundColor:
-                            this.props.experiment === {}
-                              ? "silver"
-                              : this.getCategoryColor(
+                  <div>
+                    <Row className="justify-content-center">
+                      <Col md="auto">
+                        <h2
+                          dangerouslySetInnerHTML={{
+                            __html: this.props.experiment,
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                    <Row className="justify-content-center">
+                      <Col md="auto">
+                        <Badge
+                          style={{
+                            backgroundColor:
+                              this.props.experiment === {}
+                                ? "silver"
+                                : this.getCategoryColor(
                                   this.state.experiment.category
                                 ),
-                          color: "black",
-                          fontSize: "1.2rem",
-                        }}
-                      >
-                        {this.props.experiment === {}
-                          ? "CEM1XXXW"
-                          : this.state.experiment.category}
-                      </Badge>
-                    </Col>
-                  </Row>
-                  <Row style={{ marginTop: "2rem" }}>
-                    <Col md={8}>
-                      <ManualCard
-                        experiment={this.state.experiment}
-                        variant="Introduction"
-                      />
-                      <ManualCard
-                        experiment={this.state.experiment}
-                        variant="Method"
-                      />
-                    </Col>
-                    <Col md={4}>
-                      <Information
-                        experiment={this.state.experiment}
-                        variant="Reagents"
-                      />
-                      <Information
-                        experiment={this.state.experiment}
-                        variant="Apparatus"
-                      />
-                    </Col>
-                  </Row>
-                </div>
-              )}
+                            color: "black",
+                            fontSize: "1.2rem",
+                          }}
+                        >
+                          {this.props.experiment === {}
+                            ? "CEM1XXXW"
+                            : this.state.experiment.category}
+                        </Badge>
+                      </Col>
+                    </Row>
+                    <Row style={{ marginTop: "2rem" }}>
+                      <Col md={8}>
+                        <ManualCard
+                          experiment={this.state.experiment}
+                          variant="Introduction"
+                        />
+                        <ManualCard
+                          experiment={this.state.experiment}
+                          variant="Method"
+                        />
+                      </Col>
+                      <Col md={4}>
+                        <Information
+                          experiment={this.state.experiment}
+                          variant="Reagents"
+                        />
+                        <Information
+                          experiment={this.state.experiment}
+                          variant="Apparatus"
+                        />
+                      </Col>
+                    </Row>
+                  </div>
+                )}
             </Container>
           </Tab>
           <Tab eventKey="diagram" title="Virtual Experiment">
@@ -187,6 +207,10 @@ export default class Experiment extends Component {
                   }
                   reagents={
                     this.state.hidden ? [] : this.state.experiment.reagents
+                      .map(reagent => ({
+                        name: reagent,
+                        color: this.state.reagents.find(reagentData => reagentData.name === reagent)?.color || 'rgb(255,255,255)'
+                      }))
                   }
                   callback={this.callbackDiagram}
                 />
@@ -248,8 +272,8 @@ export default class Experiment extends Component {
                           this.props.experiment === {}
                             ? "silver"
                             : this.getCategoryColor(
-                                this.state.experiment.category
-                              ),
+                              this.state.experiment.category
+                            ),
                         color: "black",
                         fontSize: "1.2rem",
                       }}
