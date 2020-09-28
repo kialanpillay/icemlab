@@ -17,6 +17,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../App.css";
 import Experiment from "./Experiment";
 import Icon from "@material-ui/core/Icon";
+import { ICEMLAB_SERVICE } from "../apiUrls"
 
 //Array of data for the About functionality
 const about = [
@@ -88,7 +89,7 @@ export default class Home extends Component {
   };
   //GET request to retrieve an array of available experiments from the API server
   getExperiments = () => {
-    const url = "https://icemlab-service.herokuapp.com/experiment/";
+    const url = `${ICEMLAB_SERVICE}/experiment/`;
     fetch(url, {
       method: "GET",
     })

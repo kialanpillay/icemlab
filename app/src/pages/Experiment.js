@@ -15,6 +15,7 @@ import Checklist from "../components/Checklist";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ReactPlayer from "react-player";
 import Alert from "react-bootstrap/Alert";
+import { ICEMLAB_SERVICE } from "../apiUrls"
 
 export default class Experiment extends Component {
   //Constructor
@@ -65,7 +66,7 @@ export default class Experiment extends Component {
 
   //GET request to retrieve a experiment data from the API server
   getExperiment = () => {
-    const endpoint = "https://icemlab-service.herokuapp.com/experiment/";
+    const endpoint = `${ICEMLAB_SERVICE}/experiment/`;
     const query = {
       title: this.props.experiment,
     };

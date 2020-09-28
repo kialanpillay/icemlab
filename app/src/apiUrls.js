@@ -1,0 +1,1 @@
+export const ICEMLAB_SERVICE = process.env.REACT_APP_ICEMLAB_SERVICE

@@ -8,6 +8,7 @@ import UploadCard from "../components/UploadCard";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Upload from "./Upload";
+import { ICEMLAB_SERVICE } from "../apiUrls"
 
 //Experiment Dashboard Page Component
 export default class Dashboard extends Component {
@@ -32,15 +33,15 @@ export default class Dashboard extends Component {
   handleSearch = (event) => {
     this.setState({ search: event.target.value });
   };
-  
+
   callbackTitle = (title) => {
     this.setState({ selection: title });
   };
- 
+
 
   //GET request to retrieve an array of available experiments from the API server
   getExperiments = () => {
-    const url = "https://icemlab-service.herokuapp.com/experiment/";
+    const url = `${ICEMLAB_SERVICE}/experiment/`;
     fetch(url, {
       method: "GET",
     })
@@ -111,16 +112,16 @@ export default class Dashboard extends Component {
                 return item.title
                   .toLowerCase()
                   .includes(this.state.search.toLowerCase()) ? (
-                  <Col md={4} key={index}>
-                    <ExperimentCard
-                      experimentTitle={item.title}
-                      experimentCategory={item.category}
-                      experimentModified={item.modified}
-                      experimentColor={this.getCategoryColor(item.category)}
-                      callbackTitle={this.callbackTitle}
-                    />
-                  </Col>
-                ) : null;
+                    <Col md={4} key={index}>
+                      <ExperimentCard
+                        experimentTitle={item.title}
+                        experimentCategory={item.category}
+                        experimentModified={item.modified}
+                        experimentColor={this.getCategoryColor(item.category)}
+                        callbackTitle={this.callbackTitle}
+                      />
+                    </Col>
+                  ) : null;
               })}
             </Row>
           </Container>
