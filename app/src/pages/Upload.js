@@ -375,7 +375,7 @@ class Upload extends Component {
                   </OverlayTrigger>
                   {!this.state.hidden ? (
                     <ReagentInput
-                      data={this.processReagents(this.state.reagentsData)}
+                      data={this.processReagents(this.state.reagentsData.map(reagent => reagent.name))}
                       selected={this.processReagents(
                         this.state.selectedReagents
                       )}
