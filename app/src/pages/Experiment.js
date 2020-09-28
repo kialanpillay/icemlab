@@ -15,7 +15,7 @@ import Checklist from "../components/Checklist";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ReactPlayer from "react-player";
 import Alert from "react-bootstrap/Alert";
-import { ICEMLAB_SERVICE } from "../apiUrls"
+import { ICEMLAB_SERVICE } from "../apiUrls";
 
 export default class Experiment extends Component {
   //Constructor
@@ -30,7 +30,7 @@ export default class Experiment extends Component {
       checklistComplete: false,
       videoVisible: false,
       diagramComplete: false,
-      reagents: []
+      reagents: [],
     };
   }
 
@@ -142,78 +142,79 @@ export default class Experiment extends Component {
                   </Spinner>{" "}
                 </Row> //Spinner component displays while waiting for a server response
               ) : (
-                  <div>
-                    <Row className="justify-content-center">
-                      <Col md="auto">
-                        <h2
-                          dangerouslySetInnerHTML={{
-                            __html: this.props.experiment,
-                          }}
-                        />
-                      </Col>
-                    </Row>
-                    <Row className="justify-content-center">
-                      <Col md="auto">
-                        <Badge
-                          style={{
-                            backgroundColor:
-                              this.props.experiment === {}
-                                ? "silver"
-                                : this.getCategoryColor(
+                <div>
+                  <Row className="justify-content-center">
+                    <Col md="auto">
+                      <h2
+                        dangerouslySetInnerHTML={{
+                          __html: this.props.experiment,
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="justify-content-center">
+                    <Col md="auto">
+                      <Badge
+                        style={{
+                          backgroundColor:
+                            this.props.experiment === {}
+                              ? "silver"
+                              : this.getCategoryColor(
                                   this.state.experiment.category
                                 ),
-                            color: "black",
-                            fontSize: "1.2rem",
-                          }}
-                        >
-                          {this.props.experiment === {}
-                            ? "CEM1XXXW"
-                            : this.state.experiment.category}
-                        </Badge>
-                      </Col>
-                    </Row>
-                    <Row style={{ marginTop: "2rem" }}>
-                      <Col md={8}>
-                        <ManualCard
-                          experiment={this.state.experiment}
-                          variant="Introduction"
-                        />
-                        <ManualCard
-                          experiment={this.state.experiment}
-                          variant="Method"
-                        />
-                      </Col>
-                      <Col md={4}>
-                        <Information
-                          experiment={this.state.experiment}
-                          variant="Reagents"
-                        />
-                        <Information
-                          experiment={this.state.experiment}
-                          variant="Apparatus"
-                        />
-                      </Col>
-                    </Row>
-                  </div>
-                )}
+                          color: "black",
+                          fontSize: "1.2rem",
+                        }}
+                      >
+                        {this.props.experiment === {}
+                          ? "CEM1XXXW"
+                          : this.state.experiment.category}
+                      </Badge>
+                    </Col>
+                  </Row>
+                  <Row style={{ marginTop: "2rem" }}>
+                    <Col md={8}>
+                      <ManualCard
+                        experiment={this.state.experiment}
+                        variant="Introduction"
+                      />
+                      <ManualCard
+                        experiment={this.state.experiment}
+                        variant="Method"
+                      />
+                    </Col>
+                    <Col md={4}>
+                      <Information
+                        experiment={this.state.experiment}
+                        variant="Reagents"
+                      />
+                      <Information
+                        experiment={this.state.experiment}
+                        variant="Apparatus"
+                      />
+                    </Col>
+                  </Row>
+                </div>
+              )}
             </Container>
           </Tab>
           <Tab eventKey="diagram" title="Virtual Experiment">
             <Row style={{ margin: "0  0 0 -15px" }}>
               <Col md={9}>
-                <Diagram
-                  apparatus={
-                    this.state.hidden ? [] : this.state.experiment.apparatus
-                  }
-                  reagents={
-                    this.state.hidden ? [] : this.state.experiment.reagents
-                      .map(reagent => ({
-                        name: reagent,
-                        color: this.state.reagents.find(reagentData => reagentData.name === reagent)?.color || 'rgb(255,255,255)'
-                      }))
-                  }
-                  callback={this.callbackDiagram}
-                />
+                {this.state.hidden ||
+                this.state.reagents.length === 0 ? null : (
+                  <Diagram
+                    apparatus={this.state.experiment.apparatus}
+                    reagents={this.state.experiment.reagents.map((reagent) => ({
+                      name: reagent,
+                      color:
+                        this.state.reagents.find(
+                          (reagentData) => reagentData.name === reagent
+                        )?.color || "rgb(100,100,100)",
+                    }))}
+                    callback={this.callbackDiagram}
+                  />
+                )}
               </Col>
               <Col md={3}>
                 <Card style={{ marginTop: "1rem", height: "38rem" }}>
@@ -272,8 +273,8 @@ export default class Experiment extends Component {
                           this.props.experiment === {}
                             ? "silver"
                             : this.getCategoryColor(
-                              this.state.experiment.category
-                            ),
+                                this.state.experiment.category
+                              ),
                         color: "black",
                         fontSize: "1.2rem",
                       }}
