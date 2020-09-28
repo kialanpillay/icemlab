@@ -18,6 +18,19 @@
                 var graph = new mxGraph(container);
                 new mxRubberband(graph)
 
+                //Initialising style objects
+                let style = {};
+                style[mxConstants.STYLE_STROKECOLOR] = "black";
+                style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_CONNECTOR;
+                style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+                style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
+                style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
+                style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
+                style[mxConstants.STYLE_FONTSIZE] = "14";
+                style[mxConstants.VALID_COLOR] = "black";
+
+                graph.getStylesheet().putDefaultEdgeStyle(style);
+
                 var parent = graph.getDefaultParent();
 
                 graph.getModel().beginUpdate();
