@@ -280,7 +280,6 @@ export default class Diagram extends Component {
     if (src !== null) {
       const style =
         `${mxConstants.STYLE_SHAPE}=${mxConstants.SHAPE_IMAGE};` +
-        `${mxConstants.STYLE_PERIMETER}=${mxPerimeter.RectanglePerimeter};` +
         `${mxConstants.STYLE_IMAGE}=${window.location.href}${src};`;
 
       let parent = graph.getDefaultParent();
@@ -288,6 +287,14 @@ export default class Diagram extends Component {
       graph.setSelectionCell(cell);
       this.selectionChanged(graph, value);
     } else if (type === null) {
+      const style =
+        `${mxConstants.STYLE_SHAPE}=${mxConstants.SHAPE_RECTANGLE};` +
+        `${mxConstants.STYLE_FILLCOLOR}=none;` +
+        `${mxConstants.STYLE_STROKECOLOR}=none;` +
+        `${mxConstants.STYLE_STROKEWIDTH}=0;` +
+        `${mxConstants.STYLE_FONTSIZE}=14;` +
+        `${mxConstants.STYLE_FONTCOLOR}=black`;
+
       let parent = graph.getDefaultParent();
       let cell = graph.insertVertex(
         parent,
@@ -297,14 +304,13 @@ export default class Diagram extends Component {
         y,
         `${value.length * 8}`,
         20,
-        "reagent"
+        style
       );
       graph.setSelectionCell(cell);
       this.selectionChanged(graph, value);
     } else if (type === "text") {
       const style =
         `${mxConstants.STYLE_SHAPE}=${mxConstants.SHAPE_RECTANGLE};` +
-        `${mxConstants.STYLE_PERIMETER}=${mxPerimeter.RectanglePerimeter};` +
         `${mxConstants.STYLE_FILLCOLOR}=none;` +
         `${mxConstants.STYLE_STROKECOLOR}=none;` +
         `${mxConstants.STYLE_STROKEWIDTH}=0;` +
@@ -567,6 +573,7 @@ export default class Diagram extends Component {
       }
     };
 
+    //Exports the diagram to an XML representation
     const exportXML = async () => {
       const { graph } = this.state;
 
@@ -588,6 +595,8 @@ export default class Diagram extends Component {
         document.body.removeChild(element);
       }
     };
+
+    //Mutators
 
     const handleSearch = (event) => {
       this.setState({ search: event.target.value });
@@ -686,7 +695,7 @@ export default class Diagram extends Component {
                     .map((reagent, index) => {
                       return (
                         <div key={index}>
-                          <p className="item" value={reagent.name} type="text">
+                          <p className="item" value={reagent.name}>
                             {reagent.name}
                           </p>
                           <OverlayTrigger
