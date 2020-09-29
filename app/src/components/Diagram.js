@@ -65,7 +65,8 @@ export default class Diagram extends Component {
       layout: {},
       createVisible: false,
       currentNode: null,
-      wiki: {
+      reagentWiki: this.convertArrayToObject(this.props.reagents),
+      apparatusWiki: {
         "Erlenmeyer Flask": {
           title: "Erlenmeyer Flask",
           description:
@@ -157,7 +158,68 @@ export default class Diagram extends Component {
 
   componentDidMount() {
     this.loadGraph();
+    this.getWikipediaData();
   }
+
+  getWikipediaData = async () => {
+    this.props.reagents.forEach(async ({ wikiRef, name }) => {
+      const base =
+        "https://en.wikipedia.org/w/api.php?action=query&format=json";
+      const proxy = "https://icemlab-cors-service.herokuapp.com/";
+      try {
+        const descResponse = await this.fetchJson(
+          `${proxy}${base}&prop=description&titles=${wikiRef}`
+        );
+        let description = "";
+        if ("description" in Object.values(descResponse.query.pages)[0]) {
+          description = Object.values(descResponse.query.pages)[0].description;
+        }
+
+        const imgResponse = await this.fetchJson(
+          `${proxy}${base}&prop=pageimages&titles=${wikiRef}&pithumbsize=100`
+        );
+        let image = "";
+        if ("thumbnail" in Object.values(imgResponse.query.pages)[0]) {
+          image = Object.values(imgResponse.query.pages)[0].thumbnail.source;
+        }
+
+        const srcResponse = await this.fetchJson(
+          `${proxy}${base}&prop=info&inprop=url&titles=${wikiRef}`
+        );
+        const source = Object.values(srcResponse.query.pages)[0].fullurl;
+
+        this.setState((prev) => {
+          let prevWiki = { ...prev.reagentWiki };
+          prevWiki[name] = {
+            description: description,
+            image: image,
+            source: source,
+          };
+          return { ...prev, reagentWiki: prevWiki };
+        });
+      } catch (error) {
+        console.error("Could not get wikipedia data", error);
+      }
+    });
+  };
+
+  //Asynchronous fetch API call
+  fetchJson = async (url) => {
+    const response = await fetch(url);
+    return await response.json();
+  };
+
+  //Helper function that converts array items to object keys
+  convertArrayToObject = (array) => {
+    const obj = {};
+    return array.reduce((obj, item) => {
+      return {
+        ...obj,
+        [item["name"]]: {},
+      };
+    }, obj);
+  };
+
   //Functor to return current graph
   graphF = (evt) => {
     const { graph } = this.state;
@@ -495,22 +557,27 @@ export default class Diagram extends Component {
   }
 
   render() {
-    const popover = (name) => {
-      const wiki = this.state.wiki[name];
+    const popover = (name, variant) => {
+      const wiki =
+        variant === "apparatus"
+          ? this.state.apparatusWiki[name]
+          : this.state.reagentWiki[name];
 
       if (!wiki) {
         return name;
       }
-
-      const { title, description, image, source } = this.state.wiki[name];
+      const { description, image, source } =
+        variant === "apparatus"
+          ? this.state.apparatusWiki[name]
+          : this.state.reagentWiki[name];
 
       return (
         <div style={{ textAlign: "left" }}>
-          <div style={{ marginBottom: 5 }}>{title}</div>
+          <div style={{ marginBottom: 5 }}>{name}</div>
 
           {image && (
-            <div>
-              <img src={image} alt={title} />
+            <div style={{ backgroundColor: "white", display: "inline-block" }}>
+              <img src={image} alt={name} />
             </div>
           )}
           <div style={{ marginTop: 5 }}>{description || "Loading"}</div>
@@ -655,7 +722,7 @@ export default class Diagram extends Component {
                     .map((item, index) => {
                       return (
                         <PopoverStickOnHover
-                          component={<div>{popover(item)}</div>}
+                          component={<div>{popover(item, "apparatus")}</div>}
                           placement="right"
                           onMouseEnter={() => {}}
                           delay={200}
@@ -698,9 +765,14 @@ export default class Diagram extends Component {
                           <p className="item" value={reagent.name}>
                             {reagent.name}
                           </p>
-                          <OverlayTrigger
-                            placement="bottom"
-                            overlay={<Tooltip>{reagent.name}</Tooltip>}
+                          <PopoverStickOnHover
+                            component={
+                              <div>{popover(reagent.name, "reagent")}</div>
+                            }
+                            placement="right"
+                            onMouseEnter={() => {}}
+                            delay={200}
+                            key={index}
                           >
                             <div
                               className="item"
@@ -716,7 +788,7 @@ export default class Diagram extends Component {
                               }}
                               type={reagent.color}
                             ></div>
-                          </OverlayTrigger>
+                          </PopoverStickOnHover>
                         </div>
                       );
                     })}

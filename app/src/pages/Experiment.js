@@ -211,6 +211,10 @@ export default class Experiment extends Component {
                         this.state.reagents.find(
                           (reagentData) => reagentData.name === reagent
                         )?.color || "rgb(100,100,100)",
+                      wikiRef:
+                        this.state.reagents.find(
+                          (reagentData) => reagentData.name === reagent
+                        )?.wikiRef || "",
                     }))}
                     callback={this.callbackDiagram}
                   />
