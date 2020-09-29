@@ -350,7 +350,7 @@ class Upload extends Component {
                     </OverlayTrigger>
                     {!this.state.hidden ? (
                       <Checklist
-                        data={this.state.apparatusData.sort()}
+                        data={this.state.apparatusData.map(apparatus => apparatus.name).sort()}
                         checked={this.state.checkedApparatus}
                         callback={this.callbackChecklist}
                         variant="upload"

@@ -66,84 +66,7 @@ export default class Diagram extends Component {
       createVisible: false,
       currentNode: null,
       reagentWiki: this.convertArrayToObject(this.props.reagents),
-      apparatusWiki: {
-        "Erlenmeyer Flask": {
-          title: "Erlenmeyer Flask",
-          description:
-            "Flask which features a flat bottom, a conical body, and a cylindrical neck.",
-          image:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/20150320-OSEC-LSC-0080_%2816299658674%29.jpg/58px-20150320-OSEC-LSC-0080_%2816299658674%29.jpg",
-          source: "https://en.wikipedia.org/wiki/Erlenmeyer_flask",
-        },
-        Beaker: {
-          title: "Beaker",
-          description: "Cylindrical container with a flat bottom",
-          image:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Beakers.jpg/100px-Beakers.jpg",
-          source: "https://en.wikipedia.org/wiki/Beaker_(laboratory_equipment)",
-        },
-        "Ice Bath": {
-          title: "Ice Bath",
-          description:
-            "Liquid mixture which is used to maintain low temperatures",
-          image:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Aldolrxnpic.jpg/100px-Aldolrxnpic.jpg",
-          source: "https://en.wikipedia.org/wiki/Cooling_bath",
-        },
-        "Hirsch Funnel": {
-          title: "Hirsch Funnel",
-          description: "Used to assist in collecting recrystallized compounds",
-          image:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Embudo_B%C3%BCchner.jpeg/75px-Embudo_B%C3%BCchner.jpeg",
-          source: "https://en.wikipedia.org/wiki/B%C3%BCchner_funnel",
-        },
-        "Büchner Funnel": {
-          title: "Büchner Funnel",
-          description: "Used to assist in collecting recrystallized compounds",
-          image:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Embudo_B%C3%BCchner.jpeg/75px-Embudo_B%C3%BCchner.jpeg",
-          source: "https://en.wikipedia.org/wiki/B%C3%BCchner_funnel",
-        },
-        "Glass Rod": {
-          title: "Glass Rod",
-          description: "Used to mix chemicals",
-          image:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Stirring_rod.jpg/60px-Stirring_rod.jpg",
-          wiki: "https://en.wikipedia.org/wiki/Glass_rod",
-        },
-        Hotplate: {
-          title: "Hotplate",
-          description: "Generally used to heat glassware or its contents",
-          image:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Light_Label_Electric_tabletop_burner_KCK-L103.jpg/100px-Light_Label_Electric_tabletop_burner_KCK-L103.jpg",
-          source: "https://en.wikipedia.org/wiki/Hot_plate",
-        },
-        "Reflux Condenser": {
-          //used in more complex reactions that require the controlled mixing of multiple reagents
-          title: "Reflux Condenser",
-          description:
-            "Used to condense vapors — that is, turn them into liquids — by cooling them down.",
-          image:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Distillation_2-3.jpg/100px-Distillation_2-3.jpg",
-          source: "https://en.wikipedia.org/wiki/Condenser_(laboratory)",
-        },
-        "Two-necked Flask": {
-          title: "Two-necked Flask",
-          description:
-            "Used in more complex reactions that require the controlled mixing of multiple reagents",
-          image:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Erlenmeyer_Flasks.jpg/100px-Erlenmeyer_Flasks.jpg",
-          source: "https://en.wikipedia.org/wiki/Schlenk_flask",
-        },
-        Burner: {
-          title: "Bunsen burner",
-          description:
-            "Produces a single open gas flame, and is used for heating, sterilization, and combustion",
-          image:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Bunsen_burner.jpg/58px-Bunsen_burner.jpg",
-          source: "https://en.wikipedia.org/wiki/Bunsen_burner",
-        },
-      },
+      apparatusWiki: this.convertArrayToObject(this.props.apparatus),
       loaded: false,
       search: "",
       anchorEl: null,
@@ -158,11 +81,14 @@ export default class Diagram extends Component {
 
   componentDidMount() {
     this.loadGraph();
-    this.getWikipediaData();
+    this.getWikipediaData("apparatus");
+    this.getWikipediaData("reagents");
   }
 
-  getWikipediaData = async () => {
-    this.props.reagents.forEach(async ({ wikiRef, name }) => {
+  getWikipediaData = async (variant) => {
+    const data =
+      variant === "apparatus" ? this.props.apparatus : this.props.reagents;
+    data.forEach(async ({ wikiRef, name }) => {
       const base =
         "https://en.wikipedia.org/w/api.php?action=query&format=json";
       const proxy = "https://icemlab-cors-service.herokuapp.com/";
@@ -187,17 +113,24 @@ export default class Diagram extends Component {
           `${proxy}${base}&prop=info&inprop=url&titles=${wikiRef}`
         );
         const source = Object.values(srcResponse.query.pages)[0].fullurl;
-
         this.setState((prev) => {
-          let prevWiki = { ...prev.reagentWiki };
+          let prevWiki =
+            variant === "apparatus"
+              ? { ...prev.apparatusWiki }
+              : { ...prev.reagentWiki };
           prevWiki[name] = {
             description: description,
             image: image,
             source: source,
           };
-          return { ...prev, reagentWiki: prevWiki };
+          if (variant === "apparatus") {
+            return { ...prev, apparatusWiki: prevWiki };
+          } else {
+            return { ...prev, reagentWiki: prevWiki };
+          }
         });
       } catch (error) {
+        console.log(wikiRef);
         console.error("Could not get wikipedia data", error);
       }
     });
@@ -714,25 +647,27 @@ export default class Diagram extends Component {
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
                   {this.props.apparatus
-                    .filter((item) =>
-                      item
+                    .filter((apparatus) =>
+                      apparatus.name
                         .toLowerCase()
                         .includes(this.state.search.toLowerCase())
                     )
-                    .map((item, index) => {
+                    .map((apparatus, index) => {
                       return (
                         <PopoverStickOnHover
-                          component={<div>{popover(item, "apparatus")}</div>}
+                          component={
+                            <div>{popover(apparatus.name, "apparatus")}</div>
+                          }
                           placement="right"
                           onMouseEnter={() => {}}
                           delay={200}
                           key={index}
                         >
                           <img
-                            alt={item}
+                            alt={apparatus.name}
                             className="item"
-                            value={item}
-                            src={`apparatus_svg/${item}.svg`}
+                            value={apparatus.name}
+                            src={`apparatus_svg/${apparatus.name}.svg`}
                           />
                         </PopoverStickOnHover>
                       );

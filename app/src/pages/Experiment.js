@@ -30,7 +30,8 @@ export default class Experiment extends Component {
       checklistComplete: false,
       videoVisible: false,
       diagramComplete: false,
-      reagents: [],
+      reagentData: [],
+      apparatusData: [],
     };
   }
 
@@ -87,7 +88,7 @@ export default class Experiment extends Component {
       });
   };
 
-  //GET request to retrieve a reagent meta-deta from the API server
+  //GET request to retrieve reagent meta-deta from the API server
   getReagents = () => {
     const endpoint = `${ICEMLAB_SERVICE}/reagent/`;
     fetch(endpoint, {
@@ -96,7 +97,24 @@ export default class Experiment extends Component {
       .then((response) => response.json())
       .then((response) => {
         this.setState({
-          reagents: response.reagents,
+          reagentData: response.reagents,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  //GET request to retrieve apparatus meta-deta from the API server
+  getApparatus = () => {
+    const endpoint = `${ICEMLAB_SERVICE}/apparatus/`;
+    fetch(endpoint, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        this.setState({
+          apparatusData: response.apparatus,
         });
       })
       .catch((err) => {
@@ -121,6 +139,7 @@ export default class Experiment extends Component {
   //Calls method once the component has rendered
   componentDidMount() {
     this.getExperiment();
+    this.getApparatus();
     this.getReagents();
   }
 
@@ -202,17 +221,26 @@ export default class Experiment extends Component {
             <Row style={{ margin: "0  0 0 -15px" }}>
               <Col md={9}>
                 {this.state.hidden ||
-                this.state.reagents.length === 0 ? null : (
+                this.state.reagentData.length === 0 ||
+                this.state.apparatusData.length === 0 ? null : (
                   <Diagram
-                    apparatus={this.state.experiment.apparatus}
+                    apparatus={this.state.experiment.apparatus.map(
+                      (apparatus) => ({
+                        name: apparatus,
+                        wikiRef:
+                          this.state.apparatusData.find(
+                            (apparatusData) => apparatusData.name === apparatus
+                          )?.wikiRef || "",
+                      })
+                    )}
                     reagents={this.state.experiment.reagents.map((reagent) => ({
                       name: reagent,
                       color:
-                        this.state.reagents.find(
+                        this.state.reagentData.find(
                           (reagentData) => reagentData.name === reagent
                         )?.color || "rgb(100,100,100)",
                       wikiRef:
-                        this.state.reagents.find(
+                        this.state.reagentData.find(
                           (reagentData) => reagentData.name === reagent
                         )?.wikiRef || "",
                     }))}
