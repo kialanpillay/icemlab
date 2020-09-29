@@ -1,9 +1,10 @@
-# ICemLab
+# iCEMLab
+Virtual Chemistry Lab (iCEMlab) web application, developed for the University of Cape Town Department of Chemistry.
 
-## Starting the front-end
-
+## Installation
 ```
-cd app/
-npm i
+git clone https://gitlab.cs.uct.ac.za/icemlab-capstone/icemlab.git
+cd icemlab/app
+npm install
 npm start
 ```
