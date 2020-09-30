@@ -11,16 +11,16 @@ import Spinner from "react-bootstrap/Spinner";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import Badge from "react-bootstrap/Badge";
+import Icon from "@material-ui/core/Icon";
 import Navigation from "../components/Navigation";
 import AboutCard from "../components/AboutCard";
+import Experiment from "./Experiment";
+import { ICEMLAB_SERVICE } from "../apiUrls"
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../App.css";
-import Experiment from "./Experiment";
-import Icon from "@material-ui/core/Icon";
-import { ICEMLAB_SERVICE } from "../apiUrls"
 
 //Array of data for the About functionality
-const about = [
+const ABOUT = [
   {
     text: "Select Experiment",
     icon: "search",
@@ -248,7 +248,7 @@ export default class Home extends Component {
                   style={{ marginTop: "3rem" }}
                   className="justify-content-center"
                 >
-                  {about.map((item, idx) => {
+                  {ABOUT.map((item, idx) => {
                     return (
                       <Col md={2} key={idx}>
                         <AboutCard

@@ -1,10 +1,9 @@
 import React from "react";
+import Badge from "react-bootstrap/Badge";
 import EditTwoToneIcon from "@material-ui/icons/EditTwoTone";
 import "./ExperimentCard.css";
-import Badge from "react-bootstrap/Badge";
 
 //Custom component to display experiments
-
 export default function ExperimentCard(props) {
   const modified = props.experimentModified.substring(0, 10);
 

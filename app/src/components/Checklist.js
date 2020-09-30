@@ -5,7 +5,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 
-//Custom component for apparatus checklist
+//Custom checklist component
 export default class Checklist extends Component {
   //Constructor
   constructor(props) {

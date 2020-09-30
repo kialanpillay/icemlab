@@ -38,7 +38,6 @@ export default class Dashboard extends Component {
     this.setState({ selection: title });
   };
 
-
   //GET request to retrieve an array of available experiments from the API server
   getExperiments = () => {
     const url = `${ICEMLAB_SERVICE}/experiment/`;
@@ -60,6 +59,7 @@ export default class Dashboard extends Component {
   componentDidMount() {
     this.getExperiments();
   }
+  //Returns a hex colour code for distinct categories
   getCategoryColor = (category) => {
     let color;
     if (category === "CEM1000W") {
@@ -128,6 +128,7 @@ export default class Dashboard extends Component {
         </div>
       );
     } else {
+      //Render the Upload component once the user has made a selection
       return (
         <div>
           <Upload experimentTitle={this.state.selection} edit={true} />

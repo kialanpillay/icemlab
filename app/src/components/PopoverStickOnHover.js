@@ -1,19 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Overlay } from 'react-bootstrap'
-
 import Tooltip from 'react-bootstrap/Tooltip'
 
+//Custom Popover component to display additional apparatus or reagent information
 export default class PopoverStickOnHover extends React.Component {
   constructor(props) {
     super(props)
-
-    this.handleMouseEnter = this.handleMouseEnter.bind(this)
-    this.handleMouseLeave = this.handleMouseLeave.bind(this)
-
     this.state = {
       showPopover: false,
     }
+    //Binding of methods to the class instance
+    this.handleMouseEnter = this.handleMouseEnter.bind(this)
+    this.handleMouseLeave = this.handleMouseLeave.bind(this)
   }
 
   handleMouseEnter() {

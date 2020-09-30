@@ -1,7 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
 import Home from "./pages/Home";
-import Upload from "./pages/Upload";
 
 describe("the Home component", () => {
   test("has the correct heading text", () => {

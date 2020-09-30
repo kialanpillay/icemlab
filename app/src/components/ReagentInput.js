@@ -15,6 +15,7 @@ export default class ReagentInput extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  //Updates component state with selected values
   handleChange = (event, values) => {
     this.setState(
       {

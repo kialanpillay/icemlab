@@ -5,16 +5,15 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import Alert from "react-bootstrap/Alert";
+import CheckIcon from "@material-ui/icons/Check";
 import Navigation from "../components/Navigation";
 import ReagentInput from "../components/ReagentInput";
 import Checklist from "../components/Checklist";
-import Alert from "react-bootstrap/Alert";
-import CheckIcon from "@material-ui/icons/Check";
 import ReactQuill from "react-quill";
-import "./Upload.css";
+import { ICEMLAB_SERVICE } from "../apiUrls";
 import "react-quill/dist/quill.snow.css";
-import main from "../assets/main.png";
-import { ICEMLAB_SERVICE } from "../apiUrls"
+import "./Upload.css";
 
 const EDITOR_MODULES = {
   toolbar: [
@@ -34,7 +33,7 @@ const IMAGE_MODULES = {
   ],
 };
 
-//Upload  Page Component
+//Upload Page Component
 class Upload extends Component {
   //Constructor
   constructor(props) {
@@ -96,7 +95,7 @@ class Upload extends Component {
       });
   };
 
-  //convert to array with title key
+  //Convert to array with title key
   processReagents = (reagents) => {
     const arr = reagents.map((item) => {
       return {
@@ -107,7 +106,7 @@ class Upload extends Component {
     return arr;
   };
 
-  //format for the server
+  //Parses reagents into required format for the server
   processSelectedReagents = () => {
     const arr = this.state.selectedReagents.map((item) => {
       return typeof item === "object" ? item.title : item;
@@ -133,7 +132,7 @@ class Upload extends Component {
       this.setState({ hidden: false });
     }
   }
-  //retrieves the value of the user input as assigns it to the relevant state variable
+  //Retrieves the value of the user input as assigns it to the relevant state variable
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
@@ -179,7 +178,7 @@ class Upload extends Component {
         console.log(err);
       });
   };
-  //Encode query parameters for a HTTP request
+  //Encodes query parameters for a HTTP request
   encodeParameters = (params) => {
     let query = Object.keys(params)
       .map((k) => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
@@ -215,7 +214,7 @@ class Upload extends Component {
       });
   };
 
-  //alert to notify the user that the experiment was uploaded successfully
+  //Alert to notify the user that the experiment was uploaded successfully
   alertOnClose = () => {
     window.location.href = "/dashboard";
   };
@@ -231,7 +230,7 @@ class Upload extends Component {
       image: content,
     });
   }
-
+  //Converts decimal points to commas in a text string
   convertDecimalPoint = (method) => {
     let arr = method.split("");
     for (let i = 0; i < arr.length; i++) {
@@ -350,14 +349,16 @@ class Upload extends Component {
                     </OverlayTrigger>
                     {!this.state.hidden ? (
                       <Checklist
-                        data={this.state.apparatusData.map(apparatus => apparatus.name).sort()}
+                        data={this.state.apparatusData
+                          .map((apparatus) => apparatus.name)
+                          .sort()}
                         checked={this.state.checkedApparatus}
                         callback={this.callbackChecklist}
                         variant="upload"
                       />
                     ) : null}
                   </Form.Group>
-                  <img src={main} height="350" alt="Graphic"></img>
+                  <img src={"./main.png"} height="350" alt="Graphic"></img>
                 </div>
                 <Form.Group as={Col} controlId="reagents">
                   <OverlayTrigger
@@ -375,7 +376,9 @@ class Upload extends Component {
                   </OverlayTrigger>
                   {!this.state.hidden ? (
                     <ReagentInput
-                      data={this.processReagents(this.state.reagentsData.map(reagent => reagent.name))}
+                      data={this.processReagents(
+                        this.state.reagentsData.map((reagent) => reagent.name)
+                      )}
                       selected={this.processReagents(
                         this.state.selectedReagents
                       )}

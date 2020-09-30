@@ -1,6 +1,10 @@
 import React, { Component } from "react";
-import "./Diagram.css";
-
+import Accordion from "react-bootstrap/Accordion";
+import Card from "react-bootstrap/Card";
+import Tooltip from "react-bootstrap/Tooltip";
+import FormControl from "react-bootstrap/FormControl";
+import InputGroup from "react-bootstrap/InputGroup";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import ZoomInIcon from "@material-ui/icons/ZoomIn";
 import ZoomOutIcon from "@material-ui/icons/ZoomOut";
 import ZoomOutMapIcon from "@material-ui/icons/ZoomOutMap";
@@ -9,23 +13,13 @@ import RedoIcon from "@material-ui/icons/Redo";
 import SaveIcon from "@material-ui/icons/Save";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ToggleButton from "@material-ui/lab/ToggleButton";
-
-import { IconButton } from "@material-ui/core";
-
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import PopoverStickOnHover from "./PopoverStickOnHover";
-import Accordion from "react-bootstrap/Accordion";
-import Card from "react-bootstrap/Card";
-import Tooltip from "react-bootstrap/Tooltip";
-
-import FormControl from "react-bootstrap/FormControl";
-import InputGroup from "react-bootstrap/InputGroup";
-
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
+import { IconButton } from "@material-ui/core";
+import PopoverStickOnHover from "./PopoverStickOnHover";
+import "./Diagram.css";
 
 import {
   mxGraph,
@@ -79,12 +73,14 @@ export default class Diagram extends Component {
     this.undoManager = null;
   }
 
+  //Calls method once the component has rendered
   componentDidMount() {
     this.loadGraph();
     this.getWikipediaData("apparatus");
     this.getWikipediaData("reagents");
   }
 
+  //Asynchronous method to retrieve data from the Wikipedia API
   getWikipediaData = async (variant) => {
     const data =
       variant === "apparatus" ? this.props.apparatus : this.props.reagents;
@@ -142,7 +138,7 @@ export default class Diagram extends Component {
     return await response.json();
   };
 
-  //Helper function that converts array items to object keys
+  //Converts array items to object keys
   convertArrayToObject = (array) => {
     const obj = {};
     return array.reduce((obj, item) => {
@@ -200,6 +196,7 @@ export default class Diagram extends Component {
       ds.createDragElement = mxDragSource.prototype.createDragElement;
     });
   };
+
   //Changes the currently selected graph node
   selectionChanged = (graph, value) => {
     this.setState({

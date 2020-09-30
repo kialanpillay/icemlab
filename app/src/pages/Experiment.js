@@ -8,15 +8,15 @@ import Tab from "react-bootstrap/Tab";
 import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 import Badge from "react-bootstrap/Badge";
+import Alert from "react-bootstrap/Alert";
 import Navigation from "../components/Navigation";
 import Information from "../components/Information";
 import ManualCard from "../components/ManualCard";
 import Checklist from "../components/Checklist";
-import "bootstrap/dist/css/bootstrap.min.css";
 import ReactPlayer from "react-player";
-import Alert from "react-bootstrap/Alert";
 import { ICEMLAB_SERVICE } from "../apiUrls";
 
+//Experiment Page Component
 export default class Experiment extends Component {
   //Constructor
   constructor(props) {
@@ -58,7 +58,7 @@ export default class Experiment extends Component {
     }
   };
 
-  //Encode query parameters for a HTTP request
+  //Encodes query parameters for a HTTP request
   encodeParameters = (params) => {
     let query = Object.keys(params)
       .map((k) => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
@@ -122,6 +122,7 @@ export default class Experiment extends Component {
       });
   };
 
+  //Returns a hex colour code for distinct categories
   getCategoryColor = (category) => {
     let color;
     if (category === "CEM1000W") {
@@ -281,6 +282,7 @@ export default class Experiment extends Component {
               </Col>
             </Row>
           </Tab>
+          {/*Render the tab only if the experiment has loaded and the experiment has a video URL*/}
           {this.state.hidden || this.state.experiment.url === "" ? null : (
             <Tab
               eventKey="video"
