@@ -80,7 +80,7 @@ export default class Diagram extends Component {
     this.getWikipediaData("reagents");
   }
 
-  //Asynchronous method to retrieve data from the Wikipedia API
+  //Asynchronously retrieves data from the Wikipedia API
   getWikipediaData = async (variant) => {
     const data =
       variant === "apparatus" ? this.props.apparatus : this.props.reagents;
