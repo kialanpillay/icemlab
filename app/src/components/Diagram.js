@@ -232,6 +232,7 @@ export default class Diagram extends Component {
     graph.setConnectable(true);
     graph.setCellsEditable(true);
     graph.setEnabled(true);
+    graph.setHtmlLabels(true);
     graph.centerZoom = true;
 
     const keyHandler = new mxKeyHandler(graph);
@@ -308,6 +309,31 @@ export default class Diagram extends Component {
         `${mxConstants.STYLE_STROKEWIDTH}=0;` +
         `${mxConstants.STYLE_FONTSIZE}=14;` +
         `${mxConstants.STYLE_FONTCOLOR}=black`;
+
+      let parent = graph.getDefaultParent();
+      let cell = graph.insertVertex(
+        parent,
+        target,
+        value,
+        x,
+        y,
+        100,
+        40,
+        style
+      );
+      graph.setSelectionCell(cell);
+      this.selectionChanged(graph, value);
+    }
+    else if (type === "unit") {
+      const style =
+      `${mxConstants.STYLE_SHAPE}=${mxConstants.SHAPE_RECTANGLE};` +
+      `${mxConstants.STYLE_FILLCOLOR}=none;` +
+      `${mxConstants.STYLE_STROKECOLOR}=none;` +
+      `${mxConstants.STYLE_STROKEWIDTH}=0;` +
+      `${mxConstants.STYLE_FONTSIZE}=14;` +
+      `${mxConstants.STYLE_EDITABLE}=0;` +
+      `${mxConstants.STYLE_FONTCOLOR}=black`;
+
 
       let parent = graph.getDefaultParent();
       let cell = graph.insertVertex(
@@ -732,6 +758,7 @@ export default class Diagram extends Component {
                 <Accordion.Toggle
                   as="h5"
                   eventKey="2"
+         
                   style={{ cursor: "pointer" }}
                 >
                   General
@@ -745,7 +772,6 @@ export default class Diagram extends Component {
                     value="Text"
                     type="text"
                     style={{
-                      border: "1px solid black",
                       padding: "0.5rem",
                       textAlign: "center",
                       cursor: "pointer",
@@ -754,8 +780,21 @@ export default class Diagram extends Component {
                   >
                     Text
                   </div>
+                  <div
+                    className="item"
+                    value=    "cm<sup>3</sup>"
+                    type="unit"
+                    style={{
+                      textAlign: "center",
+                      cursor: "pointer",
+                      width: "100px",
+                    }}
+                  >
+                    cm<sup>3</sup>
+                  </div>
                 </Card.Body>
               </Accordion.Collapse>
+            
             </Card>
           </Accordion>
         </div>
