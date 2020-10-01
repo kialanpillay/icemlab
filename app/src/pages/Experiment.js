@@ -378,7 +378,12 @@ export default class Experiment extends Component {
                   className="justify-content-center"
                   style={{ marginTop: "2rem" }}
                 >
-                  <ReactPlayer url={this.state.experiment.url} controls />
+                  <ReactPlayer
+                    url={this.state.experiment.url}
+                    width={854}
+                    height={480}
+                    controls
+                  />
                 </Row>
               </Container>
             </Tab>
