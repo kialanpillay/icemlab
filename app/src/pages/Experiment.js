@@ -9,6 +9,8 @@ import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 import Badge from "react-bootstrap/Badge";
 import Alert from "react-bootstrap/Alert";
+import Form from "react-bootstrap/Form";
+import Viewer from "../components/Viewer";
 import Navigation from "../components/Navigation";
 import Information from "../components/Information";
 import ManualCard from "../components/ManualCard";
@@ -32,7 +34,9 @@ export default class Experiment extends Component {
       diagramComplete: false,
       reagentData: [],
       apparatusData: [],
+      viewerCompound: "",
     };
+    this.handleChange = this.handleChange.bind(this);
   }
 
   //Sets the state of the checked array to include items that have been selected.
@@ -80,6 +84,7 @@ export default class Experiment extends Component {
       .then((response) => {
         this.setState({
           experiment: response.experiment,
+          viewerCompound: response.experiment.reagents[0],
           hidden: false,
         });
       })
@@ -135,6 +140,10 @@ export default class Experiment extends Component {
       color = "#D1C4E9";
     }
     return color;
+  };
+
+  handleChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
   };
 
   //Calls method once the component has rendered
@@ -206,11 +215,11 @@ export default class Experiment extends Component {
                     <Col md={4}>
                       <Information
                         experiment={this.state.experiment}
-                        variant="Reagents"
+                        variant="Apparatus"
                       />
                       <Information
                         experiment={this.state.experiment}
-                        variant="Apparatus"
+                        variant="Reagents"
                       />
                     </Col>
                   </Row>
@@ -282,6 +291,52 @@ export default class Experiment extends Component {
               </Col>
             </Row>
           </Tab>
+          <Tab eventKey="viewer" title="Compound Viewer">
+            <Container style={{ marginTop: "2rem", marginBottom: "2rem" }}>
+              <Row>
+                <Col md={3}>
+                  <img src={"logo/1280px-PubChem_logo.svg.png"} width={200} />
+                  <h6>
+                    Explore chemical information from{" "}
+                    <a
+                      href="https://pubchem.ncbi.nlm.nih.gov/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Pubchem
+                    </a>
+                    , the world's largest free chemistry database.
+                  </h6>
+                  <h2>Compound</h2>
+                  <Form.Control
+                    as="select"
+                    required={true}
+                    name="viewerCompound"
+                    value={this.state.viewerCompound}
+                    onChange={this.handleChange}
+                  >
+                    {!this.state.hidden
+                      ? this.state.experiment.reagents.map((reagent, index) => {
+                          return <option key={index}>{reagent}</option>;
+                        })
+                      : null}
+                  </Form.Control>
+                </Col>
+                <Col md="auto">
+                  <Viewer
+                    compound={this.state.viewerCompound}
+                    section={"Physical-Description"}
+                  />
+                </Col>
+                <Col md="auto">
+                  <Viewer
+                    compound={this.state.viewerCompound}
+                    section={"2D-Structure"}
+                  />
+                </Col>
+              </Row>
+            </Container>
+          </Tab>
           {/*Render the tab only if the experiment has loaded and the experiment has a video URL*/}
           {this.state.hidden || this.state.experiment.url === "" ? null : (
             <Tab
@@ -323,7 +378,12 @@ export default class Experiment extends Component {
                   className="justify-content-center"
                   style={{ marginTop: "2rem" }}
                 >
-                  <ReactPlayer url={this.state.experiment.url} controls />
+                  <ReactPlayer
+                    url={this.state.experiment.url}
+                    width={854}
+                    height={480}
+                    controls
+                  />
                 </Row>
               </Container>
             </Tab>

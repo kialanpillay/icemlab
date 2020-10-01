@@ -8,7 +8,7 @@ export default class Navigation extends Component {
     return (
       <Navbar bg="light" variant="light">
         <Navbar.Brand>
-          <img alt="" src="logo.png" height="30" />
+          <img alt="" src="logo/logo.png" height="30" />
         </Navbar.Brand>
         <Nav className="mr-auto">
           <Nav.Link href="/">Home</Nav.Link>
@@ -16,10 +16,10 @@ export default class Navigation extends Component {
         </Nav>
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Brand href="http://www.uct.ac.za/">
-            <img alt="" src="transparent_round_logo.gif" height="40" />{" "}
+            <img alt="" src="logo/transparent_round_logo.gif" height="40" />{" "}
           </Navbar.Brand>
           <Navbar.Brand href="http://www.chemistry.uct.ac.za/">
-            <img alt="" src="uctchem.png" height="40" />{" "}
+            <img alt="" src="logo/uctchem.png" height="40" />{" "}
           </Navbar.Brand>
         </Navbar.Collapse>
       </Navbar>
