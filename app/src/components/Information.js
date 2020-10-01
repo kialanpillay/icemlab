@@ -84,8 +84,8 @@ export default class Information extends Component {
     return (
       <Card
         style={{
-          height: this.props.variant === "Reagents" ? "10rem" : "18rem",
-          marginTop: this.props.variant === "Reagents" ? "0rem" : "2rem",
+          height: this.props.variant === "Reagents" ? "18rem" : "10rem",
+          marginTop: this.props.variant === "Reagents" ? "2rem" : "0rem",
         }}
       >
         <Card.Header as="h5">
