@@ -143,7 +143,7 @@ export default class Home extends Component {
                   style={{ marginTop: "1rem" }}
                   className="justify-content-center"
                 >
-                  <Col md={8}>
+                  <Col md={9}>
                     <InputGroup className="mb-3">
                       <FormControl
                         placeholder={`Search from over ${this.state.experiments.length} different experiments`}
