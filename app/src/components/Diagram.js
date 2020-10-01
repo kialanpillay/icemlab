@@ -770,6 +770,7 @@ export default class Diagram extends Component {
                         dangerouslySetInnerHTML={{
                           __html: item,
                         }}
+                        key={index}
                       />
                     );
                   })}

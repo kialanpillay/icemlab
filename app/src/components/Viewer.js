@@ -29,7 +29,7 @@ export default class Viewer extends Component {
       <div>
         <iframe
           title="pubchem-widget"
-          class="pubchem-widget"
+          className="pubchem-widget"
           src={`https://pubchem.ncbi.nlm.nih.gov/compound/${
             this.props.compound
           }#section=${this.props.section}&${

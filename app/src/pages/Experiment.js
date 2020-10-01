@@ -307,7 +307,6 @@ export default class Experiment extends Component {
                     </a>
                     , the world's largest free chemistry database.
                   </h6>
-                  <h2>Compound</h2>
                   <Form.Control
                     as="select"
                     required={true}
