@@ -820,9 +820,9 @@ export default class Diagram extends Component {
             horizontal: "left",
           }}
           open={this.state.open}
-          autoHideDuration={6000}
+          autoHideDuration={500}
           onClose={closeGeneratingPng}
-          message="Generating image..."
+          message="Saving image..."
           action={
             <React.Fragment>
               <IconButton
