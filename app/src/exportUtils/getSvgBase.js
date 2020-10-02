@@ -27,7 +27,7 @@ const createSvgCanvas = (node) => {
  * Adds support for page links.
  */
 const isCustomLink = (href) => {
-    return href.substring(0, 5) == 'data:';
+    return href.substring(0, 5) === 'data:';
 };
 
 /**
@@ -58,12 +58,12 @@ const updateSvgLinks = (node, target, removeCustom) => {
  * Returns the link for the given cell.
  */
 const getLinkForCell = (cell) => {
-    if (cell.value != null && typeof (cell.value) == 'object') {
+    if (cell.value !== null && typeof (cell.value) == 'object') {
         var link = cell.value.getAttribute('link');
 
         // Removes links with leading javascript: protocol
         // TODO: Check more possible attack vectors
-        if (link != null && link.toLowerCase().substring(0, 11) === 'javascript:') {
+        if (link !== null && link.toLowerCase().substring(0, 11) === 'javascript:') {
             link = link.substring(11);
         }
 
@@ -107,7 +107,7 @@ const addForeignObjectWarning = (canvas, root) => {
 
         // Workaround for implicit namespace handling in HTML5 export, IE adds NS1 namespace so use code below
         // in all IE versions except quirks mode. KNOWN: Adds xlink namespace to each image tag in output.
-        if (a.setAttributeNS == null || (root.ownerDocument != document && document.documentMode == null)) {
+        if (a.setAttributeNS === null || (root.ownerDocument !== document && document.documentMode === null)) {
             a.setAttribute('xlink:href', foreignObjectWarningLink);
             a.setAttribute('target', '_blank');
         }
@@ -145,17 +145,17 @@ export const getSvgBase = (graph, background, scale, border, nocrop, crisp,
     }
 
     try {
-        scale = (scale != null) ? scale : 1;
-        border = (border != null) ? border : 0;
-        crisp = (crisp != null) ? crisp : true;
-        ignoreSelection = (ignoreSelection != null) ? ignoreSelection : true;
-        showText = (showText != null) ? showText : true;
+        scale = (scale !== null) ? scale : 1;
+        border = (border !== null) ? border : 0;
+        crisp = (crisp !== null) ? crisp : true;
+        ignoreSelection = (ignoreSelection !== null) ? ignoreSelection : true;
+        showText = (showText !== null) ? showText : true;
 
         var bounds = (ignoreSelection || nocrop) ?
             graph.getGraphBounds() : graph.getBoundingBox(
                 graph.getSelectionCells());
 
-        if (bounds == null) {
+        if (bounds === null) {
             throw Error(mxResources.get('drawingEmpty'));
         }
 
@@ -214,7 +214,7 @@ export const getSvgBase = (graph, background, scale, border, nocrop, crisp,
         var getAlternateText = svgCanvas.getAlternateText;
         svgCanvas.getAlternateText = function (fo, x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation) {
             // Assumes a max character width of 0.5em
-            if (str != null && graph.state.fontSize > 0) {
+            if (str !== null && graph.state.fontSize > 0) {
                 try {
                     if (mxUtils.isNode(str)) {
                         str = str.innerText;
@@ -230,10 +230,10 @@ export const getSvgBase = (graph, background, scale, border, nocrop, crisp,
                     var length = 0;
                     var index = 0;
 
-                    while ((exp == 0 || length < exp) && index < str.length) {
+                    while ((exp === 0 || length < exp) && index < str.length) {
                         var char = str.charCodeAt(index);
 
-                        if (char == 10 || char == 13) {
+                        if (char === 10 || char === 13) {
                             if (length > 0) {
                                 break;
                             }

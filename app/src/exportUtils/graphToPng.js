@@ -6,7 +6,7 @@ for (var n = 0; n < 256; n++)
 	
 	for (var k = 0; k < 8; k++)
 	{
-		if ((c & 1) == 1)
+		if ((c & 1) === 1)
 		{
 			c = 0xedb88320 ^ (c >>> 1);
 		}
@@ -60,7 +60,7 @@ export const writeGraphModelToPng = (data, type, key, value, error) => {
 	};
 
 	// Checks signature
-	if (fread(f, 8) != String.fromCharCode(137) + 'PNG' + String.fromCharCode(13, 10, 26, 10)) {
+	if (fread(f, 8) !== String.fromCharCode(137) + 'PNG' + String.fromCharCode(13, 10, 26, 10)) {
 		if (error !== null) {
 			error();
 		}
@@ -88,13 +88,13 @@ export const writeGraphModelToPng = (data, type, key, value, error) => {
 
 		if (chunk === 'IDAT') {
 			result = f.substring(0, pos - 8);
-
+			let chunkData = null;
 			if (type === 'pHYs' && key === 'dpi') {
 				var dpm = Math.round(value / 0.0254); //One inch is equal to exactly 0.0254 meters.
-				var chunkData = writeInt(dpm) + writeInt(dpm) + String.fromCharCode(1);
+				chunkData = writeInt(dpm) + writeInt(dpm) + String.fromCharCode(1);
 			}
 			else {
-				var chunkData = key + String.fromCharCode(0) +
+				chunkData = key + String.fromCharCode(0) +
 					((type === 'zTXt') ? String.fromCharCode(0) : '') +
 					value;
 			}

@@ -295,7 +295,7 @@ export default class Experiment extends Component {
             <Container style={{ marginTop: "2rem", marginBottom: "2rem" }}>
               <Row>
                 <Col md={3}>
-                  <img src={"logo/1280px-PubChem_logo.svg.png"} width={200} />
+                  <img alt="PubChem" src={"logo/1280px-PubChem_logo.svg.png"} width={200} />
                   <h6>
                     Explore chemical information from{" "}
                     <a

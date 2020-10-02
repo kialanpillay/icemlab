@@ -10,7 +10,7 @@ export const getSvg = (graph, background, scale, border, nocrop, crisp,
 {
     var temp = null;
     
-    if (!keepTheme && graph.themes != null && graph.defaultThemeName == 'darkTheme')
+    if (!keepTheme && graph.themes !== null && graph.defaultThemeName === 'darkTheme')
     {
         temp = graph.stylesheet;
         graph.stylesheet = graph.getDefaultStylesheet();

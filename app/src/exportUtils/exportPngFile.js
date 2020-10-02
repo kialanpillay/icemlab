@@ -9,11 +9,11 @@ const createImageDataUri = (canvas, xml, format, dpi) => {
     var data = canvas.toDataURL('image/' + format);
 
     // Checks if output is invalid or empty
-    if (data.length <= 6 || data == canvas.cloneNode(false).toDataURL('image/' + format)) {
-        throw { message: 'Invalid image' };
+    if (data.length <= 6 || data === canvas.cloneNode(false).toDataURL('image/' + format)) {
+        throw new Error('Invalid image');
     }
 
-    if (xml != null) {
+    if (xml !== null) {
         data = writeGraphModelToPng(data, 'tEXt', 'mxfile', encodeURIComponent(xml));
     }
 
@@ -35,7 +35,7 @@ const getBaseFilename = () => {
  * Save canvas
  */
 const saveCanvas = (canvas, xml, format, dpi) => {
-    var ext = ((format == 'jpeg') ? 'jpg' : format);
+    var ext = ((format === 'jpeg') ? 'jpg' : format);
     var filename = getBaseFilename() + '.' + ext;
     var data = createImageDataUri(canvas, xml, format, dpi);
     saveLocalFile(data.substring(data.lastIndexOf(',') + 1), filename, 'image/' + format, true);

@@ -1,4 +1,4 @@
-import { createImageUrlConverter } from "./imageUrlConverter";
+import { createImageUrlConverter } from "./createImageUrlConverter";
 import { convertImageToDataUri } from "./convertImageToDataUri";
 
 /**
@@ -6,7 +6,7 @@ import { convertImageToDataUri } from "./convertImageToDataUri";
  */
 export const convertImages = (svgRoot, callback, converter) => {
 	// Converts images to data URLs for immediate painting
-	if (converter == null) {
+	if (converter === null) {
 		converter = createImageUrlConverter();
 	}
 
@@ -20,7 +20,7 @@ export const convertImages = (svgRoot, callback, converter) => {
 	function dec() {
 		counter--;
 
-		if (counter == 0) {
+		if (counter === 0) {
 			callback(svgRoot);
 		}
 	};
@@ -35,7 +35,7 @@ export const convertImages = (svgRoot, callback, converter) => {
 						var src = converter.convert(img.getAttribute(srcAttr));
 
 						// Data URIs are pass-through
-						if (src != null && src.substring(0, 5) != 'data:') {
+						if (src !== null && src.substring(0, 5) !== 'data:') {
 							inc();
 
 							convertImageToDataUri(src, function (uri) {
@@ -64,7 +64,7 @@ export const convertImages = (svgRoot, callback, converter) => {
 	convertImages('img', 'src');
 
 	// All from cache or no images
-	if (counter == 0) {
+	if (counter === 0) {
 		callback(svgRoot);
 	}
 };
