@@ -42,11 +42,11 @@ import {
   mxPerimeter,
   mxCompactTreeLayout,
   mxCodec,
-  mxXmlCanvas2D,
-  mxImageExport,
   mxImage,
   mxKeyHandler,
 } from "mxgraph-js";
+
+import { exportPngFile } from "../exportUtils/exportPngFile";
 
 const SIDEBAR_UNITS = ["cm<sup>3</sup>", "dm<sup>3</sup>", "mℓ", "ℓ"];
 
@@ -530,52 +530,7 @@ export default class Diagram extends Component {
 
     const exportPNG = async () => {
       const { graph } = this.state;
-
-      const encoder = new mxCodec();
-      const result = encoder.encode(graph.getModel());
-      const xml = mxUtils.getXml(result);
-
-      // export PNG
-      var xmlDoc = mxUtils.createXmlDocument();
-      var root = xmlDoc.createElement("output");
-      xmlDoc.appendChild(root);
-
-      var xmlCanvas = new mxXmlCanvas2D(root);
-      var imgExport = new mxImageExport();
-      imgExport.drawState(
-        graph.getView().getState(graph.model.root),
-        xmlCanvas
-      );
-
-      var bounds = graph.getGraphBounds();
-      var w = Math.ceil(bounds.x + bounds.width);
-      var h = Math.ceil(bounds.y + bounds.height);
-
-      const response = await fetch("https://icemlab-export.herokuapp.com/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          w,
-          h,
-          xml,
-        }),
-      });
-
-      const imageBlob = await response.blob();
-      const imageFilename = "Experiment.png";
-
-      if (window.navigator.msSaveOrOpenBlob) {
-        window.navigator.msSaveBlob(imageBlob, imageFilename);
-      } else {
-        let element = window.document.createElement("a");
-        element.href = window.URL.createObjectURL(imageBlob);
-        element.download = imageFilename;
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-      }
+      exportPngFile(graph);
     };
 
     //Exports the diagram to an XML representation
@@ -747,7 +702,7 @@ export default class Diagram extends Component {
               </Card.Header>
 
               <Accordion.Collapse eventKey="2">
-                <Card.Body>
+              <Card.Body>
                   <p
                     className="item"
                     value="Text"
@@ -865,9 +820,9 @@ export default class Diagram extends Component {
             horizontal: "left",
           }}
           open={this.state.open}
-          autoHideDuration={6000}
+          autoHideDuration={500}
           onClose={closeGeneratingPng}
-          message="Generating image..."
+          message="Saving image..."
           action={
             <React.Fragment>
               <IconButton
