@@ -99,7 +99,7 @@ const absoluteCssFonts = (fontCss, graph) => {
 
             // Gets path for URL
             var path = window.location.pathname;
-            var idx = (path !== null) ? path.lastIndexOf('/') : -1;
+            const idx = (path !== null) ? path.lastIndexOf('/') : -1;
 
             if (idx >= 0) {
                 path = path.substring(0, idx + 1);
@@ -114,7 +114,7 @@ const absoluteCssFonts = (fontCss, graph) => {
             }
 
             for (var i = 1; i < parts.length; i++) {
-                var idx = parts[i].indexOf(')');
+                const idx = parts[i].indexOf(')');
 
                 if (idx > 0) {
                     var url = trimCssUrl(parts[i].substring(0, idx));
@@ -207,7 +207,7 @@ export const exportToCanvas = (callback, width, imageCache, error, limitHeight,
         border = (border != null) ? border : 0;
 
         var bg = null;
-        
+
         convertImages(getSvg(graph, null, null, border, noCrop, null, ignoreSelection,
             null, null, null, addShadow, null, keepTheme), function (svgRoot) {
                 try {
@@ -311,8 +311,6 @@ export const exportToCanvas = (callback, width, imageCache, error, limitHeight,
                     };
 
                     img.onerror = function (e) {
-                        //console.log('img', e, img.src);
-
                         if (error != null) {
                             error(e);
                         }
@@ -326,14 +324,8 @@ export const exportToCanvas = (callback, width, imageCache, error, limitHeight,
                         addMathCss(svgRoot);
                     }
 
-                    let resolvedFontCss = null;
-
                     var done = function () {
                         try {
-                            if (resolvedFontCss != null) {
-                                addFontCss(svgRoot, resolvedFontCss);
-                            }
-
                             img.src = createSvgDataUri(mxUtils.getXml(svgRoot));
                         }
                         catch (e) {
@@ -359,8 +351,6 @@ export const exportToCanvas = (callback, width, imageCache, error, limitHeight,
                     });
                 }
                 catch (e) {
-                    //console.log('src', e, img.src);
-
                     if (error != null) {
                         error(e);
                     }

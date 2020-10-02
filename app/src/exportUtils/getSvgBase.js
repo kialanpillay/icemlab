@@ -48,7 +48,7 @@ const updateSvgLinks = (node, target, removeCustom) => {
                 links[i].setAttribute('target', target);
             }
             else if (removeCustom && isCustomLink(href)) {
-                links[i].setAttribute('href', 'javascript:void(0);');
+                links[i].setAttribute('href', '#');
             }
         }
     }
@@ -60,12 +60,6 @@ const updateSvgLinks = (node, target, removeCustom) => {
 const getLinkForCell = (cell) => {
     if (cell.value !== null && typeof (cell.value) == 'object') {
         var link = cell.value.getAttribute('link');
-
-        // Removes links with leading javascript: protocol
-        // TODO: Check more possible attack vectors
-        if (link !== null && link.toLowerCase().substring(0, 11) === 'javascript:') {
-            link = link.substring(11);
-        }
 
         return link;
     }
