@@ -281,7 +281,7 @@ export default class Diagram extends Component {
       let cell = graph.insertVertex(parent, target, "", x, y, 100, 100, style);
       graph.setSelectionCell(cell);
       this.selectionChanged(graph, value);
-    } else if (type === null) {
+    } else if (type === "reagent") {
       const style =
         `${mxConstants.STYLE_SHAPE}=${mxConstants.SHAPE_RECTANGLE};` +
         `${mxConstants.STYLE_FILLCOLOR}=none;` +
@@ -297,7 +297,7 @@ export default class Diagram extends Component {
         value,
         x,
         y,
-        `${value.length * 8}`,
+        160,
         20,
         style
       );
@@ -447,7 +447,7 @@ export default class Diagram extends Component {
     };
   };
 
-  //Instantiates undo manager  with utility functions
+  //Instantiates undo manager with utility functions
   initUndo = () => {
     const { graph } = this.state;
 
@@ -657,7 +657,11 @@ export default class Diagram extends Component {
                     .map((reagent, index) => {
                       return (
                         <div key={index}>
-                          <p className="item" value={reagent.name}>
+                          <p
+                            className="item"
+                            value={reagent.name}
+                            type="reagent"
+                          >
                             {reagent.name}
                           </p>
                           <PopoverStickOnHover
@@ -702,7 +706,7 @@ export default class Diagram extends Component {
               </Card.Header>
 
               <Accordion.Collapse eventKey="2">
-              <Card.Body>
+                <Card.Body>
                   <p
                     className="item"
                     value="Text"
