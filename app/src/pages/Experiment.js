@@ -284,7 +284,9 @@ export default class Experiment extends Component {
                     }}
                   >
                     {this.state.diagramComplete
-                      ? "Experiment complete! You may now view the demonstration."
+                      ? this.state.experiment.url === ""
+                        ? "Experiment complete!"
+                        : "Experiment complete! You may now view the video demonstration."
                       : "Hold up! Check that you have added all required apparautus and reagents to your diagram."}
                   </Alert>
                 </Card>
@@ -295,7 +297,11 @@ export default class Experiment extends Component {
             <Container style={{ marginTop: "2rem", marginBottom: "2rem" }}>
               <Row>
                 <Col md={3}>
-                  <img alt="PubChem" src={"logo/1280px-PubChem_logo.svg.png"} width={200} />
+                  <img
+                    alt="PubChem"
+                    src={"logo/1280px-PubChem_logo.svg.png"}
+                    width={200}
+                  />
                   <h6>
                     Explore chemical information from{" "}
                     <a
