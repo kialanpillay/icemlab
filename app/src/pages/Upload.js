@@ -7,6 +7,7 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import Alert from "react-bootstrap/Alert";
 import CheckIcon from "@material-ui/icons/Check";
+import ErrorIcon from "@material-ui/icons/Error";
 import Navigation from "../components/Navigation";
 import ReagentInput from "../components/ReagentInput";
 import Checklist from "../components/Checklist";
@@ -50,6 +51,7 @@ class Upload extends Component {
       courseCode: "CEM1000W",
       videoLink: "",
       upload: false,
+      error: false,
       hidden: true,
       apparatusData: [], //array to store apparatus retrieved from the server
       reagentsData: [],
@@ -170,10 +172,11 @@ class Upload extends Component {
       body: JSON.stringify(payload),
     })
       .then((response) => response.json())
-      .then(() => {
-        this.setState({ upload: true }); //  alert
+      .then((response) => {
+        response.statusCode === 200
+          ? this.setState({ upload: true })
+          : this.setState({ error: true });
       })
-
       .catch((err) => {
         console.log(err);
       });
@@ -214,9 +217,11 @@ class Upload extends Component {
       });
   };
 
-  //Alert to notify the user that the experiment was uploaded successfully
-  alertOnClose = () => {
-    window.location.href = "/dashboard";
+  //Alert to notify the user that the experiment was uploaded successfully or not
+  alertOnClose = (variant) => {
+    variant === "success"
+      ? (window.location.href = "/dashboard")
+      : this.setState({ error: false });
   };
 
   handleEditorChange(content, delta, source, editor) {
@@ -538,7 +543,7 @@ class Upload extends Component {
                   <Alert //Indicating the upload success to the user
                     show={this.state.upload}
                     variant="success"
-                    onClose={() => this.alertOnClose()}
+                    onClose={() => this.alertOnClose("success")}
                     dismissible
                     style={{
                       display: "flex",
@@ -553,6 +558,25 @@ class Upload extends Component {
                     {this.props.edit
                       ? "Experiment Saved"
                       : "Experiment Uploaded"}
+                  </Alert>
+                  <Alert //Indicating the upload failure to the user
+                    show={this.state.error}
+                    onClose={() => this.alertOnClose("error")}
+                    variant="danger"
+                    dismissible
+                    style={{
+                      display: "flex",
+                      marginLeft: "10px",
+                    }}
+                  >
+                    <ErrorIcon
+                      style={{
+                        marginRight: "5px",
+                      }}
+                    />
+                    {this.props.edit
+                      ? "Save Failed!"
+                      : "Upload Failed!"}
                   </Alert>
                 </Row>
               </div>
