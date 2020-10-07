@@ -42,7 +42,7 @@ export default class Information extends Component {
         const weightResponse = await this.fetchJson(weightEndpoint);
         let weight = "No Data";
         if ("PropertyTable" === Object.keys(weightResponse)[0]) {
-          weight = `${weightResponse.PropertyTable.Properties[0].MolecularWeight}g/mol`;
+          weight = `${weightResponse.PropertyTable.Properties[0].MolecularWeight} g/mol`;
         }
         this.setState((prev) => {
           let prevData = { ...prev.chemData };
