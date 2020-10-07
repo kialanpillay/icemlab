@@ -8,7 +8,7 @@ import UploadCard from "../components/UploadCard";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Upload from "./Upload";
-import { ICEMLAB_SERVICE } from "../apiUrls"
+import { ICEMLAB_SERVICE } from "../apiUrls";
 
 //Experiment Dashboard Page Component
 export default class Dashboard extends Component {
@@ -26,8 +26,6 @@ export default class Dashboard extends Component {
     //Binding of methods to the class instance
     this.handleSearch = this.handleSearch.bind(this);
     this.callbackTitle = this.callbackTitle.bind(this);
-
-
   }
   //Sets search-string state using the value of a user event (key press)
   handleSearch = (event) => {
@@ -83,9 +81,23 @@ export default class Dashboard extends Component {
             <Row
               style={{
                 marginTop: "2rem",
+                height: "3rem",
               }}
             >
-              <Col md={{ span: 4, offset: 8 }}>
+              <Col md={3}>
+                iCEMlab Service Monitoring
+                <a
+                  href="https://icemlab.montastic.io"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="https://icemlab.montastic.io/badge"
+                    alt="Status badge"
+                  />
+                </a>
+              </Col>
+              <Col md={{ span: 4, offset: 5 }}>
                 {/*Search bar*/}
                 <InputGroup>
                   <FormControl
@@ -100,7 +112,6 @@ export default class Dashboard extends Component {
                 </InputGroup>
               </Col>
             </Row>
-
             <Row>
               <Col md={4}>
                 {/*Rendering the card which allows experiments to be uploaded when clicked on*/}
@@ -112,16 +123,16 @@ export default class Dashboard extends Component {
                 return item.title
                   .toLowerCase()
                   .includes(this.state.search.toLowerCase()) ? (
-                    <Col md={4} key={index}>
-                      <ExperimentCard
-                        experimentTitle={item.title}
-                        experimentCategory={item.category}
-                        experimentModified={item.modified}
-                        experimentColor={this.getCategoryColor(item.category)}
-                        callbackTitle={this.callbackTitle}
-                      />
-                    </Col>
-                  ) : null;
+                  <Col md={4} key={index}>
+                    <ExperimentCard
+                      experimentTitle={item.title}
+                      experimentCategory={item.category}
+                      experimentModified={item.modified}
+                      experimentColor={this.getCategoryColor(item.category)}
+                      callbackTitle={this.callbackTitle}
+                    />
+                  </Col>
+                ) : null;
               })}
             </Row>
           </Container>
