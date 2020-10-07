@@ -47,6 +47,7 @@ class Upload extends Component {
       checkedApparatus: [],
       selectedReagents: [],
       method: "",
+      image: "",
       notes: "",
       courseCode: "CEM1000W",
       videoLink: "",
@@ -54,8 +55,7 @@ class Upload extends Component {
       error: false,
       hidden: true,
       apparatusData: [], //array to store apparatus retrieved from the server
-      reagentsData: [],
-      image: "",
+      reagentsData: [], //array to store reagents retrieved from the server
     };
     //Binding of methods to the class instance
     this.handleChange = this.handleChange.bind(this);
@@ -97,26 +97,6 @@ class Upload extends Component {
       });
   };
 
-  //Convert to array with title key
-  processReagents = (reagents) => {
-    const arr = reagents.map((item) => {
-      return {
-        title: item,
-      };
-    });
-
-    return arr;
-  };
-
-  //Parses reagents into required format for the server
-  processSelectedReagents = () => {
-    const arr = this.state.selectedReagents.map((item) => {
-      return typeof item === "object" ? item.title : item;
-    });
-
-    return arr;
-  };
-
   //Sets the state of the checked array to include items that have been selected.
   callbackChecklist = (checked) => {
     this.setState({ checkedApparatus: checked });
@@ -144,7 +124,7 @@ class Upload extends Component {
       this.state.title !== "" &&
       this.state.preamble.information !== "" &&
       this.state.checkedApparatus.length !== 0 &&
-      this.processSelectedReagents().length !== 0 &&
+      this.state.selectedReagents.length !== 0 &&
       this.state.method.length !== 0
     );
   };
@@ -155,7 +135,7 @@ class Upload extends Component {
       title: this.state.title,
       information: this.state.preamble,
       apparatus: this.state.checkedApparatus,
-      reagents: this.processSelectedReagents(),
+      reagents: this.state.selectedReagents,
       method: this.state.method,
       notes: this.state.notes,
       category: this.state.courseCode,
@@ -381,12 +361,10 @@ class Upload extends Component {
                   </OverlayTrigger>
                   {!this.state.hidden ? (
                     <ReagentInput
-                      data={this.processReagents(
-                        this.state.reagentsData.map((reagent) => reagent.name)
+                      data={this.state.reagentsData.map(
+                        (reagent) => reagent.name
                       )}
-                      selected={this.processReagents(
-                        this.state.selectedReagents
-                      )}
+                      selected={this.state.selectedReagents}
                       callback={this.callbackReagents}
                     />
                   ) : null}
@@ -574,9 +552,7 @@ class Upload extends Component {
                         marginRight: "5px",
                       }}
                     />
-                    {this.props.edit
-                      ? "Save Failed!"
-                      : "Upload Failed!"}
+                    {this.props.edit ? "Save Failed!" : "Upload Failed!"}
                   </Alert>
                 </Row>
               </div>

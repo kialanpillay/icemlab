@@ -40,7 +40,6 @@ export default class ReagentInput extends React.Component {
           multiple
           id="tags-outlined"
           options={this.props.data}
-          getOptionLabel={(option) => option.title}
           filterSelectedOptions
           value={this.state.selected}
           onChange={this.handleChange}
