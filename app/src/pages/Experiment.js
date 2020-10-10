@@ -69,6 +69,16 @@ export default class Experiment extends Component {
       .join("&");
     return `?${query}`;
   };
+  //Converts array items to object keys
+  convertArrayToObject = (array) => {
+    const obj = {};
+    return array.reduce((obj, item) => {
+      return {
+        ...obj,
+        [item["name"]]: {},
+      };
+    }, obj);
+  };
 
   //GET request to retrieve a experiment data from the API server
   getExperiment = () => {
@@ -215,6 +225,7 @@ export default class Experiment extends Component {
                     <Col md={4}>
                       <Information
                         experiment={this.state.experiment}
+                        apparatusData= {this.convertArrayToObject(this.state.apparatusData)}
                         variant="Apparatus"
                       />
                       <Information
