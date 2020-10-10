@@ -12,20 +12,27 @@ export default class Information extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      chemData: this.convertArrayToObject(this.props.experiment.reagents),
-      apparatusData: this.props.apparatusData,
+      chemData: this.convertArrayToObject(
+        "reagents",
+        this.props.experiment.reagents
+      ),
+      wiki: this.convertArrayToObject(
+        "apparatus",
+        this.props.experiment.apparatus
+      ),
     };
   }
   componentDidMount() {
     if (this.props.variant === "Reagents") {
       this.getPubChemData();
+    } else {
+      this.getWikipediaData();
     }
-    this.getWikipediaData();
   }
 
   //Asynchronously retrieves data from the Wikipedia API
   getWikipediaData = async () => {
-    this.state.apparatusData.forEach(async ({ wikiRef, name }) => {
+    this.props.apparatusData.forEach(async ({ wikiRef, name }) => {
       const base =
         "https://en.wikipedia.org/w/api.php?action=query&format=json";
       const proxy = "https://icemlab-cors-service.herokuapp.com/";
@@ -38,11 +45,11 @@ export default class Information extends Component {
           description = Object.values(descResponse.query.pages)[0].description;
         }
         this.setState((prev) => {
-          let prevData = { ...prev.apparatusData };
-          prevData[name] = {
+          let prevWiki = { ...prev.wiki };
+          prevWiki[name] = {
             description: description,
           };
-          return { ...prev, apparatusData: prevData };
+          return { ...prev, wiki: prevWiki };
         });
       } catch (error) {
         console.error("Could not get Wikipediadata", error);
@@ -94,14 +101,23 @@ export default class Information extends Component {
   };
 
   //Converts array items to object keys
-  convertArrayToObject = (array) => {
+  convertArrayToObject = (variant, array) => {
     const obj = {};
-    return array.reduce((obj, item) => {
-      return {
-        ...obj,
-        [item]: "",
-      };
-    }, obj);
+    if (variant === "apparatus") {
+      return array.reduce((obj, item) => {
+        return {
+          ...obj,
+          [item]: {},
+        };
+      }, obj);
+    } else {
+      return array.reduce((obj, item) => {
+        return {
+          ...obj,
+          [item]: "",
+        };
+      }, obj);
+    }
   };
 
   //Strips whitespaces and converts reagent string to lowercase
@@ -139,7 +155,7 @@ export default class Information extends Component {
           }}
         >
           {this.props.variant === "Reagents"
-            ? this.props.experiment.reagents.map((item, index) => {
+            ? this.props.experiment.reagents.map((reagent, index) => {
                 return (
                   <div>
                     <OverlayTrigger
@@ -149,36 +165,35 @@ export default class Information extends Component {
                           <div style={{ textAlign: "left" }}>
                             Molecular Formula:
                             <br />
-                            {this.state.chemData[item].formula || "Loading"}
+                            {this.state.chemData[reagent].formula || "Loading"}
                             <br />
                             Molecular Weight:
                             <br />
-                            {this.state.chemData[item].weight || "Loading"}
+                            {this.state.chemData[reagent].weight || "Loading"}
                           </div>
                         </Tooltip>
                       }
                       key={index}
                     >
-                      <ListGroup.Item key={index}>{item}</ListGroup.Item>
+                      <ListGroup.Item key={index}>{reagent}</ListGroup.Item>
                     </OverlayTrigger>
                   </div>
                 );
               })
-            : this.props.experiment.apparatus.map((apparatusItem, index) => {
+            : this.props.experiment.apparatus.map((apparatus, index) => {
                 return (
                   <OverlayTrigger
                     placement="right"
                     overlay={
                       <Tooltip>
                         <div style={{ textAlign: "left" }}>
-                          {this.state.apparatusData[apparatusItem]
-                            .description || "Loading"}
+                          {this.state.wiki[apparatus].description|| "Loading"}
                         </div>
                       </Tooltip>
                     }
                     key={index}
                   >
-                    <ListGroup.Item key={index}>{apparatusItem}</ListGroup.Item>
+                    <ListGroup.Item key={index}>{apparatus}</ListGroup.Item>
                   </OverlayTrigger>
                 );
               })}

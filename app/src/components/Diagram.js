@@ -92,7 +92,7 @@ export default class Diagram extends Component {
       const proxy = "https://icemlab-cors-service.herokuapp.com/";
       try {
         const descResponse = await this.fetchJson(
-          `${proxy}${base}&prop=description&txitles=${wikiRef}`
+          `${proxy}${base}&prop=description&titles=${wikiRef}`
         );
         let description = "";
         if ("description" in Object.values(descResponse.query.pages)[0]) {
