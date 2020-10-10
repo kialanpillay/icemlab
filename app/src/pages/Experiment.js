@@ -160,7 +160,7 @@ export default class Experiment extends Component {
         <Tabs defaultActiveKey="practical-manual" style={{ marginTop: "1rem" }}>
           <Tab eventKey="practical-manual" title="Practical Manual">
             <Container style={{ marginTop: "2rem", marginBottom: "2rem" }}>
-              {this.state.hidden ? (
+              {this.state.hidden || this.state.apparatusData.length === 0 ? (
                 <Row className="justify-content-center">
                   <Spinner
                     animation="border"
@@ -215,6 +215,16 @@ export default class Experiment extends Component {
                     <Col md={4}>
                       <Information
                         experiment={this.state.experiment}
+                        apparatusData={this.state.experiment.apparatus.map(
+                          (apparatus) => ({
+                            name: apparatus,
+                            wikiRef:
+                              this.state.apparatusData.find(
+                                (apparatusData) =>
+                                  apparatusData.name === apparatus
+                              )?.wikiRef || "",
+                          })
+                        )}
                         variant="Apparatus"
                       />
                       <Information
