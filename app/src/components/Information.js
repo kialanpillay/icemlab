@@ -13,13 +13,42 @@ export default class Information extends Component {
     super(props);
     this.state = {
       chemData: this.convertArrayToObject(this.props.experiment.reagents),
+      apparatusData: this.props.apparatusData,
     };
   }
   componentDidMount() {
     if (this.props.variant === "Reagents") {
       this.getPubChemData();
     }
+    this.getWikipediaData();
   }
+
+  //Asynchronously retrieves data from the Wikipedia API
+  getWikipediaData = async () => {
+    this.state.apparatusData.forEach(async ({ wikiRef, name }) => {
+      const base =
+        "https://en.wikipedia.org/w/api.php?action=query&format=json";
+      const proxy = "https://icemlab-cors-service.herokuapp.com/";
+      try {
+        const descResponse = await this.fetchJson(
+          `${proxy}${base}&prop=description&titles=${wikiRef}`
+        );
+        let description = "";
+        if ("description" in Object.values(descResponse.query.pages)[0]) {
+          description = Object.values(descResponse.query.pages)[0].description;
+        }
+        this.setState((prev) => {
+          let prevData = { ...prev.apparatusData };
+          prevData[name] = {
+            description: description,
+          };
+          return { ...prev, apparatusData: prevData };
+        });
+      } catch (error) {
+        console.error("Could not get Wikipediadata", error);
+      }
+    });
+  };
 
   //Asynchronously retrieves molecular compound data from the PubChem API
   getPubChemData = async () => {
@@ -112,29 +141,46 @@ export default class Information extends Component {
           {this.props.variant === "Reagents"
             ? this.props.experiment.reagents.map((item, index) => {
                 return (
+                  <div>
+                    <OverlayTrigger
+                      placement="right"
+                      overlay={
+                        <Tooltip>
+                          <div style={{ textAlign: "left" }}>
+                            Molecular Formula:
+                            <br />
+                            {this.state.chemData[item].formula || "Loading"}
+                            <br />
+                            Molecular Weight:
+                            <br />
+                            {this.state.chemData[item].weight || "Loading"}
+                          </div>
+                        </Tooltip>
+                      }
+                      key={index}
+                    >
+                      <ListGroup.Item key={index}>{item}</ListGroup.Item>
+                    </OverlayTrigger>
+                  </div>
+                );
+              })
+            : this.props.experiment.apparatus.map((apparatusItem, index) => {
+                return (
                   <OverlayTrigger
                     placement="right"
                     overlay={
                       <Tooltip>
                         <div style={{ textAlign: "left" }}>
-                          Molecular Formula:
-                          <br />
-                          {this.state.chemData[item].formula || "Loading"}
-                          <br />
-                          Molecular Weight:
-                          <br />
-                          {this.state.chemData[item].weight || "Loading"}
+                          {this.state.apparatusData[apparatusItem]
+                            .description || "Loading"}
                         </div>
                       </Tooltip>
                     }
                     key={index}
                   >
-                    <ListGroup.Item key={index}>{item}</ListGroup.Item>
+                    <ListGroup.Item key={index}>{apparatusItem}</ListGroup.Item>
                   </OverlayTrigger>
                 );
-              })
-            : this.props.experiment.apparatus.map((item, index) => {
-                return <ListGroup.Item key={index}>{item}</ListGroup.Item>;
               })}
         </ListGroup>
       </Card>
