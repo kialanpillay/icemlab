@@ -157,7 +157,6 @@ export default class Information extends Component {
           {this.props.variant === "Reagents"
             ? this.props.experiment.reagents.map((reagent, index) => {
                 return (
-                  <div>
                     <OverlayTrigger
                       placement="right"
                       overlay={
@@ -177,7 +176,6 @@ export default class Information extends Component {
                     >
                       <ListGroup.Item key={index}>{reagent}</ListGroup.Item>
                     </OverlayTrigger>
-                  </div>
                 );
               })
             : this.props.experiment.apparatus.map((apparatus, index) => {
