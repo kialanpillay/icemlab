@@ -52,7 +52,7 @@ export default class Information extends Component {
           return { ...prev, wiki: prevWiki };
         });
       } catch (error) {
-        console.error("Could not get Wikipediadata", error);
+        console.error("Could not get Wikipedia data", error);
       }
     });
   };

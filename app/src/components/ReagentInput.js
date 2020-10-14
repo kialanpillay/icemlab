@@ -6,6 +6,7 @@ import {
   createMuiTheme,
 } from "@material-ui/core/styles";
 
+//Custom Input component for reagent data 
 export default class ReagentInput extends React.Component {
   constructor(props) {
     super(props);
