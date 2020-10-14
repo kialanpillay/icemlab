@@ -73,6 +73,11 @@ export default class Diagram extends Component {
     this.graphContainer = React.createRef();
     this.loadGraph = this.loadGraph.bind(this);
     this.undoManager = null;
+    this.handleClick = this.handleClick.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+    this.showGeneratingPng = this.showGeneratingPng.bind(this);
+    this.closeGeneratingPng = this.closeGeneratingPng.bind(this);
   }
 
   //Calls method once the component has rendered
@@ -177,7 +182,7 @@ export default class Diagram extends Component {
     mxConstraintHandler.prototype.pointImage = new mxImage("point.gif", 5, 5);
   };
 
-  //Creates a draggable element from sidebar items (apparatus)
+  //Creates a draggable element from sidebar items
   createDragElement = () => {
     const { graph } = this.state;
     const items = this.sidebar.current.querySelectorAll(".item");
@@ -347,6 +352,7 @@ export default class Diagram extends Component {
       graph.setSelectionCell(cell);
       this.selectionChanged(graph, value);
     }
+    //Passes number of graph nodes to parent component
     this.props.callback(Object.keys(this.state.graph.model.cells).length - 2);
   };
 
@@ -389,7 +395,8 @@ export default class Diagram extends Component {
         let constraints = this.graph.getAllConnectionConstraints(this.previous);
         let nearestConstraint = null;
         let dist = null;
-
+        
+        //Calculates constraints
         for (var i = 0; i < constraints.length; i++) {
           var cp = this.graph.getConnectionPoint(this.previous, constraints[i]);
 
@@ -498,7 +505,62 @@ export default class Diagram extends Component {
     }
   }
 
+  //Exports the diagram to an PNG representation
+  exportPNG = async () => {
+    const { graph } = this.state;
+    exportPngFile(graph);
+  };
+
+  //Exports the diagram to an XML representation
+  exportXML = async () => {
+    const { graph } = this.state;
+
+    // save/download XML
+    const encoder = new mxCodec();
+    const result = encoder.encode(graph.getModel());
+    const xml = mxUtils.getXml(result);
+    const xmlBlob = new Blob([xml], { type: "text/xml" });
+    const xmlFilename = "Experiment.xml";
+
+    if (window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveBlob(xmlBlob, xmlFilename);
+    } else {
+      let element = window.document.createElement("a");
+      element.href = window.URL.createObjectURL(xmlBlob);
+      element.download = xmlFilename;
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    }
+  };
+
+  //Mutators
+  handleSearch = (event) => {
+    this.setState({ search: event.target.value });
+  };
+
+  handleClick = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  showGeneratingPng = () => {
+    this.setState({ open: true });
+  };
+
+  closeGeneratingPng = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    this.setState({ open: false });
+  };
+
   render() {
+    //Popover Component
     const popover = (name, variant) => {
       const wiki =
         variant === "apparatus"
@@ -532,60 +594,6 @@ export default class Diagram extends Component {
       );
     };
 
-    const exportPNG = async () => {
-      const { graph } = this.state;
-      exportPngFile(graph);
-    };
-
-    //Exports the diagram to an XML representation
-    const exportXML = async () => {
-      const { graph } = this.state;
-
-      // save/download XML
-      const encoder = new mxCodec();
-      const result = encoder.encode(graph.getModel());
-      const xml = mxUtils.getXml(result);
-      const xmlBlob = new Blob([xml], { type: "text/xml" });
-      const xmlFilename = "Experiment.xml";
-
-      if (window.navigator.msSaveOrOpenBlob) {
-        window.navigator.msSaveBlob(xmlBlob, xmlFilename);
-      } else {
-        let element = window.document.createElement("a");
-        element.href = window.URL.createObjectURL(xmlBlob);
-        element.download = xmlFilename;
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-      }
-    };
-
-    //Mutators
-
-    const handleSearch = (event) => {
-      this.setState({ search: event.target.value });
-    };
-
-    const handleClick = (event) => {
-      this.setState({ anchorEl: event.currentTarget });
-    };
-
-    const handleClose = () => {
-      this.setState({ anchorEl: null });
-    };
-
-    const showGeneratingPng = () => {
-      this.setState({ open: true });
-    };
-
-    const closeGeneratingPng = (event, reason) => {
-      if (reason === "clickaway") {
-        return;
-      }
-
-      this.setState({ open: false });
-    };
-
     return (
       <div>
         <div className="sidebar" ref={this.sidebar}>
@@ -593,7 +601,7 @@ export default class Diagram extends Component {
             <FormControl
               placeholder={"Search"}
               value={this.state.search}
-              onChange={handleSearch}
+              onChange={this.handleSearch}
             />
           </InputGroup>
 
@@ -784,7 +792,7 @@ export default class Diagram extends Component {
               aria-label="color"
               aria-controls="simple-menu"
               aria-haspopup="true"
-              onClick={handleClick}
+              onClick={this.handleClick}
             >
               <SaveIcon />
               <ArrowDropDownIcon />
@@ -797,21 +805,21 @@ export default class Diagram extends Component {
           anchorEl={this.state.anchorEl}
           keepMounted
           open={Boolean(this.state.anchorEl)}
-          onClose={handleClose}
+          onClose={this.handleClose}
         >
           <MenuItem
             onClick={() => {
-              handleClose();
-              exportPNG();
-              showGeneratingPng();
+              this.handleClose();
+              this.exportPNG();
+              this.showGeneratingPng();
             }}
           >
             PNG
           </MenuItem>
           <MenuItem
             onClick={() => {
-              handleClose();
-              exportXML();
+              this.handleClose();
+              this.exportXML();
             }}
           >
             Draw.io
@@ -829,7 +837,7 @@ export default class Diagram extends Component {
           }}
           open={this.state.open}
           autoHideDuration={500}
-          onClose={closeGeneratingPng}
+          onClose={this.closeGeneratingPng}
           message="Saving image..."
           action={
             <React.Fragment>
@@ -837,7 +845,7 @@ export default class Diagram extends Component {
                 size="small"
                 aria-label="close"
                 color="inherit"
-                onClick={closeGeneratingPng}
+                onClick={this.closeGeneratingPng}
               >
                 <CloseIcon fontSize="small" />
               </IconButton>
