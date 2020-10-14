@@ -38,16 +38,24 @@ export default class Information extends Component {
       const proxy = "https://icemlab-cors-service.herokuapp.com/";
       try {
         const descResponse = await this.fetchJson(
-          `${proxy}${base}&prop=description&titles=${wikiRef}`
+          `${proxy}${base}&prop=pageterms&titles=${wikiRef}`
         );
-        let description = "";
-        if ("description" in Object.values(descResponse.query.pages)[0]) {
-          description = Object.values(descResponse.query.pages)[0].description;
+        let description = "Laboratory equipment";
+        if ("description" in Object.values(descResponse.query.pages)[0].terms) {
+          description = Object.values(descResponse.query.pages)[0].terms
+            .description[0];
         }
+
+        const srcResponse = await this.fetchJson(
+          `${proxy}${base}&prop=info&inprop=url&titles=${wikiRef}`
+        );
+        const source = Object.values(srcResponse.query.pages)[0].fullurl;
+
         this.setState((prev) => {
           let prevWiki = { ...prev.wiki };
           prevWiki[name] = {
             description: description,
+            source: source,
           };
           return { ...prev, wiki: prevWiki };
         });
@@ -157,25 +165,25 @@ export default class Information extends Component {
           {this.props.variant === "Reagents"
             ? this.props.experiment.reagents.map((reagent, index) => {
                 return (
-                    <OverlayTrigger
-                      placement="right"
-                      overlay={
-                        <Tooltip>
-                          <div style={{ textAlign: "left" }}>
-                            Molecular Formula:
-                            <br />
-                            {this.state.chemData[reagent].formula || "Loading"}
-                            <br />
-                            Molecular Weight:
-                            <br />
-                            {this.state.chemData[reagent].weight || "Loading"}
-                          </div>
-                        </Tooltip>
-                      }
-                      key={index}
-                    >
-                      <ListGroup.Item key={index}>{reagent}</ListGroup.Item>
-                    </OverlayTrigger>
+                  <OverlayTrigger
+                    placement="right"
+                    overlay={
+                      <Tooltip>
+                        <div style={{ textAlign: "left" }}>
+                          Molecular Formula:
+                          <br />
+                          {this.state.chemData[reagent].formula || "Loading"}
+                          <br />
+                          Molecular Weight:
+                          <br />
+                          {this.state.chemData[reagent].weight || "Loading"}
+                        </div>
+                      </Tooltip>
+                    }
+                    key={index}
+                  >
+                    <ListGroup.Item key={index}>{reagent}</ListGroup.Item>
+                  </OverlayTrigger>
                 );
               })
             : this.props.experiment.apparatus.map((apparatus, index) => {
@@ -184,8 +192,8 @@ export default class Information extends Component {
                     placement="right"
                     overlay={
                       <Tooltip>
-                        <div style={{ textAlign: "left" }}>
-                          {this.state.wiki[apparatus].description|| "Loading"}
+                        <div style={{ textAlign: "left", maxWidth: 120 }}>
+                          {this.state.wiki[apparatus].description || "Loading"}
                         </div>
                       </Tooltip>
                     }

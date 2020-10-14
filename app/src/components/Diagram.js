@@ -92,11 +92,15 @@ export default class Diagram extends Component {
       const proxy = "https://icemlab-cors-service.herokuapp.com/";
       try {
         const descResponse = await this.fetchJson(
-          `${proxy}${base}&prop=description&titles=${wikiRef}`
+          `${proxy}${base}&prop=pageterms&titles=${wikiRef}`
         );
-        let description = "";
-        if ("description" in Object.values(descResponse.query.pages)[0]) {
-          description = Object.values(descResponse.query.pages)[0].description;
+        let description =
+          variant === "apparatus"
+            ? "Laboratory equipment"
+            : "Chemical compound";
+        if ("description" in Object.values(descResponse.query.pages)[0].terms) {
+          description = Object.values(descResponse.query.pages)[0].terms
+            .description[0];
         }
 
         const imgResponse = await this.fetchJson(
