@@ -15,7 +15,7 @@ import Icon from "@material-ui/core/Icon";
 import Navigation from "../components/Navigation";
 import AboutCard from "../components/AboutCard";
 import Experiment from "./Experiment";
-import { ICEMLAB_SERVICE } from "../apiUrls"
+import { ICEMLAB_SERVICE } from "../apiUrls";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../App.css";
 
@@ -167,79 +167,85 @@ export default class Home extends Component {
                       }}
                     >
                       <ListGroup variant="flush">
-                        {this.state.experiments.map((item, index) => {
-                          return item.title
-                            .toLowerCase()
-                            .includes(this.state.search.toLowerCase()) ? (
-                            //Tooltip functionality to display experiment description on mouseover
-                            <OverlayTrigger
-                              placement="left"
-                              overlay={
-                                <Tooltip>
-                                  <div style={{ textAlign: "left" }}>
-                                    Summary
-                                    <div style={{ display: "flex" }}>
-                                      {item.reagents.length}
-                                      <Icon
-                                        style={{
-                                          color: "white",
-                                        }}
-                                      >
-                                        science
-                                      </Icon>
-                                      {item.apparatus.length}
-                                      <Icon
-                                        style={{
-                                          color: "white",
-                                        }}
-                                      >
-                                        biotech
-                                      </Icon>
-                                      180
-                                      <Icon
-                                        style={{
-                                          color: "white",
-                                        }}
-                                      >
-                                        schedule
-                                      </Icon>
+                        {this.state.experiments
+                          .filter((experiment) =>
+                            experiment.title
+                              .toLowerCase()
+                              .includes(this.state.search.toLowerCase())
+                          )
+                          .map((experiment, index) => {
+                            return (
+                              //Tooltip functionality to display experiment description on mouseover
+                              <OverlayTrigger
+                                placement="left"
+                                overlay={
+                                  <Tooltip>
+                                    <div style={{ textAlign: "left" }}>
+                                      Summary
+                                      <div style={{ display: "flex" }}>
+                                        {experiment.reagents.length}
+                                        <Icon
+                                          style={{
+                                            color: "white",
+                                          }}
+                                        >
+                                          science
+                                        </Icon>
+                                        {experiment.apparatus.length}
+                                        <Icon
+                                          style={{
+                                            color: "white",
+                                          }}
+                                        >
+                                          biotech
+                                        </Icon>
+                                        180
+                                        <Icon
+                                          style={{
+                                            color: "white",
+                                          }}
+                                        >
+                                          schedule
+                                        </Icon>
+                                      </div>
+                                      <br />
+                                      {experiment.information}
                                     </div>
-                                    <br />
-                                    {item.information}
-                                  </div>
-                                </Tooltip>
-                              }
-                              key={index}
-                            >
-                              <ListGroup.Item
-                                action
-                                onClick={() => this.handleSelection(item.title)}
+                                  </Tooltip>
+                                }
                                 key={index}
                               >
-                                <div style={{ display: "flex" }}>
-                                  <Badge
-                                    style={{
-                                      backgroundColor: this.getCategoryColor(
-                                        item.category
-                                      ),
-                                      color: "black",
-                                      fontSize: "1rem",
-                                      marginRight: "0.5rem",
-                                    }}
-                                  >
-                                    {item.category}
-                                  </Badge>
-                                  {/*Inner HTML used to display subscripts*/}
-                                  <div
-                                    dangerouslySetInnerHTML={{
-                                      __html: item.title,
-                                    }}
-                                  />
-                                </div>
-                              </ListGroup.Item>
-                            </OverlayTrigger>
-                          ) : null;
-                        })}
+                                <ListGroup.Item
+                                  action
+                                  onClick={() =>
+                                    this.handleSelection(experiment.title)
+                                  }
+                                  key={index}
+                                >
+                                  <div style={{ display: "flex" }}>
+                                    <Badge
+                                      style={{
+                                        backgroundColor: this.getCategoryColor(
+                                          experiment.category
+                                        ),
+                                        color: "black",
+                                        fontSize: "1rem",
+                                        marginRight: "0.5rem",
+                                      }}
+                                    >
+                                      {experiment.category}
+                                    </Badge>
+                                    {/*Inner HTML used to display subscripts*/}
+                                    <div
+                                      dangerouslySetInnerHTML={{
+                                        __html: experiment.title,
+                                      }}
+                                    />
+                                  </div>
+                                </ListGroup.Item>
+                              </OverlayTrigger>
+                            );
+                          })}
                       </ListGroup>
                     </Card>
                   </Col>

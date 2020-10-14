@@ -117,23 +117,27 @@ export default class Dashboard extends Component {
                 {/*Rendering the card which allows experiments to be uploaded when clicked on*/}
                 <UploadCard />
               </Col>
-              {this.state.experiments.map((item, index) => {
-                //Each experiment in the array is mapped to a card. If experiments have been filtered, only the relevant ones will be displayed.
-
-                return item.title
-                  .toLowerCase()
-                  .includes(this.state.search.toLowerCase()) ? (
-                  <Col md={4} key={index}>
-                    <ExperimentCard
-                      experimentTitle={item.title}
-                      experimentCategory={item.category}
-                      experimentModified={item.modified}
-                      experimentColor={this.getCategoryColor(item.category)}
-                      callbackTitle={this.callbackTitle}
-                    />
-                  </Col>
-                ) : null;
-              })}
+              {this.state.experiments
+                .filter((experiment) =>
+                  experiment.title
+                    .toLowerCase()
+                    .includes(this.state.search.toLowerCase())
+                )
+                .map((experiment, index) => {
+                  return (
+                    <Col md={4} key={index}>
+                      <ExperimentCard
+                        experimentTitle={experiment.title}
+                        experimentCategory={experiment.category}
+                        experimentModified={experiment.modified}
+                        experimentColor={this.getCategoryColor(
+                          experiment.category
+                        )}
+                        callbackTitle={this.callbackTitle}
+                      />
+                    </Col>
+                  );
+                })}
             </Row>
           </Container>
         </div>
