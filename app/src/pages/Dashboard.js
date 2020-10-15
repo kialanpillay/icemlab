@@ -7,6 +7,7 @@ import Row from "react-bootstrap/Row";
 import UploadCard from "../components/UploadCard";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
+import Card from "react-bootstrap/Card";
 import Badge from "react-bootstrap/Badge";
 import Upload from "./Upload";
 import { ICEMLAB_SERVICE } from "../apiUrls";
@@ -114,24 +115,29 @@ export default class Dashboard extends Component {
             <Row
               style={{
                 marginTop: "2rem",
-                height: "3rem",
               }}
             >
-              <Col md={3}>
-                <a
-                  href="https://stats.uptimerobot.com/jLLm4fjk6w"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Badge
-                    variant={this.state.status ? "success" : "danger"}
-                    style={{ fontSize: "1rem" }}
-                  >
-                    iCEMlab Services {this.state.status ? "OK" : "Degraded"}
-                  </Badge>
-                </a>
+              <Col md={4}>
+                <Card>
+                  <Card.Body>
+                    <Card.Subtitle>iCEMlab Health Monitoring</Card.Subtitle>
+                    <Card.Link
+                      href="https://stats.uptimerobot.com/jLLm4fjk6w"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Badge
+                        variant={this.state.status ? "success" : "danger"}
+                        style={{ fontSize: "0.8rem" }}
+                      >
+                        Services {this.state.status ? "OK" : "Degraded"} - View
+                        More
+                      </Badge>
+                    </Card.Link>
+                  </Card.Body>
+                </Card>
               </Col>
-              <Col md={{ span: 4, offset: 5 }}>
+              <Col md={{ span: 4, offset: 4 }}>
                 {/*Search bar*/}
                 <InputGroup>
                   <FormControl
