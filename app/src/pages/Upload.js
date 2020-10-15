@@ -44,7 +44,7 @@ class Upload extends Component {
     //State is used instead of class member variables to avoid manually managing component renders
     this.state = {
       title: "",
-      preamble: "",
+      introduction: "",
       checkedApparatus: [],
       selectedReagents: [],
       method: "",
@@ -127,7 +127,7 @@ class Upload extends Component {
   validatePayload = () => {
     return (
       this.state.title !== "" &&
-      this.state.preamble.information !== "" &&
+      this.state.introduction !== "" &&
       this.state.checkedApparatus.length !== 0 &&
       this.state.selectedReagents.length !== 0 &&
       this.state.method.length !== 0
@@ -138,7 +138,7 @@ class Upload extends Component {
   putPayload = () => {
     const payload = {
       title: this.state.title,
-      information: this.state.preamble,
+      information: this.state.introduction,
       apparatus: this.state.checkedApparatus,
       reagents: this.state.selectedReagents,
       method: this.state.method,
@@ -189,7 +189,7 @@ class Upload extends Component {
       .then((response) => {
         this.setState({
           title: response.experiment.title,
-          preamble: response.experiment.information,
+          introduction: response.experiment.information,
           checkedApparatus: response.experiment.apparatus,
           selectedReagents: response.experiment.reagents,
           method: response.experiment.method,
@@ -307,25 +307,25 @@ class Upload extends Component {
                     disabled={this.props.edit}
                   />
                 </Form.Group>
-                <Form.Group as={Col} controlId="preamble">
+                <Form.Group as={Col} controlId="introduction">
                   <OverlayTrigger
                     placement="left"
                     overlay={
                       <Tooltip>
-                        Enter a introduction, preamble or description for this
+                        Enter an introduction, preamble or description for this
                         experiment into the text area.
                       </Tooltip>
                     }
                   >
-                    <Form.Label>Preamble</Form.Label>
+                    <Form.Label>Introduction</Form.Label>
                   </OverlayTrigger>
                   <Form.Control
                     as="textarea"
                     rows="5"
-                    placeholder="Enter Experiment Preamble"
+                    placeholder="Enter Experiment Introduction"
                     required={true}
-                    name="preamble"
-                    value={this.state.preamble}
+                    name="introduction"
+                    value={this.state.introduction}
                     onChange={this.handleChange}
                   />
                 </Form.Group>
@@ -402,6 +402,7 @@ class Upload extends Component {
                     modules={EDITOR_MODULES}
                     style={{ height: "16rem", marginLeft: "1rem" }}
                     value={this.state.method}
+                    placeholder="I am a step. This is another step."
                   ></ReactQuill>
                 </OverlayTrigger>
               </div>
@@ -450,7 +451,7 @@ class Upload extends Component {
                     modules={IMAGE_MODULES}
                     style={{ height: "16rem", marginLeft: "1rem" }}
                     value={this.state.image}
-                    placeholder={"Maximum image file size: 300KB"}
+                    placeholder="Maximum image file size: 300KB"
                   ></ReactQuill>
                 </OverlayTrigger>
               </div>
@@ -473,7 +474,7 @@ class Upload extends Component {
                     <Form.Label>Video URL</Form.Label>
                   </OverlayTrigger>
                   <Form.Control
-                    placeholder=""
+                    placeholder="Enter Video URL"
                     required={true}
                     name="videoLink"
                     value={this.state.videoLink}
@@ -502,7 +503,7 @@ class Upload extends Component {
                   <Form.Control
                     as="textarea"
                     rows="6"
-                    placeholder=""
+                    placeholder="Enter Applicable Notes"
                     name="notes"
                     value={this.state.notes}
                     onChange={this.handleChange}
