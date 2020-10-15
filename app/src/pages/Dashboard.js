@@ -23,6 +23,7 @@ export default class Dashboard extends Component {
       search: "",
       loading: true,
       selection: "",
+      status: true,
     };
     //Binding of methods to the class instance
     this.handleSearch = this.handleSearch.bind(this);
@@ -57,6 +58,7 @@ export default class Dashboard extends Component {
   };
   //Calls method once the component has rendered
   componentDidMount() {
+    this.getMonitors();
     this.getExperiments();
   }
   //Returns a hex colour code for distinct categories
@@ -72,6 +74,35 @@ export default class Dashboard extends Component {
       color = "#D1C4E9";
     }
     return color;
+  };
+
+  //GET request to retrieve monitor data from UptimeRobot API
+  getMonitors = () => {
+    const url = `https://api.uptimerobot.com/v2/getMonitors/`;
+    const payload = {
+      api_key: process.env.REACT_APP_UPTIME_KEY,
+      format: "json",
+    };
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        response.monitors.forEach((monitor) => {
+          if (monitor.status !== 2) {
+            this.setState({ status: false });
+          }
+        });
+      })
+      .catch((err) => {
+        this.setState({ status: false });
+        console.log(err);
+      });
   };
 
   render() {
@@ -92,8 +123,11 @@ export default class Dashboard extends Component {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Badge variant="secondary" style={{ fontSize: "1rem" }}>
-                    iCEMlab Service Monitoring
+                  <Badge
+                    variant={this.state.status ? "success" : "danger"}
+                    style={{ fontSize: "1rem" }}
+                  >
+                    iCEMlab Services {this.state.status ? "OK" : "Degraded"}
                   </Badge>
                 </a>
               </Col>
