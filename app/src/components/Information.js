@@ -22,6 +22,7 @@ export default class Information extends Component {
       ),
     };
   }
+  //Calls method once the component has rendered
   componentDidMount() {
     if (this.props.variant === "Reagents") {
       this.getPubChemData();
@@ -108,7 +109,7 @@ export default class Information extends Component {
     return await response.json();
   };
 
-  //Converts array items to object keys
+  //Reduces array items to object keys
   convertArrayToObject = (variant, array) => {
     const obj = {};
     if (variant === "apparatus") {

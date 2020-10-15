@@ -16,6 +16,7 @@ import { ICEMLAB_SERVICE } from "../apiUrls";
 import "react-quill/dist/quill.snow.css";
 import "./Upload.css";
 
+//Quill RTE Modules
 const EDITOR_MODULES = {
   toolbar: [
     [{ header: [1, 2, false] }],
@@ -64,7 +65,7 @@ class Upload extends Component {
     this.callbackChecklist = this.callbackChecklist.bind(this);
     this.callbackReagents = this.callbackReagents.bind(this);
   }
-  //GET request to retrieve an array of available experiments from the API server
+  //GET request to retrieve apparatus data from the API server
   getApparatus = () => {
     const apparatusEndpoint = `${ICEMLAB_SERVICE}/apparatus/`;
     fetch(apparatusEndpoint, {
@@ -81,6 +82,7 @@ class Upload extends Component {
       });
   };
 
+  //GET request to retrieve reagent data from the API server
   getReagents = () => {
     const reagentsEndpoint = `${ICEMLAB_SERVICE}/reagent/`;
     fetch(reagentsEndpoint, {
@@ -104,21 +106,24 @@ class Upload extends Component {
   callbackReagents = (selected) => {
     this.setState({ selectedReagents: selected });
   };
+
   //Calls method once the component has rendered
   componentDidMount() {
     this.getReagents();
     this.getApparatus();
     if (this.props.edit) {
+      //Retrieves experiment if an edit operation
       this.getExperiment(this.props.selection);
     } else {
       this.setState({ hidden: false });
     }
   }
-  //Retrieves the value of the user input as assigns it to the relevant state variable
+  //Handles user input and assigns it to the target state variable
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  //Validates upload data payload
   validatePayload = () => {
     return (
       this.state.title !== "" &&
@@ -161,6 +166,7 @@ class Upload extends Component {
         console.log(err);
       });
   };
+
   //Encodes query parameters for a HTTP request
   encodeParameters = (params) => {
     let query = Object.keys(params)
@@ -168,6 +174,8 @@ class Upload extends Component {
       .join("&");
     return `?${query}`;
   };
+
+  //GET request to retrieve experiment data from the API server
   getExperiment = () => {
     const endpoint = `${ICEMLAB_SERVICE}/experiment/`;
     const query = {
@@ -204,12 +212,14 @@ class Upload extends Component {
       : this.setState({ error: false });
   };
 
+  //Sets method state with editor HTML content
   handleEditorChange(content, delta, source, editor) {
     this.setState({
       method: this.convertDecimalPoint(content),
     });
   }
 
+  //Sets image state with editor HTML content
   handleImageChange(content, delta, source, editor) {
     this.setState({
       image: content,

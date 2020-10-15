@@ -46,8 +46,10 @@ import {
   mxKeyHandler,
 } from "mxgraph-js";
 
+//Export Module
 import { exportPngFile } from "../exportUtils/exportPngFile";
 
+//Measurement Units
 const SIDEBAR_UNITS = ["cm<sup>3</sup>", "dm<sup>3</sup>", "mℓ", "ℓ"];
 
 //Diagramming Tool Component
@@ -149,7 +151,7 @@ export default class Diagram extends Component {
     return await response.json();
   };
 
-  //Converts array items to object keys
+  //Reduces array items to object keys
   convertArrayToObject = (array) => {
     const obj = {};
     return array.reduce((obj, item) => {
@@ -395,7 +397,7 @@ export default class Diagram extends Component {
         let constraints = this.graph.getAllConnectionConstraints(this.previous);
         let nearestConstraint = null;
         let dist = null;
-        
+
         //Calculates constraints
         for (var i = 0; i < constraints.length; i++) {
           var cp = this.graph.getConnectionPoint(this.previous, constraints[i]);
@@ -439,7 +441,7 @@ export default class Diagram extends Component {
       }
       return null;
     };
-
+    //Constructs edge
     graph.connectionHandler.createEdgeState = function () {
       let edge = graph.createEdge(
         null,
@@ -494,24 +496,20 @@ export default class Diagram extends Component {
           this.settingConnection();
 
           graph.getModel().beginUpdate();
-          try {
-            //graph.insertVertex(parent, null, null, 180, 440, 480, 40, "table");
-          } finally {
-            graph.getModel().endUpdate();
-          }
+          graph.getModel().endUpdate();
         }
       );
       mxEvent.disableContextMenu(container);
     }
   }
 
-  //Exports the diagram to an PNG representation
+  //Exports the diagram to PNG format
   exportPNG = async () => {
     const { graph } = this.state;
     exportPngFile(graph);
   };
 
-  //Exports the diagram to an XML representation
+  //Exports the diagram to XML format
   exportXML = async () => {
     const { graph } = this.state;
 

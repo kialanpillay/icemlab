@@ -52,7 +52,7 @@ export default class Experiment extends Component {
     this.setState({ checklistComplete: false });
   };
 
-  //Callback function to compare the number of diagram notes to experiment items
+  //Callback function to compare the number of diagram nodes to experiment items
   callbackDiagram = (nodes) => {
     const numItems =
       this.state.experiment.apparatus.length +
@@ -70,7 +70,7 @@ export default class Experiment extends Component {
     return `?${query}`;
   };
 
-  //GET request to retrieve a experiment data from the API server
+  //GET request to retrieve experiment data from the API server
   getExperiment = () => {
     const endpoint = `${ICEMLAB_SERVICE}/experiment/`;
     const query = {
@@ -142,6 +142,7 @@ export default class Experiment extends Component {
     return color;
   };
 
+  //Handles user input and assigns it to the target state variable
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };

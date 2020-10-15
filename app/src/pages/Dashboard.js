@@ -7,6 +7,7 @@ import Row from "react-bootstrap/Row";
 import UploadCard from "../components/UploadCard";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
+import Badge from "react-bootstrap/Badge";
 import Upload from "./Upload";
 import { ICEMLAB_SERVICE } from "../apiUrls";
 
@@ -32,6 +33,7 @@ export default class Dashboard extends Component {
     this.setState({ search: event.target.value });
   };
 
+  //Callback function to set selected experiment title
   callbackTitle = (title) => {
     this.setState({ selection: title });
   };
@@ -85,16 +87,14 @@ export default class Dashboard extends Component {
               }}
             >
               <Col md={3}>
-                iCEMlab Service Monitoring
                 <a
-                  href="https://icemlab.montastic.io"
+                  href="https://stats.uptimerobot.com/jLLm4fjk6w"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <img
-                    src="https://icemlab.montastic.io/badge"
-                    alt="Status badge"
-                  />
+                  <Badge variant="secondary" style={{ fontSize: "1rem" }}>
+                    iCEMlab Service Monitoring
+                  </Badge>
                 </a>
               </Col>
               <Col md={{ span: 4, offset: 5 }}>

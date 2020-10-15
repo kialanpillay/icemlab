@@ -1,12 +1,9 @@
 import React from "react";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
-import {
-  ThemeProvider,
-  createMuiTheme,
-} from "@material-ui/core/styles";
+import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
-//Custom Input component for reagent data 
+//Custom Input component for reagent data
 export default class ReagentInput extends React.Component {
   constructor(props) {
     super(props);
@@ -29,6 +26,7 @@ export default class ReagentInput extends React.Component {
   };
 
   render() {
+    //Material UI Theme
     const theme = createMuiTheme({
       palette: {
         primary: { main: "#4E2E84" },

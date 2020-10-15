@@ -61,6 +61,7 @@ export default class Home extends Component {
     this.handleClear = this.handleClear.bind(this);
   }
 
+  //Returns a hex colour code for distinct categories
   getCategoryColor = (category) => {
     let color;
     if (category === "CEM1000W") {
@@ -75,15 +76,15 @@ export default class Home extends Component {
     return color;
   };
 
-  //Sets search-string state using the value of a user event (key press)
+  //Sets search state variable using the value of a user event (key press)
   handleSearch = (event) => {
     this.setState({ search: event.target.value });
   };
-  //Resets state, which clears the input component
+  //Resets search state variable, which clears the input component
   handleClear = () => {
     this.setState({ search: "" });
   };
-  //Sets the experiment selection state
+  //Sets the experiment selection state variable
   handleSelection = (selection) => {
     this.setState({ selection: selection });
   };
